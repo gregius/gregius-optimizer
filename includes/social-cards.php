@@ -1,11 +1,12 @@
 <?php
-defined( 'ABSPATH' ) || exit;
 /**
  * Social card metadata output (Open Graph and Twitter).
  *
  * @package gregius-optimizer
  * @license GPL-2.0-or-later
  */
+
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Register social image sizes for Open Graph and Twitter Cards.

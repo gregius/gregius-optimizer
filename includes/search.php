@@ -1,11 +1,12 @@
 <?php
-defined( 'ABSPATH' ) || exit;
 /**
  * Search-facing metadata output.
  *
  * @package gregius-optimizer
  * @license GPL-2.0-or-later
  */
+
+defined( 'ABSPATH' ) || exit;
 
 if ( ! function_exists( 'gg_optimizer_output_meta_description' ) ) {
 	/**

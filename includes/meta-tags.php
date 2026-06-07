@@ -1,6 +1,4 @@
 <?php
-defined( 'ABSPATH' ) || exit;
-// phpcs:ignoreFile Squiz.Commenting.FileComment.Missing
 /**
  * Meta tags for search and social cards.
  *
@@ -9,10 +7,17 @@ defined( 'ABSPATH' ) || exit;
  * @since 1.0.0
  * @version 1.0.0
  */
+
+defined( 'ABSPATH' ) || exit;
 // Custom_Meta_Field is loaded from gregius-optimizer.php if not already available.
 
 add_action( 'init', 'gg_optimizer_register_smo_meta_fields' );
 
+/**
+ * Register social meta override fields for all public post types.
+ *
+ * @return void
+ */
 function gg_optimizer_register_smo_meta_fields() {
 	if ( ! class_exists( 'GG_Optimizer_Custom_Meta_Field' ) ) {
 		return;

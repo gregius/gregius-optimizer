@@ -1,11 +1,12 @@
 <?php
-defined( 'ABSPATH' ) || exit;
 /**
  * Robots directives for meta robots and robots.txt.
  *
  * @package gregius-optimizer
  * @license GPL-2.0-or-later
  */
+
+defined( 'ABSPATH' ) || exit;
 
 if ( ! function_exists( 'gg_optimizer_is_hidden_from_search' ) ) {
 	/**

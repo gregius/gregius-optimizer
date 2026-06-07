@@ -1,5 +1,4 @@
 <?php
-defined( 'ABSPATH' ) || exit;
 /**
  * LLMs context file and meta registration.
  *
@@ -7,9 +6,16 @@ defined( 'ABSPATH' ) || exit;
  * @license GPL-2.0-or-later
  */
 
+defined( 'ABSPATH' ) || exit;
+
 // 1. Register meta fields for all public post types.
 add_action( 'init', 'gg_optimizer_register_llms_meta_fields' );
 
+/**
+ * Register LLMs meta fields for all public post types.
+ *
+ * @return void
+ */
 function gg_optimizer_register_llms_meta_fields() {
 	if ( ! class_exists( 'GG_Optimizer_Custom_Meta_Field' ) ) {
 		return;
@@ -17,7 +23,7 @@ function gg_optimizer_register_llms_meta_fields() {
 
 	$post_types  = get_post_types( array( 'public' => true ), 'names' );
 	$meta_fields = array(
-		'_gg_optimizer_include_in_llms' => array(
+		'_gg_optimizer_include_in_llms'  => array(
 			'type'        => 'boolean',
 			'default'     => false,
 			'label'       => 'Include in llms.txt',
@@ -55,6 +61,14 @@ add_action(
 );
 
 if ( ! function_exists( 'gg_optimizer_llms_normalize_text' ) ) {
+	/**
+	 * Normalize text content for LLMs context output.
+	 *
+	 * Strips shortcodes, HTML tags, and decodes HTML entities.
+	 *
+	 * @param string $text Raw text content.
+	 * @return string Normalized plain text.
+	 */
 	function gg_optimizer_llms_normalize_text( $text ) {
 		$text = (string) $text;
 		$text = strip_shortcodes( $text );
@@ -97,9 +111,9 @@ if ( ! function_exists( 'gg_optimizer_get_llms_context' ) ) {
 				$summary = wp_trim_words( $home->post_content, 40 );
 			}
 
-			$summary  = gg_optimizer_llms_normalize_text( $summary );
-			$lines[]  = sprintf( '- [Home](%1$s): %2$s', esc_url_raw( $site_url ), $summary );
-			$lines[]  = '';
+			$summary = gg_optimizer_llms_normalize_text( $summary );
+			$lines[] = sprintf( '- [Home](%1$s): %2$s', esc_url_raw( $site_url ), $summary );
+			$lines[] = '';
 		}
 
 		$defaults = array(
@@ -218,6 +232,11 @@ if ( ! function_exists( 'gg_optimizer_output_llms_txt' ) ) {
 }
 
 if ( ! function_exists( 'gg_optimizer_output_llms_head_link' ) ) {
+	/**
+	 * Output a <link> element in the document head pointing to /llms.txt.
+	 *
+	 * @return void
+	 */
 	function gg_optimizer_output_llms_head_link() {
 		if ( ! apply_filters( 'gg_optimizer_llms_enabled', true ) ) {
 			return;
@@ -295,18 +314,18 @@ add_action(
 					return current_user_can( 'manage_options' );
 				},
 				'args'                => array(
-					'llms_override'     => array(
+					'llms_override'        => array(
 						'required'          => false,
 						'type'              => 'string',
 						'sanitize_callback' => 'sanitize_textarea_field',
 					),
-					'unsaved_toggles'   => array(
-						'required'          => false,
-						'type'              => 'object',
+					'unsaved_toggles'      => array(
+						'required' => false,
+						'type'     => 'object',
 					),
 					'unsaved_descriptions' => array(
-						'required'          => false,
-						'type'              => 'object',
+						'required' => false,
+						'type'     => 'object',
 					),
 				),
 				'callback'            => function ( $request ) {

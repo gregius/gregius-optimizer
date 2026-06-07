@@ -1,11 +1,12 @@
 <?php
-defined( 'ABSPATH' ) || exit;
 /**
  * Schema.org structured data (JSON-LD).
  *
  * @package gregius-optimizer
  * @license GPL-2.0-or-later
  */
+
+defined( 'ABSPATH' ) || exit;
 
 if ( ! function_exists( 'gg_optimizer_schema_get_organization_content_sources' ) ) {
 	/**

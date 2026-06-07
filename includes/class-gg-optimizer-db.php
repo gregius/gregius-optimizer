@@ -8,11 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Database setup and key-value CRUD for the gg_optimizer_settings table.
+ */
 class GG_Optimizer_DB {
 
-	const TABLE_NAME         = 'gg_optimizer_settings';
-	const DB_VERSION         = '1.0.0';
-	const DB_VERSION_OPTION  = 'gg_optimizer_db_version';
+	const TABLE_NAME        = 'gg_optimizer_settings';
+	const DB_VERSION        = '1.0.0';
+	const DB_VERSION_OPTION = 'gg_optimizer_db_version';
 
 	/**
 	 * Create or upgrade the settings table if needed.
@@ -106,7 +109,7 @@ class GG_Optimizer_DB {
 		global $wpdb;
 
 		$table = $wpdb->prefix . self::TABLE_NAME;
-		$rows = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+		$rows  = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
 			$wpdb->prepare(
 				'SELECT setting_key, setting_value FROM %i WHERE setting_key LIKE %s',
 				$table,

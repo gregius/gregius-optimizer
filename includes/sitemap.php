@@ -1,5 +1,4 @@
 <?php
-defined( 'ABSPATH' ) || exit;
 /**
  * Sitemap optimization controls.
  *
@@ -7,10 +6,17 @@ defined( 'ABSPATH' ) || exit;
  * @license GPL-2.0-or-later
  */
 
+defined( 'ABSPATH' ) || exit;
+
 // Custom_Meta_Field is loaded from gregius-optimizer.php if not already available.
 
 add_action( 'init', 'gg_optimizer_register_hide_meta' );
 
+/**
+ * Register the hide-from-search meta field for all public post types.
+ *
+ * @return void
+ */
 function gg_optimizer_register_hide_meta() {
 	if ( ! class_exists( 'GG_Optimizer_Custom_Meta_Field' ) ) {
 		return;

@@ -1,11 +1,12 @@
 <?php
-defined( 'ABSPATH' ) || exit;
 /**
  * Asset enqueue logic for Gregius Optimizer.
  *
  * @package gregius-optimizer
  * @license GPL-2.0-or-later
  */
+
+defined( 'ABSPATH' ) || exit;
 
 add_action(
 	'enqueue_block_editor_assets',
