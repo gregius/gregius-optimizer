@@ -1,0 +1,11 @@
+{
+	"name": "gregius-optimizer",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"plugin-zip": "node bin/plugin-zip.js"
+	},
+	"devDependencies": {
+		"archiver": "^7.0.1"
+	}
+}

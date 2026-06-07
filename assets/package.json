@@ -1,0 +1,13 @@
+{
+	"name": "assets",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"build": "wp-scripts build --config webpack.config.js",
+		"start": "wp-scripts start --config webpack.config.js"
+	},
+	"devDependencies": {
+		"@wordpress/scripts": "^27.9.0",
+		"clean-webpack-plugin": "^4.0.0"
+	}
+}

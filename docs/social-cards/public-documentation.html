@@ -1,0 +1,313 @@
+<!-- wp:columns {"align":"wide","style":{"spacing":{"padding":{"right":"0","left":"0"}}}} -->
+<div class="wp-block-columns alignwide" style="padding-right:0;padding-left:0">
+  <!-- wp:column {"width":"33.33%"} -->
+  <div class="wp-block-column" style="flex-basis:33.33%">
+    <!-- wp:group {"className":"is-sticky-scroll","style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"default"}} -->
+    <div class="wp-block-group is-sticky-scroll">
+      <!-- wp:heading {"fontSize":"heading-4","anchor":"in-this-page"} -->
+      <h2 id="in-this-page" class="wp-block-heading has-heading-4-font-size">In this page</h2>
+      <!-- /wp:heading -->
+      <!-- wp:list {"fontSize":"medium"} -->
+      <ul class="wp-block-list has-medium-font-size">
+        <!-- wp:list-item -->
+        <li><a href="#overview">Overview</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#before-you-start">Before you start</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#global-fallback-image">Set a global fallback image</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#customize-search-snippet">Customize the search snippet (Google)</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#customize-open-graph">Customize Open Graph cards</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#customize-twitter">Customize Twitter / X cards</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#reset-overrides">Reset overrides</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#permissions">Permissions</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#next-steps">Next steps</a></li>
+        <!-- /wp:list-item -->
+      </ul>
+      <!-- /wp:list -->
+      <!-- wp:separator -->
+      <hr class="wp-block-separator has-alpha-channel-opacity" />
+      <!-- /wp:separator -->
+    </div>
+    <!-- /wp:group -->
+  </div>
+  <!-- /wp:column -->
+  <!-- wp:column {"width":"66.66%"} -->
+  <div class="wp-block-column" style="flex-basis:66.66%">
+    <!-- wp:heading {"anchor":"overview"} -->
+    <h2 id="overview" class="wp-block-heading">Overview</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Control how your content appears when shared on social media and in search results. This feature lets you set <strong>separate titles, descriptions, and images</strong> for Google Search, Open Graph (Facebook, LinkedIn), and Twitter/X — all from your post editor.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">When someone shares your content on social media or finds it through search, platforms use meta tags to build a preview card. The Social Cards feature gives you control over these previews with:</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:list {"className":"wp-block-list"} -->
+    <ul class="wp-block-list">
+      <!-- wp:list-item -->
+      <li><strong>Search Snippet (Google)</strong> — Title and description for Google search results</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><strong>Open Graph (Facebook, LinkedIn, etc.)</strong> — Title, description, and image for social sharing</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><strong>Twitter / X</strong> — Title, description, and image for Twitter Cards</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Each platform has its own set of overrides, so you can optimize separately for search and social.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"before-you-start"} -->
+    <h2 id="before-you-start" class="wp-block-heading">Before you start</h2>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list"} -->
+    <ul class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Gregius Optimizer plugin installed and activated</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Post types must support <code>custom-fields</code> for meta overrides</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Image dimensions: OG images resize to 1200×630 px; Twitter prefers square or 2:1 ratio</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"global-fallback-image"} -->
+    <h2 id="global-fallback-image" class="wp-block-heading">Set a global fallback image</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">The Global Image serves as a fallback for all platform cards when no platform-specific image is set.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open any post or page in the Block Editor.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Locate the <strong>Social Cards</strong> panel in the right sidebar.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Settings</strong> to open the configuration modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>In the <strong>Global Image</strong> section, click the image area to open the media library.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Select an image. A 150×150 px thumbnail preview appears.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Use the kebab menu (⋮) in the top-right corner of the image to <strong>Replace</strong> or <strong>Remove</strong> it.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:heading {"level":3,"anchor":"image-fallback-chain"} -->
+    <h3 id="image-fallback-chain" class="wp-block-heading">How images are resolved per card</h3>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list"} -->
+    <ul class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Each card (OG, Twitter) checks its own image first</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>If not set, it falls back to the post's featured image</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>If no featured image, it uses the Global Image</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">There is no cascade from one card's image to another's. Each platform resolves independently.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"customize-search-snippet"} -->
+    <h2 id="customize-search-snippet" class="wp-block-heading">Customize the Search Snippet (Google)</h2>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the <strong>Social Cards</strong> modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>In the <strong>Search Snippet</strong> card, you'll see a live preview styled like a Google search result.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>The card shows a favicon and URL bar, an editable title (blue link text), and an editable description (gray text).</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Type directly into the fields to override the snippet.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Character counters below each field show your count against the recommended maximum: Title 60, Description 160.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph"><strong>Note:</strong> When you set a Google title, it also updates the browser's <code>&lt;title&gt;</code> tag for that page, so search engines and browser tabs stay consistent.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"customize-open-graph"} -->
+    <h2 id="customize-open-graph" class="wp-block-heading">Customize Open Graph cards (Facebook, LinkedIn)</h2>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the <strong>Social Cards</strong> modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>In the <strong>Open Graph</strong> section, you'll see a live preview card with an image area, hostname label, title, and description.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click the image area to choose or replace the OG-specific image.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Use the kebab menu (⋮) on the image to <strong>Replace</strong> or <strong>Remove</strong>.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Type directly into the title and description fields.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph"><strong>Character limits:</strong> Title 55, Description 65.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph"><strong>Pro tip:</strong> Open Graph images display at 1200×630 px. Use high-resolution images with this aspect ratio for best results.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"customize-twitter"} -->
+    <h2 id="customize-twitter" class="wp-block-heading">Customize Twitter / X cards</h2>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the <strong>Social Cards</strong> modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>In the <strong>Twitter / X</strong> section, you'll see a live preview card with an image area, domain label, title, and description.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>The Twitter card type is automatically set: <strong>Summary card</strong> (no image) or <strong>Summary large image</strong> (with image).</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Character limits: Title 70, Description 200.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Twitter image overrides are independent of OG — you can use different images for each platform.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"reset-overrides"} -->
+    <h2 id="reset-overrides" class="wp-block-heading">Reset overrides</h2>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the <strong>Social Cards</strong> modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>The <strong>Reset to defaults</strong> button becomes active when any overrides are set.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click it to clear all 9 override fields (Google, OG, Twitter titles/descriptions/images, plus Global Image).</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Empty fields use fallback values automatically (post title, excerpt, featured image).</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"permissions"} -->
+    <h2 id="permissions" class="wp-block-heading">Permissions</h2>
+    <!-- /wp:heading -->
+    <!-- wp:table {"hasFixedLayout":false} -->
+    <figure class="wp-block-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Required capability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Edit social meta for a post</td>
+            <td><code>edit_post</code> (on that post)</td>
+          </tr>
+          <tr>
+            <td>Upload images via Media Library</td>
+            <td><code>upload_files</code></td>
+          </tr>
+          <tr>
+            <td>View meta preview</td>
+            <td><code>edit_post</code> (on that post)</td>
+          </tr>
+        </tbody>
+      </table>
+    </figure>
+    <!-- /wp:table -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"next-steps"} -->
+    <h2 id="next-steps" class="wp-block-heading">Next steps</h2>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list"} -->
+    <ul class="wp-block-list">
+      <!-- wp:list-item -->
+      <li><a href="/docs/schema/public-documentation.html">Schema</a> — Add structured data markup to help search engines understand your content</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="/docs/sitemap/public-documentation.html">Sitemap</a> — Control which content appears in your XML sitemap</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="/docs/robots/public-documentation.html">Robots.txt</a> — Configure crawl directives for search engines and AI bots</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="https://developers.google.com/search/docs/appearance/structured-data/search-gallery" target="_blank" rel="noreferrer noopener">Google Search Snippet documentation</a> — External resource</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="https://ogp.me/" target="_blank" rel="noreferrer noopener">Open Graph protocol</a> — External resource</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/abouts-cards" target="_blank" rel="noreferrer noopener">Twitter Cards documentation</a> — External resource</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+  </div>
+  <!-- /wp:column -->
+</div>
+<!-- /wp:columns -->

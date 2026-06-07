@@ -1,0 +1,343 @@
+<!-- wp:columns {"align":"wide","style":{"spacing":{"padding":{"right":"0","left":"0"}}}} -->
+<div class="wp-block-columns alignwide" style="padding-right:0;padding-left:0">
+  <!-- wp:column {"width":"33.33%"} -->
+  <div class="wp-block-column" style="flex-basis:33.33%">
+    <!-- wp:group {"className":"is-sticky-scroll","style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"default"}} -->
+    <div class="wp-block-group is-sticky-scroll">
+      <!-- wp:heading {"fontSize":"heading-4","anchor":"in-this-page"} -->
+      <h2 id="in-this-page" class="wp-block-heading has-heading-4-font-size">In this page</h2>
+      <!-- /wp:heading -->
+      <!-- wp:list {"fontSize":"medium"} -->
+      <ul class="wp-block-list has-medium-font-size">
+        <!-- wp:list-item -->
+        <li><a href="#overview">Overview</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#before-you-start">Before you start</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#exclude-a-post-type">Exclude a post type</a>
+          <!-- wp:list -->
+          <ul class="wp-block-list">
+            <!-- wp:list-item -->
+            <li><a href="#re-enable-a-post-type">Re-enable a post type</a></li>
+            <!-- /wp:list-item -->
+          </ul>
+          <!-- /wp:list -->
+        </li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#exclude-a-taxonomy">Exclude a taxonomy</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#enable-author-sitemap">Enable the author sitemap</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#hide-a-page">Hide a page from search</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#reset-to-defaults">Reset to defaults</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#permissions">Permissions</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#next-steps">Next steps</a></li>
+        <!-- /wp:list-item -->
+      </ul>
+      <!-- /wp:list -->
+      <!-- wp:separator -->
+      <hr class="wp-block-separator has-alpha-channel-opacity" />
+      <!-- /wp:separator -->
+    </div>
+    <!-- /wp:group -->
+  </div>
+  <!-- /wp:column -->
+  <!-- wp:column {"width":"66.66%"} -->
+  <div class="wp-block-column" style="flex-basis:66.66%">
+    <!-- wp:heading {"anchor":"overview"} -->
+    <h2 id="overview" class="wp-block-heading">Overview</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">The Sitemap feature gives you granular control over your site's <code>wp-sitemap.xml</code> file. WordPress generates this file automatically, but you may want to exclude certain content types (like product categories with few entries) or specific pages (like thank-you pages that should not appear in search results).</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">All controls are available from a single panel in the Block Editor sidebar. Changes take effect immediately on the next sitemap request.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:heading {"level":3,"anchor":"what-you-can-control"} -->
+    <h3 id="what-you-can-control" class="wp-block-heading">What you can control</h3>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list"} -->
+    <ul class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Which post types appear in the sitemap (Posts, Pages, Products, etc.)</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Which taxonomies appear (Categories, Tags, custom taxonomies)</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Whether author archive pages are included</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Which specific users are excluded from the author sitemap</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Individual documents — hide any page or post from search engines entirely</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"before-you-start"} -->
+    <h2 id="before-you-start" class="wp-block-heading">Before you start</h2>
+    <!-- /wp:heading -->
+    <!-- wp:heading {"level":3,"anchor":"prerequisites"} -->
+    <h3 id="prerequisites" class="wp-block-heading">Prerequisites</h3>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list"} -->
+    <ul class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Gregius Optimizer plugin installed and activated</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>WordPress 6.9 or later</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"exclude-a-post-type"} -->
+    <h2 id="exclude-a-post-type" class="wp-block-heading">Exclude a post type from the sitemap</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">If your site has a custom post type that should not appear in search results (for example, internal notes or archived events), you can exclude it entirely from the sitemap.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open any post or page in the Block Editor.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Locate the <strong>Sitemap</strong> panel in the right sidebar. If you don't see it, check that the post type supports custom fields.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Settings</strong> to open the configuration modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Under <strong>Post types</strong>, find the post type you want to exclude.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Toggle the switch to <strong>off</strong>.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Update</strong> to save.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">The excluded post type will no longer appear in <code>wp-sitemap.xml</code>. Previously published posts of that type remain accessible on the frontend.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:heading {"level":3,"anchor":"re-enable-a-post-type"} -->
+    <h3 id="re-enable-a-post-type" class="wp-block-heading">Re-enable a post type</h3>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the <strong>Sitemap</strong> modal again.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Toggle the post type back to <strong>on</strong>.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Update</strong>.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"exclude-a-taxonomy"} -->
+    <h2 id="exclude-a-taxonomy" class="wp-block-heading">Exclude a taxonomy from the sitemap</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">By default, Categories and Tags are excluded from the sitemap. You can change this or exclude other taxonomies.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the <strong>Sitemap</strong> modal from the Block Editor sidebar.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Scroll to the <strong>Taxonomies</strong> section.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Toggle each taxonomy on or off as needed.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Update</strong>.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph"><strong>Note:</strong> Taxonomies with very few entries typically add little value to search engine crawlers. Consider enabling them only when they contain substantial, unique content.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"enable-author-sitemap"} -->
+    <h2 id="enable-author-sitemap" class="wp-block-heading">Enable the author sitemap</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Author archive pages are excluded from the sitemap by default. You can enable them and selectively exclude individual authors.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the <strong>Sitemap</strong> modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Under <strong>Author sitemap</strong>, toggle <strong>Include author page in sitemap</strong> to on.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>A list of all authors appears below the toggle.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Toggle individual authors off to exclude them from the sitemap.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Update</strong>.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"hide-a-page"} -->
+    <h2 id="hide-a-page" class="wp-block-heading">Hide a page from search engines</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Individual pages or posts can be hidden from search engines. This adds a <code>noindex</code> instruction and removes the page from all sitemaps.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the post in the Block Editor.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>In the <strong>Sitemap</strong> panel, find the <strong>Hide page from search engines</strong> toggle.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Toggle it to <strong>on</strong>.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Update or publish the post.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:list {"className":"wp-block-list"} -->
+    <ul class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>The page gets a <code>&lt;meta name="robots" content="noindex"&gt;</code> tag.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>The page is excluded from <code>wp-sitemap.xml</code>.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>The page remains accessible via direct link.</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph"><strong>Tip:</strong> Use this for thank-you pages, admin-only content, draft-quality posts, or any page that should not appear in search results.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"reset-to-defaults"} -->
+    <h2 id="reset-to-defaults" class="wp-block-heading">Reset to defaults</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">If you have made changes and want to start over:</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the <strong>Sitemap</strong> modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Reset to defaults</strong>.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>The button is disabled when no overrides exist — if it is greyed out, you are already at default settings.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">This reverts all toggles (post types, taxonomies, authors) to their original filter defaults. It does not affect the "Hide from search engines" setting on individual posts.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"permissions"} -->
+    <h2 id="permissions" class="wp-block-heading">Permissions</h2>
+    <!-- /wp:heading -->
+    <!-- wp:table {"hasFixedLayout":false} -->
+    <figure class="wp-block-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Required capability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>View sitemap settings</td>
+            <td><code>manage_options</code></td>
+          </tr>
+          <tr>
+            <td>Update sitemap settings</td>
+            <td><code>manage_options</code></td>
+          </tr>
+          <tr>
+            <td>Hide a post from search engines</td>
+            <td><code>edit_post</code> (on that post)</td>
+          </tr>
+        </tbody>
+      </table>
+    </figure>
+    <!-- /wp:table -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Only site administrators can change global sitemap settings. Content editors can hide their own posts from search engines.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"next-steps"} -->
+    <h2 id="next-steps" class="wp-block-heading">Next steps</h2>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list","fontSize":"medium"} -->
+    <ul class="wp-block-list has-medium-font-size">
+      <!-- wp:list-item -->
+      <li><a href="/docs/robots/public-documentation.html">Robots.txt</a> — Customize your robots.txt directives</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="/docs/schema/public-documentation.html">Schema</a> — Configure structured data for better search appearance</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="/docs/social-cards/public-documentation.html">Social Cards</a> — Control how your content appears on social media</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="/docs/llms/public-documentation.html">LLMs</a> — Provide context for AI language models</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview" target="_blank" rel="noreferrer noopener">Google Sitemaps documentation</a> — External resource</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+  </div>
+  <!-- /wp:column -->
+</div>
+<!-- /wp:columns -->

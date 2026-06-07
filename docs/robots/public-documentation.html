@@ -1,0 +1,279 @@
+<!-- wp:columns {"align":"wide","style":{"spacing":{"padding":{"right":"0","left":"0"}}}} -->
+<div class="wp-block-columns alignwide" style="padding-right:0;padding-left:0">
+  <!-- wp:column {"width":"33.33%"} -->
+  <div class="wp-block-column" style="flex-basis:33.33%">
+    <!-- wp:group {"className":"is-sticky-scroll","style":{"position":{"type":"sticky","top":"0px"}},"layout":{"type":"default"}} -->
+    <div class="wp-block-group is-sticky-scroll">
+      <!-- wp:heading {"fontSize":"heading-4","anchor":"in-this-page"} -->
+      <h2 id="in-this-page" class="wp-block-heading has-heading-4-font-size">In this page</h2>
+      <!-- /wp:heading -->
+      <!-- wp:list {"fontSize":"medium"} -->
+      <ul class="wp-block-list has-medium-font-size">
+        <!-- wp:list-item -->
+        <li><a href="#overview">Overview</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#before-you-start">Before you start</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#edit-robots-txt">Edit your robots.txt</a>
+          <!-- wp:list -->
+          <ul class="wp-block-list">
+            <!-- wp:list-item -->
+            <li><a href="#reset-to-defaults">Reset to defaults</a></li>
+            <!-- /wp:list-item -->
+          </ul>
+          <!-- /wp:list -->
+        </li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#robots-meta">How robots meta works</a>
+          <!-- wp:list -->
+          <ul class="wp-block-list">
+            <!-- wp:list-item -->
+            <li><a href="#noindex-a-post">Noindex a specific post</a></li>
+            <!-- /wp:list-item -->
+          </ul>
+          <!-- /wp:list -->
+        </li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#permissions">Permissions</a></li>
+        <!-- /wp:list-item -->
+        <!-- wp:list-item -->
+        <li><a href="#next-steps">Next steps</a></li>
+        <!-- /wp:list-item -->
+      </ul>
+      <!-- /wp:list -->
+      <!-- wp:separator -->
+      <hr class="wp-block-separator has-alpha-channel-opacity" />
+      <!-- /wp:separator -->
+    </div>
+    <!-- /wp:group -->
+  </div>
+  <!-- /wp:column -->
+  <!-- wp:column {"width":"66.66%"} -->
+  <div class="wp-block-column" style="flex-basis:66.66%">
+    <!-- wp:heading {"anchor":"overview"} -->
+    <h2 id="overview" class="wp-block-heading">Overview</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">The Robots feature gives you two layers of crawl control:</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li><strong>Robots.txt</strong> — Define which crawlers (search engines, AI answer engines, AI trainers) can access which parts of your site.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><strong>Robots meta tag</strong> — Control per-page indexing directives like <code>noindex</code>.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Your site ships with sensible defaults for both. The default robots.txt allows all major search engines, AI answer services (ChatGPT, Perplexity, Claude), and AI model trainers while blocking access to <code>wp-admin</code> (except <code>admin-ajax.php</code>).</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"before-you-start"} -->
+    <h2 id="before-you-start" class="wp-block-heading">Before you start</h2>
+    <!-- /wp:heading -->
+    <!-- wp:heading {"level":3,"anchor":"prerequisites"} -->
+    <h3 id="prerequisites" class="wp-block-heading">Prerequisites</h3>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list"} -->
+    <ul class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Gregius Optimizer plugin installed and activated</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Settings → Reading → "Discourage search engines from indexing this site" should be unchecked (otherwise your custom robots.txt will not apply)</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"edit-robots-txt"} -->
+    <h2 id="edit-robots-txt" class="wp-block-heading">Edit your robots.txt</h2>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open any post or page in the Block Editor.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Locate the <strong>Robots</strong> panel in the right sidebar.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Settings</strong> to open the editor modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>The modal shows your current robots.txt content in a text area. The site's robots.txt URL appears as a clickable link at the top.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Edit the content as needed. The text area grows automatically as you add lines.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Update</strong> to save.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:heading {"level":3,"anchor":"example-restrict-ai-crawlers"} -->
+    <h3 id="example-restrict-ai-crawlers" class="wp-block-heading">Example — Restrict AI crawlers</h3>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">If you want to block AI model trainers while keeping search engines and AI answer engines:</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:code -->
+    <pre class="wp-block-code"><code>User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Cohere-ai
+Disallow: /</code></pre>
+    <!-- /wp:code -->
+    <!-- wp:heading {"level":3,"anchor":"reset-to-defaults"} -->
+    <h3 id="reset-to-defaults" class="wp-block-heading">Reset to defaults</h3>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the <strong>Robots</strong> modal.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Click <strong>Reset to defaults</strong>.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>The button is disabled when no custom override exists.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Resetting restores the built-in directives that allow all major crawlers.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"robots-meta"} -->
+    <h2 id="robots-meta" class="wp-block-heading">How robots meta works</h2>
+    <!-- /wp:heading -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Every page on your site automatically gets a <code>&lt;meta name="robots"&gt;</code> tag. The directives depend on the page type:</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:table {"hasFixedLayout":false} -->
+    <figure class="wp-block-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Page type</th>
+            <th>Directive</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Standard pages and posts</td>
+            <td><code>index, follow</code></td>
+          </tr>
+          <tr>
+            <td>Search results</td>
+            <td><code>noindex, follow</code></td>
+          </tr>
+          <tr>
+            <td>404 pages</td>
+            <td><code>noindex, follow</code></td>
+          </tr>
+          <tr>
+            <td>Posts hidden from search (via the Sitemap panel)</td>
+            <td><code>noindex, follow</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </figure>
+    <!-- /wp:table -->
+    <!-- wp:heading {"level":3,"anchor":"noindex-a-post"} -->
+    <h3 id="noindex-a-post" class="wp-block-heading">How to noindex a specific post</h3>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list","ordered":true} -->
+    <ol class="wp-block-list">
+      <!-- wp:list-item -->
+      <li>Open the post in the Block Editor.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>In the <strong>Sitemap</strong> panel, toggle <strong>Hide page from search engines</strong> to on.</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li>Update or publish the post.</li>
+      <!-- /wp:list-item -->
+    </ol>
+    <!-- /wp:list -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">The post will receive a <code>noindex, follow</code> directive and will be removed from the XML sitemap.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"permissions"} -->
+    <h2 id="permissions" class="wp-block-heading">Permissions</h2>
+    <!-- /wp:heading -->
+    <!-- wp:table {"hasFixedLayout":false} -->
+    <figure class="wp-block-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Required capability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>View robots.txt settings</td>
+            <td><code>manage_options</code></td>
+          </tr>
+          <tr>
+            <td>Update robots.txt content</td>
+            <td><code>manage_options</code></td>
+          </tr>
+          <tr>
+            <td>Hide a post from search engines</td>
+            <td><code>edit_post</code> (on that post)</td>
+          </tr>
+        </tbody>
+      </table>
+    </figure>
+    <!-- /wp:table -->
+    <!-- wp:paragraph {"className":"wp-block-paragraph"} -->
+    <p class="wp-block-paragraph">Only site administrators can change robots.txt content. Content editors can noindex their own posts.</p>
+    <!-- /wp:paragraph -->
+    <!-- wp:separator -->
+    <hr class="wp-block-separator has-alpha-channel-opacity" />
+    <!-- /wp:separator -->
+    <!-- wp:heading {"anchor":"next-steps"} -->
+    <h2 id="next-steps" class="wp-block-heading">Next steps</h2>
+    <!-- /wp:heading -->
+    <!-- wp:list {"className":"wp-block-list"} -->
+    <ul class="wp-block-list">
+      <!-- wp:list-item -->
+      <li><a href="/docs/sitemap/public-documentation.html">Sitemap</a> — Fine-tune which content types appear in your XML sitemap</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="/docs/schema/public-documentation.html">Schema</a> — Add structured data for rich search results</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="/docs/social-cards/public-documentation.html">Social Cards</a> — Control how your pages appear on social media</li>
+      <!-- /wp:list-item -->
+      <!-- wp:list-item -->
+      <li><a href="https://developers.google.com/search/docs/crawling-indexing/robots/intro" target="_blank" rel="noreferrer noopener">Google robots.txt documentation</a> — External resource</li>
+      <!-- /wp:list-item -->
+    </ul>
+    <!-- /wp:list -->
+  </div>
+  <!-- /wp:column -->
+</div>
+<!-- /wp:columns -->
