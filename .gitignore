@@ -26,5 +26,8 @@ node_modules/
 # Output of `wp-scripts plugin-zip`
 *.zip
 
-# dotenv environment variables file
-.env
+# Generated Gutenberg markup for gregius.com documentation site
+docs/*/public-documentation.html
+
+# Internal AI assistant instructions
+.github/

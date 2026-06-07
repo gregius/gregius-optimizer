@@ -58,11 +58,11 @@ Auto-generate `/llms.txt` from site content for AI agent discoverability. Custom
 
 ## Documentation
 
-- **Sitemap**: [SRS](./docs/sitemap/srs.md) · [Architecture](./docs/sitemap/architecture.md) · [Developer Docs](./docs/sitemap/developer-documentation.md) · [Public Docs](./docs/sitemap/public-documentation.md)
-- **Robots**: [SRS](./docs/robots/srs.md) · [Architecture](./docs/robots/architecture.md) · [Developer Docs](./docs/robots/developer-documentation.md) · [Public Docs](./docs/robots/public-documentation.md)
-- **Schema**: [SRS](./docs/schema/srs.md) · [Architecture](./docs/schema/architecture.md) · [Developer Docs](./docs/schema/developer-documentation.md) · [Public Docs](./docs/schema/public-documentation.md)
-- **Social Cards**: [SRS](./docs/social-cards/srs.md) · [Architecture](./docs/social-cards/architecture.md) · [Developer Docs](./docs/social-cards/developer-documentation.md) · [Public Docs](./docs/social-cards/public-documentation.md)
-- **LLMs**: [SRS](./docs/llms/srs.md) · [Architecture](./docs/llms/architecture.md) · [Developer Docs](./docs/llms/developer-documentation.md) · [Public Docs](./docs/llms/public-documentation.md)
+- **Sitemap**: [SRS](./docs/sitemap/srs.md) · [Architecture](./docs/sitemap/architecture.md) · [Developer Docs](./docs/sitemap/developer-documentation.md)
+- **Robots**: [SRS](./docs/robots/srs.md) · [Architecture](./docs/robots/architecture.md) · [Developer Docs](./docs/robots/developer-documentation.md)
+- **Schema**: [SRS](./docs/schema/srs.md) · [Architecture](./docs/schema/architecture.md) · [Developer Docs](./docs/schema/developer-documentation.md)
+- **Social Cards**: [SRS](./docs/social-cards/srs.md) · [Architecture](./docs/social-cards/architecture.md) · [Developer Docs](./docs/social-cards/developer-documentation.md)
+- **LLMs**: [SRS](./docs/llms/srs.md) · [Architecture](./docs/llms/architecture.md) · [Developer Docs](./docs/llms/developer-documentation.md)
 
 ## Development
 
