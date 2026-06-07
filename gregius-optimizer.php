@@ -38,7 +38,7 @@ register_uninstall_hook( __FILE__, array( 'GG_Optimizer_DB', 'drop_tables' ) );
 
 // Custom meta field helper.
 if ( ! class_exists( 'GG_Optimizer_Custom_Meta_Field' ) ) {
-	require_once __DIR__ . '/includes/class-custom-meta-field.php';
+	require_once __DIR__ . '/includes/class-gg-optimizer-custom-meta-field.php';
 }
 
 // Search-facing metadata.
