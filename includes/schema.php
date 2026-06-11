@@ -392,6 +392,8 @@ if ( ! function_exists( 'gg_optimizer_schema_build_website_graph' ) ) {
 			$schema['description'] = $description;
 		}
 
+		$schema['inLanguage'] = get_bloginfo( 'language' );
+
 		$schema['potentialAction'] = array(
 			'@type'  => 'SearchAction',
 			'target' => home_url( '/?s={search_term_string}' ),
@@ -579,6 +581,8 @@ if ( ! function_exists( 'gg_optimizer_schema_build_graph' ) ) {
 			$schema['description'] = $description;
 		}
 
+		$schema['inLanguage'] = get_bloginfo( 'language' );
+
 		if ( ! empty( $canonical ) ) {
 			$schema['mainEntityOfPage'] = array(
 				'@type' => 'WebPage',
@@ -687,9 +691,9 @@ if ( ! function_exists( 'gg_optimizer_schema_get_breadcrumb_items' ) ) {
 			$current_item['name'] = $current_title;
 		}
 
-		$current_permalink = get_permalink( $post );
-		if ( ! empty( $current_permalink ) ) {
-			$current_item['item'] = $current_permalink;
+		$front_page_id = (int) get_option( 'page_on_front' );
+		if ( $front_page_id > 0 && $post->ID === $front_page_id ) {
+			return $items;
 		}
 
 		if ( ! empty( $current_item['name'] ) ) {
@@ -708,18 +712,20 @@ if ( ! function_exists( 'gg_optimizer_schema_build_breadcrumb_graph' ) ) {
 	 * @return array
 	 */
 	function gg_optimizer_schema_build_breadcrumb_graph( $post ) {
-		if ( ! is_singular() || is_front_page() || is_home() ) {
+		if ( ! is_singular() || is_home() ) {
 			return array();
 		}
 
 		$items = gg_optimizer_schema_get_breadcrumb_items( $post );
-		if ( count( $items ) < 2 ) {
+		if ( count( $items ) < 1 ) {
 			return array();
 		}
 
-		$list_items = array();
+		$list_items    = array();
+		$total_items   = count( $items );
+		$items_indexed = array_values( $items );
 
-		foreach ( $items as $item ) {
+		foreach ( $items_indexed as $index => $item ) {
 			$name = isset( $item['name'] ) ? trim( (string) $item['name'] ) : '';
 			if ( '' === $name ) {
 				continue;
@@ -731,14 +737,15 @@ if ( ! function_exists( 'gg_optimizer_schema_build_breadcrumb_graph' ) ) {
 				'name'     => $name,
 			);
 
-			if ( ! empty( $item['item'] ) ) {
+			$is_last = ( $index === $total_items - 1 );
+			if ( ! empty( $item['item'] ) && ! $is_last ) {
 				$list_item['item'] = $item['item'];
 			}
 
 			$list_items[] = $list_item;
 		}
 
-		if ( count( $list_items ) < 2 ) {
+		if ( count( $list_items ) < 1 ) {
 			return array();
 		}
 
@@ -836,10 +843,8 @@ if ( ! function_exists( 'gg_optimizer_schema_build_json_ld' ) ) {
 			$sameas = array();
 			$logo   = '';
 
-			if ( $is_single ) {
-				$sameas = gg_optimizer_schema_extract_sameas_urls( $post );
-				$logo   = gg_optimizer_schema_extract_logo_url( $post );
-			}
+			$sameas = gg_optimizer_schema_extract_sameas_urls( $post instanceof WP_Post ? $post : null );
+			$logo   = gg_optimizer_schema_extract_logo_url( $post instanceof WP_Post ? $post : null );
 
 			$organization = array(
 				'@type' => apply_filters( 'gg_optimizer_schema_organization_type', 'Organization' ),
@@ -861,7 +866,15 @@ if ( ! function_exists( 'gg_optimizer_schema_build_json_ld' ) ) {
 			}
 
 			if ( ! empty( $logo ) ) {
-				$organization['logo'] = $logo;
+				$logo_image_id = $home_base_id . '#logo';
+				$organization['logo'] = array( '@id' => $logo_image_id );
+				$graph[] = array(
+					'@type'      => 'ImageObject',
+					'@id'        => $logo_image_id,
+					'url'        => $logo,
+					'contentUrl' => $logo,
+					'caption'    => $name,
+				);
 			}
 
 			if ( ! empty( $sameas ) ) {
@@ -919,6 +932,19 @@ if ( ! function_exists( 'gg_optimizer_schema_build_json_ld' ) ) {
 
 					if ( ! empty( $breadcrumb ) ) {
 						$article['breadcrumb'] = array( '@id' => $breadcrumb_id );
+					}
+
+					if ( ! empty( $article['image'] ) && is_string( $article['image'] ) ) {
+						$image_url                  = $article['image'];
+						$image_id                   = $page_base_id . '#primaryimage';
+						$article['image']            = array( '@id' => $image_id );
+						$article['primaryImageOfPage'] = array( '@id' => $image_id );
+						$graph[] = array(
+							'@type'      => 'ImageObject',
+							'@id'        => $image_id,
+							'url'        => $image_url,
+							'contentUrl' => $image_url,
+						);
 					}
 
 					$graph[] = $article;
