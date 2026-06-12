@@ -89,4 +89,22 @@ Visit the contributor profiles on WordPress.org:
 * Open Graph and Twitter Card meta tags with per-platform fallback chains
 * JSON-LD structured data: Organization, WebSite, BreadcrumbList, article/page
 * 11 custom meta fields with revision support
-* REST API endpoints for all settings and previews
+ * REST API endpoints for all settings and previews
+
+== Repository ==
+
+Source code and build instructions:
+https://github.com/gregius/gregius-optimizer
+
+This plugin uses npm and @wordpress/scripts for asset compilation. Source JavaScript lives in `assets/src/` and compiles to `assets/build/`. All PHP source is human-readable.
+
+== External Services ==
+
+Gregius Optimizer does not send data to any external service. The following URLs are referenced as documentation or standards only:
+
+* **Google Robots** — https://developers.google.com/search/docs/crawling-indexing/robots/intro — robots.txt and meta robots documentation
+* **Schema.org** — https://schema.org/ — structured data vocabulary reference
+* **Google Structured Data Gallery** — https://developers.google.com/search/docs/appearance/structured-data/search-gallery — structured data feature reference
+* **Open Graph Protocol** — https://ogp.me/ — Open Graph meta tag specification
+* **Twitter/X Cards** — https://docs.x.com/overview — Twitter Card meta tag documentation
+* **llms.txt** — https://llmstxt.org/ — llms.txt proposal specification

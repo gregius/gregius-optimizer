@@ -361,7 +361,7 @@ if ( ! function_exists( 'gg_optimizer_schema_output_organization_json_ld' ) ) {
 		}
 
 		echo '<script type="application/ld+json">' . "\n";
-		echo wp_json_encode( $org, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . "\n";
+		echo wp_json_encode( $org, JSON_HEX_TAG | JSON_UNESCAPED_UNICODE ) . "\n";
 		echo '</script>' . "\n";
 	}
 }
@@ -424,7 +424,7 @@ if ( ! function_exists( 'gg_optimizer_schema_output_website_json_ld' ) ) {
 		}
 
 		echo '<script type="application/ld+json">' . "\n";
-		echo wp_json_encode( $schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . "\n";
+		echo wp_json_encode( $schema, JSON_HEX_TAG | JSON_UNESCAPED_UNICODE ) . "\n";
 		echo '</script>' . "\n";
 	}
 
@@ -787,7 +787,7 @@ if ( ! function_exists( 'gg_optimizer_schema_output_breadcrumb_json_ld' ) ) {
 		}
 
 		echo '<script type="application/ld+json">' . "\n";
-		echo wp_json_encode( $breadcrumb_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . "\n";
+		echo wp_json_encode( $breadcrumb_schema, JSON_HEX_TAG | JSON_UNESCAPED_UNICODE ) . "\n";
 		echo '</script>' . "\n";
 	}
 }
@@ -1007,7 +1007,7 @@ if ( ! function_exists( 'gg_optimizer_schema_output_json_ld' ) ) {
 		}
 
 		echo '<script type="application/ld+json">' . "\n";
-		echo wp_json_encode( $payload, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE ) . "\n";
+		echo wp_json_encode( $payload, JSON_HEX_TAG | JSON_UNESCAPED_UNICODE ) . "\n";
 		echo '</script>' . "\n";
 	}
 }

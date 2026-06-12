@@ -112,7 +112,7 @@ if ( ! function_exists( 'gg_optimizer_get_llms_context' ) ) {
 			}
 
 			$summary = gg_optimizer_llms_normalize_text( $summary );
-			$lines[] = sprintf( '- [Home](%1$s): %2$s', esc_url_raw( $site_url ), $summary );
+			$lines[] = sprintf( '- [Home](%1$s): %2$s', esc_url( $site_url ), $summary );
 			$lines[] = '';
 		}
 
@@ -174,7 +174,7 @@ if ( ! function_exists( 'gg_optimizer_get_llms_key_documents' ) ) {
 				}
 
 				$title = gg_optimizer_llms_normalize_text( get_the_title() );
-				$url   = esc_url_raw( get_permalink() );
+				$url   = esc_url( get_permalink() );
 
 				// Description: unsaved > stored custom > auto-gen from excerpt > auto-gen from content.
 				if ( isset( $unsaved_descriptions[ $post_id ] ) && '' !== $unsaved_descriptions[ $post_id ] ) {
@@ -227,7 +227,7 @@ if ( ! function_exists( 'gg_optimizer_output_llms_txt' ) ) {
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo gg_optimizer_get_llms_key_documents( $unsaved_toggles, $unsaved_descriptions );
-		echo "\nSitemap: " . esc_url_raw( home_url( '/wp-sitemap.xml' ) ) . "\n";
+		echo "\nSitemap: " . esc_url( home_url( '/wp-sitemap.xml' ) ) . "\n";
 	}
 }
 
