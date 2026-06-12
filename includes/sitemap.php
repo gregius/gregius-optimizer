@@ -389,20 +389,6 @@ if ( ! function_exists( 'gg_optimizer_sitemap_enabled_gate' ) ) {
 }
 add_filter( 'wp_sitemaps_enabled', 'gg_optimizer_sitemap_enabled_gate' );
 
-/**
- * Site-specific configuration: Exclude all taxonomies from sitemap.
- *
- * Remove or modify this hook when site has sufficient taxonomy content.
- */
-add_filter(
-	'gg_optimizer_sitemap_disabled_taxonomies',
-	function () {
-		return array(
-			'category',
-			'post_tag',
-		);
-	}
-);
 
 /**
  * REST endpoint: GET / POST sitemap settings.

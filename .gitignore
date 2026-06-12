@@ -31,3 +31,4 @@ docs/*/public-documentation.html
 
 # Internal AI assistant instructions
 .github/
+build/gregius-optimizer.zip
