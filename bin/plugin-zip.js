@@ -6,7 +6,7 @@ const archiver = require( 'archiver' );
 
 const ROOT_DIR = path.resolve( __dirname, '..' );
 const PLUGIN_SLUG = 'gregius-optimizer';
-const OUTPUT_FILE = path.join( ROOT_DIR, 'build', `${ PLUGIN_SLUG }.zip` );
+const OUTPUT_FILE = path.join( ROOT_DIR, 'build', 'zip', `${ PLUGIN_SLUG }.zip` );
 
 const EXCLUDE_PATTERNS = [
 	'.git',
@@ -68,7 +68,7 @@ function shouldExclude( filePath ) {
 async function createZip() {
 	console.log( `Building ${ PLUGIN_SLUG } plugin zip...\n` );
 
-	const buildDir = path.join( ROOT_DIR, 'build' );
+	const buildDir = path.join( ROOT_DIR, 'build', 'zip' );
 	if ( ! fs.existsSync( buildDir ) ) {
 		fs.mkdirSync( buildDir, { recursive: true } );
 	}
