@@ -76,6 +76,13 @@ Visit the contributor profiles on WordPress.org:
 * https://profiles.wordpress.org/hectorjarquin/
 * https://profiles.wordpress.org/gregiusteam/
 
+== Screenshots ==
+1. Sitemap settings via the editor
+2. Robots settings via the editor
+3. Schema settings via the editor
+4. Social cards settings via the editor
+5. LLMs settings via the editor
+
 == Changelog ==
 
 = 1.0.0 =
