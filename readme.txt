@@ -3,7 +3,7 @@ Contributors: hectorjarquin, gregiusteam
 Tags: seo, aeo, smo, llmo, optimization
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 Requires PHP: 8.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -84,6 +84,10 @@ Visit the contributor profiles on WordPress.org:
 5. LLMs settings via the editor
 
 == Changelog ==
+
+= 1.1.1 =
+* Fixed: Schema validation warnings for primaryImageOfPage and breadcrumb on BlogPosting
+* Improved: JSON-LD structure now uses proper WebPage wrapper + content entity pair
 
 = 1.1.0 =
 * Feature toggles — enable/disable each feature from its settings modal

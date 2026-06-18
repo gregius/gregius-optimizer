@@ -54,7 +54,7 @@ Builds the BreadcrumbList graph for a given post. Returns an array with `@type: 
 gg_optimizer_schema_build_graph( WP_Post $post ) : array
 ```
 
-Builds the main article/page graph. Resolves the subtype via `gg_optimizer_schema_get_resolved_subtype()`. Includes `headline`, `description`, `image`, `datePublished`, `dateModified`, `author`, `publisher`.
+Builds the content entity for singular content (BlogPosting, Article, etc.). The WebPage wrapper node is constructed by `gg_optimizer_schema_build_json_ld()`. Resolves the subtype via `gg_optimizer_schema_get_resolved_subtype()`. Includes `headline`, `description`, `image`, `datePublished`, `dateModified`, `author`, `publisher`.
 
 #### 1.6 `gg_optimizer_schema_build_json_ld`
 
@@ -62,7 +62,7 @@ Builds the main article/page graph. Resolves the subtype via `gg_optimizer_schem
 gg_optimizer_schema_build_json_ld( WP_Post $post = null ) : array
 ```
 
-Builds the complete JSON-LD array for a post, combining Organization, WebSite, article/page, and BreadcrumbList into a `@graph` structure. Used by the REST preview endpoint.
+Builds the complete JSON-LD array for a post, combining Organization, WebSite, WebPage wrapper, content entity, and BreadcrumbList into a `@graph` structure. For singular content, constructs a two-node pattern: a `WebPage` wrapper (carrying `primaryImageOfPage`, `breadcrumb`, `isPartOf`, `mainEntity`) and a content entity (carrying `headline`, `author`, `datePublished`, `image`, `mainEntityOfPage`). When the resolved schema subtype is `WebPage`, a single merged node is emitted. Used by the REST preview endpoint.
 
 #### 1.7 Helper Functions
 

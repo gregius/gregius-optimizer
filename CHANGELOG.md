@@ -5,6 +5,12 @@ All notable changes to Gregius Optimizer will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-06-18
+
+### Fixed
+- Schema validation warnings: `primaryImageOfPage` and `breadcrumb` moved to WebPage wrapper node
+- Structural fix: content entity + WebPage pair connected via mainEntity/mainEntityOfPage instead of single conflated node
+
 ## [1.1.0] - 2026-06-17
 
 ### Added

@@ -8,9 +8,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'gg_optimizer_schema_output_website', static function ( $enabled ) {
-	return GG_Optimizer_Feature_Toggle::is_enabled( 'schema' ) ? $enabled : false;
-}, 1 );
+add_filter(
+	'gg_optimizer_schema_output_website',
+	static function ( $enabled ) {
+		return GG_Optimizer_Feature_Toggle::is_enabled( 'schema' ) ? $enabled : false;
+	},
+	1
+);
 
 if ( ! function_exists( 'gg_optimizer_schema_get_organization_content_sources' ) ) {
 	/**
@@ -556,7 +560,10 @@ if ( ! function_exists( 'gg_optimizer_schema_get_image' ) ) {
 
 if ( ! function_exists( 'gg_optimizer_schema_build_graph' ) ) {
 	/**
-	 * Build schema.org graph for singular content.
+	 * Build content entity for singular content schema graph.
+	 *
+	 * Returns properties for the content entity (BlogPosting, Article, etc.).
+	 * The WebPage wrapper is added by gg_optimizer_schema_build_json_ld().
 	 *
 	 * @param WP_Post $post Post object.
 	 * @return array
@@ -585,12 +592,9 @@ if ( ! function_exists( 'gg_optimizer_schema_build_graph' ) ) {
 			$schema['description'] = $description;
 		}
 
-		$schema['inLanguage'] = get_bloginfo( 'language' );
-
 		if ( ! empty( $canonical ) ) {
 			$schema['mainEntityOfPage'] = array(
-				'@type' => 'WebPage',
-				'@id'   => $canonical,
+				'@id' => untrailingslashit( $canonical ) . '#webpage',
 			);
 		}
 
@@ -805,8 +809,9 @@ if ( ! function_exists( 'gg_optimizer_schema_build_json_ld' ) ) {
 	 *
 	 * @filter gg_optimizer_schema_output_website      - Set to false to disable WebSite schema output. Default true.
 	 * @filter gg_optimizer_schema_output_organization - Set to false to disable Organization schema output. Default true.
-	 * @filter gg_optimizer_schema_output_article - Set to false to disable BlogPosting/WebPage schema output. Default true.
-	 * @filter gg_optimizer_schema_output_faq     - Set to false to disable FAQPage schema output. Default true.
+	 * @filter gg_optimizer_schema_output_article  - Set to false to disable content entity schema output. Default true.
+	 * @filter gg_optimizer_schema_output_webpage  - Set to false to disable WebPage wrapper node. Default true.
+	 * @filter gg_optimizer_schema_output_faq      - Set to false to disable FAQPage schema output. Default true.
 	 * @filter gg_optimizer_schema_output_breadcrumb - Set to false to disable BreadcrumbList schema output. Default true.
 	 *
 	 * @param WP_Post|null $post Optional post object.
@@ -870,9 +875,9 @@ if ( ! function_exists( 'gg_optimizer_schema_build_json_ld' ) ) {
 			}
 
 			if ( ! empty( $logo ) ) {
-				$logo_image_id = $home_base_id . '#logo';
+				$logo_image_id        = $home_base_id . '#logo';
 				$organization['logo'] = array( '@id' => $logo_image_id );
-				$graph[] = array(
+				$graph[]              = array(
 					'@type'      => 'ImageObject',
 					'@id'        => $logo_image_id,
 					'url'        => $logo,
@@ -903,12 +908,17 @@ if ( ! function_exists( 'gg_optimizer_schema_build_json_ld' ) ) {
 		}
 
 		if ( $is_single ) {
-			$page_url      = (string) get_permalink( $post );
-			$page_base_id  = untrailingslashit( $page_url );
-			$page_id       = $page_base_id . '#webpage';
-			$breadcrumb_id = $page_base_id . '#breadcrumb';
-			$faq_id        = $page_base_id . '#faq';
-			$breadcrumb    = array();
+			$page_url           = (string) get_permalink( $post );
+			$page_base_id       = untrailingslashit( $page_url );
+			$page_id            = $page_base_id . '#webpage';
+			$breadcrumb_id      = $page_base_id . '#breadcrumb';
+			$faq_id             = $page_base_id . '#faq';
+			$content_id         = $page_base_id . '#content';
+			$resolved_subtype   = function_exists( 'gg_optimizer_schema_get_resolved_subtype' )
+				? gg_optimizer_schema_get_resolved_subtype( $post )
+				: '';
+			$is_webpage_subtype = ( 'WebPage' === $resolved_subtype );
+			$breadcrumb         = array();
 
 			if ( $output_breadcrumb ) {
 				$breadcrumb = gg_optimizer_schema_build_breadcrumb_graph( $post );
@@ -922,27 +932,66 @@ if ( ! function_exists( 'gg_optimizer_schema_build_json_ld' ) ) {
 			// Usage: add_filter( 'gg_optimizer_schema_output_article', '__return_false' );
 			if ( apply_filters( 'gg_optimizer_schema_output_article', true ) ) {
 				$article = gg_optimizer_schema_build_graph( $post );
+
 				if ( ! empty( $article ) ) {
 					unset( $article['@context'] );
-					$article['@id'] = $page_id;
 
-					if ( isset( $article['publisher'] ) && is_array( $article['publisher'] ) && $output_organization ) {
-						$article['publisher'] = array( '@id' => $org_id );
+					$webpage = array(
+						'@type'      => 'WebPage',
+						'@id'        => $page_id,
+						'url'        => $page_url,
+						'inLanguage' => get_bloginfo( 'language' ),
+					);
+
+					$date_modified = get_post_modified_time( 'c', true, $post );
+					if ( ! empty( $date_modified ) ) {
+						$webpage['dateModified'] = $date_modified;
+					}
+
+					$description = gg_optimizer_schema_get_description( $post );
+					if ( '' !== $description ) {
+						$webpage['description'] = $description;
 					}
 
 					if ( $output_website ) {
-						$article['isPartOf'] = array( '@id' => $site_id );
+						$webpage['isPartOf'] = array( '@id' => $site_id );
 					}
 
 					if ( ! empty( $breadcrumb ) ) {
-						$article['breadcrumb'] = array( '@id' => $breadcrumb_id );
+						$webpage['breadcrumb'] = array( '@id' => $breadcrumb_id );
 					}
 
-					if ( ! empty( $article['image'] ) && is_string( $article['image'] ) ) {
-						$image_url                  = $article['image'];
-						$image_id                   = $page_base_id . '#primaryimage';
-						$article['image']            = array( '@id' => $image_id );
-						$article['primaryImageOfPage'] = array( '@id' => $image_id );
+					$has_image = ! empty( $article['image'] ) && is_string( $article['image'] );
+					$image_url = $has_image ? $article['image'] : '';
+					$image_id  = $has_image ? $page_base_id . '#primaryimage' : '';
+
+					if ( $has_image ) {
+						$webpage['primaryImageOfPage'] = array( '@id' => $image_id );
+					}
+
+					if ( $is_webpage_subtype ) {
+						unset( $article['mainEntityOfPage'] );
+
+						foreach ( $article as $key => $value ) {
+							$webpage[ $key ] = $value;
+						}
+					} else {
+						$article['@id'] = $content_id;
+
+						if ( isset( $article['publisher'] ) && is_array( $article['publisher'] ) && $output_organization ) {
+							$article['publisher'] = array( '@id' => $org_id );
+						}
+
+						$webpage['mainEntity'] = array( '@id' => $content_id );
+
+						if ( $has_image ) {
+							$article['image'] = array( '@id' => $image_id );
+						}
+
+						$graph[] = $article;
+					}
+
+					if ( $has_image ) {
 						$graph[] = array(
 							'@type'      => 'ImageObject',
 							'@id'        => $image_id,
@@ -951,7 +1000,7 @@ if ( ! function_exists( 'gg_optimizer_schema_build_json_ld' ) ) {
 						);
 					}
 
-					$graph[] = $article;
+					$graph[] = $webpage;
 				}
 			}
 

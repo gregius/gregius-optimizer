@@ -64,9 +64,9 @@ The schema feature generates structured data (JSON-LD) for Organization, WebSite
 │  │ - gg_optimizer_schema_      │  │ - extract_logo_url()    ││
 │  │   output_website_json_ld()  │  │ - get_description()     ││
 │  │ - gg_optimizer_schema_      │  │ - get_image()           ││
-│  │   output_breadcrumb_json_ld │  │ - build_graph()         ││
-│  │ - gg_optimizer_schema_      │  │ - get_breadcrumb_items()││
-│  │   output_json_ld() (master) │  │ - build_breadcrumb_     ││
+│  │   output_breadcrumb_json_ld │  │ - build_graph()         ││ <-- Content entity only
+│  │ - gg_optimizer_schema_      │  │ - build_json_ld()       ││ <-- WebPage wrapper + content entity pair
+│  │   output_json_ld() (master) │  │ - get_breadcrumb_items()││
 │  └─────────────────────────────┘  │   graph()               ││
 │                                    └─────────────────────────┘│
 └───────────────────────────────────────────────────────────────┘
@@ -161,7 +161,7 @@ The schema feature generates structured data (JSON-LD) for Organization, WebSite
 |---|---|
 | ID | AD-02 |
 | Linked Requirements | FR-05 |
-| Decision | When multiple graph nodes (Organization + WebSite + Article + BreadcrumbList) are present, wrap them in a `@graph` array. |
+| Decision | When multiple graph nodes (Organization + WebSite + WebPage wrapper + content entity + BreadcrumbList) are present, wrap them in a `@graph` array. Nodes are linked via `mainEntity` / `mainEntityOfPage` references. |
 | Alternatives | Separate `<script>` tags per node |
 | Rationale | Single JSON-LD block is cleaner and aligns with Google's preferred structure. |
 | Consequences | All output is consolidated into one `script[type="application/ld+json"]` block. |
