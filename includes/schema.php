@@ -8,6 +8,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+add_filter( 'gg_optimizer_schema_output_website', static function ( $enabled ) {
+	return GG_Optimizer_Feature_Toggle::is_enabled( 'schema' ) ? $enabled : false;
+}, 1 );
+
 if ( ! function_exists( 'gg_optimizer_schema_get_organization_content_sources' ) ) {
 	/**
 	 * Get content sources used for Organization schema extraction.
@@ -1000,6 +1004,10 @@ if ( ! function_exists( 'gg_optimizer_schema_output_json_ld' ) ) {
 	 * @return void
 	 */
 	function gg_optimizer_schema_output_json_ld() {
+		if ( ! GG_Optimizer_Feature_Toggle::is_enabled( 'schema' ) ) {
+			return;
+		}
+
 		$payload = gg_optimizer_schema_build_json_ld();
 
 		if ( empty( $payload['@graph'] ) ) {

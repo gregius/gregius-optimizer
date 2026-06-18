@@ -3,7 +3,7 @@ Contributors: hectorjarquin, gregiusteam
 Tags: seo, aeo, smo, llmo, optimization
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 Requires PHP: 8.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -55,7 +55,7 @@ All public post types that support `custom-fields`. Meta fields, schema subtype,
 
 = Can I disable specific output groups? =
 
-Yes. Each output group (meta description, canonical, Open Graph, Twitter Cards, LLMs) has a corresponding `gg_optimizer_meta_output_*` or `gg_optimizer_llms_enabled` filter.
+Yes. Each output group (meta description, canonical, Open Graph, Twitter Cards, Schema, LLMs, Sitemap, Robots) can be toggled on/off from their respective settings modal in the block editor. Each modal has an on/off switch at the top.
 
 = Does the plugin add a database table? =
 
@@ -84,6 +84,16 @@ Visit the contributor profiles on WordPress.org:
 5. LLMs settings via the editor
 
 == Changelog ==
+
+= 1.1.0 =
+* Feature toggles — enable/disable each feature from its settings modal
+* Added: robots.txt support for multisite subsites
+* Fixed: partial toggle saves no longer reset other features
+* Fixed: Google snippet title now properly feeds the <title> tag
+* Moved: "Hide from search" from Sitemap to Robots modal
+* Improved: Google search snippet fields used as fallbacks for meta tags
+* Improved: HTML output comments now contextual, per-section
+* Security: input sanitization and escaping throughout
 
 = 1.0.0 =
 * Initial release

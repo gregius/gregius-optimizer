@@ -189,7 +189,7 @@ The Schema FAQ feature allows content editors to mark `core/accordion` blocks fo
 | Decision | Control FAQPage output via `apply_filters('gg_optimizer_schema_output_faq', true)` in `build_json_ld()`, gating the entire FAQ extraction + output path. |
 | Alternatives | JavaScript-side toggle on a post meta key, removing the `wp_head` action, or CSS/JS runtime removal |
 | Rationale | A PHP filter allows site-level or conditional disable without modifying editor content. Administrators can disable FAQ schema for specific post types, user roles, or environments without touching the accordion blocks themselves. |
-| Consequences | Requires a `remove_action` or filter callback for disablement. No UI in the admin for the filter — it is developer-only. |
+| Consequences | Requires a filter callback or the parent Schema feature toggle for disablement. No dedicated UI in the admin for this specific filter — the FAQPage output is also gated by the parent Schema modal's on/off toggle. |
 
 ---
 

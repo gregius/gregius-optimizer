@@ -101,7 +101,8 @@ The sitemap feature sits inside the `gregius-optimizer` plugin. It connects to:
 │  │                                                              │   │
 │  │  - PluginDocumentSettingPanel "Sitemap"                      │   │
 │  │  - Modal with post type / taxonomy / author toggles          │   │
-│  │  - Per-post "Hide from search engines" toggle                │   │
+│  │  - Per-post "Hide from search engines" toggle (moved to       │   │
+│  │    Robots panel as of v1.1.0)                                 │   │
 │  │  - apiFetch to /gg-optimizer/v1/sitemap-settings             │   │
 │  └──────────────────────────────────────────────────────────────┘   │
 │                                                                     │

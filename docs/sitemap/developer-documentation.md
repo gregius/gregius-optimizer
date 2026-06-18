@@ -285,6 +285,40 @@ When `true`, the post:
 
 ---
 
+### 5. Class Reference
+
+#### 5.1 GG_Optimizer_Feature_Toggle
+
+The `GG_Optimizer_Feature_Toggle` class provides a unified interface for enabling or disabling plugin features across all feature modals.
+
+**File:** `includes/class-gg-optimizer-feature-toggle.php`
+
+**Methods:**
+
+- `get_all(): array` — Returns an associative array of all feature names and their boolean states.
+- `is_enabled( string $name ): bool` — Returns whether a specific feature is enabled. Defaults to `false` if no value stored.
+- `set_all( array $toggles ): void` — Saves feature toggle states. Uses **merge behavior** — only keys present in the input array are updated, existing values for other keys are preserved.
+
+**REST API:**
+
+| Method | Route | Permission |
+|---|---|---|
+| GET | `/gg-optimizer/v1/feature-toggles` | `edit_posts` |
+| POST | `/gg-optimizer/v1/feature-toggles` | `manage_options` |
+
+**Usage:**
+```php
+// Check if sitemap feature is enabled
+if ( GG_Optimizer_Feature_Toggle::is_enabled( 'sitemap' ) ) {
+    // Enable sitemap output.
+}
+
+// Disable sitemap while preserving other feature states
+GG_Optimizer_Feature_Toggle::set_all( [ 'sitemap' => false ] );
+```
+
+---
+
 ## Integration Guide
 
 ### Installation
@@ -304,8 +338,16 @@ Custom post types registered via `register_post_type()` with `public => true` an
 ### Disabling the Entire Sitemap Feature
 
 ```php
-add_filter( 'gg_optimizer_sitemap_enabled', '__return_false' );
+// Preferred — use the feature toggle
+GG_Optimizer_Feature_Toggle::set_all( [ 'sitemap' => false ] );
+
+// Check state programmatically
+if ( ! GG_Optimizer_Feature_Toggle::is_enabled( 'sitemap' ) ) {
+    return; // Sitemap output suppressed.
+}
 ```
+
+When disabled via the feature toggle, all sitemap output is suppressed and the modal controls are dimmed. Settings are preserved in the database.
 
 ### Adding Custom Taxonomy Exclusions
 

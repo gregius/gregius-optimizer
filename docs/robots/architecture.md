@@ -43,7 +43,7 @@ The robots feature manages two outputs: the `robots.txt` file served at the site
 | Stakeholder | Concern | View Reference |
 |---|---|---|
 | Site Administrator | Control what crawlers can access | Context View |
-| Content Editor | Individual page visibility | N/A — controlled by sitemap feature's hide_from_search |
+| Content Editor | Individual page visibility | Controlled by the Robots panel's "Hide page from search engines" toggle (v1.1.0) |
 | Developer | Extend or override robot directives | Component View, ADRs |
 | SEO Specialist | Ensure correct crawl directives for search + AI bots | AD-02 |
 
@@ -55,9 +55,10 @@ The robots feature manages two outputs: the `robots.txt` file served at the site
 
 | External System | Direction | Protocol | Description |
 |---|---|---|---|
+| WordPress Core (`template_redirect`, priority 0) | ← intercepts | PHP action | Serves `/robots.txt` using `wp_basename()` for multisite-safe URL matching when core `is_robots()` returns false |
 | WordPress Core (`robots_txt`) | ← intercepts | PHP filter | Replaces robots.txt content when override exists or defaults defined |
 | WordPress Core (`wp_head`) | ← adds | PHP action | Outputs `<meta name="robots">` on every page |
-| WordPress REST API | ← responds → receives | HTTP JSON | `GET/POST /gg-optimizer/v1/robots-txt` |
+| WordPress REST API | ← responds → receives | HTTP JSON | `GET/POST /gg-optimizer/v1/robots-txt`, `GET/POST /gg-optimizer/v1/feature-toggles` |
 | GG_Optimizer_DB | → writes ← reads | PHP methods | Key `robots_txt_content` in shared settings table |
 | Post Meta (`_gg_optimizer_hide_from_search`) | ← reads | `get_post_meta` | Checks per-post noindex flag |
 

@@ -200,7 +200,7 @@ The Social Cards feature generates `<meta>` tags for Google Search snippets, Ope
 | Decision | Filter `pre_get_document_title` to substitute the Google-specific override when set, rather than only using the common meta title. |
 | Alternatives | Always use `_gg_optimizer_meta_title` for the `<title>` tag |
 | Rationale | The Google override is specifically for the search result title. Changing the document `<title>` to match ensures consistency between the browser/HTML title and the Google snippet. |
-| Consequences | Only triggers on singular, non-admin pages when `in_the_loop()`. |
+| Consequences | Only triggers on singular, non-admin pages. As of v1.1.0, the `in_the_loop()` guard was removed — `<title>` renders during `wp_head` before The Loop. |
 
 ---
 

@@ -113,6 +113,9 @@ The robots feature extends the WordPress `robots_txt` filter and provides its ow
 | FR-20 | The modal MUST contain a textarea for editing robots.txt content with dynamic row count (minimum 20 rows, grows with content). | Must |
 | FR-21 | The modal MUST have an "Update" button that saves the content and a "Reset to defaults" button that clears the override. | Must |
 | FR-22 | The "Reset to defaults" button MUST be disabled when no custom override exists. | Must |
+| FR-23 | The software MUST intercept /robots.txt requests via `template_redirect` using `wp_basename()` for multisite subdirectory compatibility. | Must |
+| FR-24 | The Robots modal MUST display a 'Hide page from search engines' toggle for the current document. | Must |
+| FR-25 | When the Robots feature toggle is OFF, all robots meta tag and robots.txt output MUST be suppressed, and modal controls MUST be dimmed (opacity: 0.5, pointer-events: none). | Must |
 
 ### 3.2 Performance Requirements
 

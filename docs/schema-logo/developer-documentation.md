@@ -179,6 +179,7 @@ add_action( 'enqueue_block_editor_assets', function () {
 |---|---|---|
 | Logo not appearing in Organization JSON-LD | Site-logo block missing `organizationLogoSchema` attribute | Verify the toggle is enabled in the block inspector |
 | Logo not appearing | `gg_optimizer_schema_output_organization` filter returning false | Check for `add_filter` callbacks on this hook |
+| Logo not appearing | Schema feature toggle disabled in the Schema modal | Check `GG_Optimizer_Feature_Toggle::is_enabled('schema')` — the parent toggle blocks all sub-schemas |
 | Wrong logo URL | Nested site-logo block takes precedence | Only enable the toggle on one site-logo block |
 | No logo even with toggle on | Block `attrs.url` empty and no theme custom logo set | Set a site logo in the Customizer or populate the block's URL attribute |
 | Logo appears on non-singular pages | Feature should only run on singular views | Verify `is_singular()` guard in `output_organization_json_ld()` |

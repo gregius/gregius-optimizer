@@ -24,6 +24,7 @@ const EXCLUDE_PATTERNS = [
 	'.gitignore',
 	'assets/.gitignore',
 	'bin',
+	'build',
 	'docs',
 	'*.md',
 	'*.log',

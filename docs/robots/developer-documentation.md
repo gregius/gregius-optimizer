@@ -93,7 +93,7 @@ $default_rules = gg_optimizer_get_default_robots_txt();
 gg_optimizer_output_robots_txt( string $output, string $is_public ) : string
 ```
 
-Hooked to `robots_txt`. Determines the final robots.txt output.
+Hooked to `robots_txt` at priority 10. Determines the final robots.txt output. For multisite compatibility, a `template_redirect` handler at priority 0 uses `wp_basename()` to match `/robots.txt` at any URL depth — this ensures robots.txt works even when WordPress core's `is_robots()` returns `false` (common on multisite subdirectory installs).
 
 **Merge order:**
 1. If `blog_public` is `'0'`, return original WordPress output unchanged
@@ -166,7 +166,34 @@ Passing `{ "content": "" }` resets the override. The next GET will return defaul
 
 | Meta Key | Type | Used By |
 |---|---|---|
-| `_gg_optimizer_hide_from_search` | `boolean` | `gg_optimizer_is_hidden_from_search()` → noindex in meta tag + sitemap exclusion |
+| `_gg_optimizer_hide_from_search` | `boolean` | Controlled by the Robots modal's "Hide page from search engines" toggle. Read by `gg_optimizer_output_robots_meta()` for `noindex` output and by `sitemap.php` for XML sitemap exclusion. |
+
+---
+
+### 5. Class Reference
+
+#### 5.1 GG_Optimizer_Feature_Toggle
+
+The `GG_Optimizer_Feature_Toggle` class provides a unified interface for enabling or disabling plugin features.
+
+**File:** `includes/class-gg-optimizer-feature-toggle.php`
+
+**Methods:**
+
+- `get_all(): array` — Returns an associative array of all feature names and their boolean states.
+- `is_enabled( string $name ): bool` — Returns whether a specific feature is enabled. Defaults to `false` if no value stored.
+- `set_all( array $toggles ): void` — Saves feature toggle states. Uses **merge behavior** — only keys present in the input array are updated, existing values for other keys are preserved.
+
+**REST API:**
+
+| Method | Route | Permission |
+|---|---|---|
+| GET | `/gg-optimizer/v1/feature-toggles` | `edit_posts` |
+| POST | `/gg-optimizer/v1/feature-toggles` | `manage_options` |
+
+**Usage:**
+`GG_Optimizer_Feature_Toggle::is_enabled( 'sitemap' )` — check if sitemap feature is active.
+`GG_Optimizer_Feature_Toggle::set_all( [ 'robots' => false ] )` — disable robots (other features unchanged).
 
 ---
 

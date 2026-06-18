@@ -8,6 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
+add_filter( 'gg_optimizer_meta_output_og', static function ( $enabled ) {
+	return GG_Optimizer_Feature_Toggle::is_enabled( 'social_cards' ) ? $enabled : false;
+}, 1 );
+
+add_filter( 'gg_optimizer_meta_output_twitter', static function ( $enabled ) {
+	return GG_Optimizer_Feature_Toggle::is_enabled( 'social_cards' ) ? $enabled : false;
+}, 1 );
+
 /**
  * Register social image sizes for Open Graph and Twitter Cards.
  *

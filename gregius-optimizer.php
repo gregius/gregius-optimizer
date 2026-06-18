@@ -3,7 +3,7 @@
  * Plugin Name:       Gregius Optimizer
  * Plugin URI:        https://gregius.com/gregius-optimizer
  * Description:       SEO, AEO, SMO, and LLMO editor extensions — schema, meta, indexing, and social cards.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.9
  * Requires PHP:      8.2
  * Author:            Hector Jarquin, Gregius
@@ -16,8 +16,8 @@
  * @package           gregius-optimizer
  */
 
-if ( ! defined( 'WPINC' ) ) {
-	die;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 // Database setup for settings table (runs early via plugins_loaded).
@@ -40,6 +40,9 @@ register_uninstall_hook( __FILE__, array( 'GG_Optimizer_DB', 'drop_tables' ) );
 if ( ! class_exists( 'GG_Optimizer_Custom_Meta_Field' ) ) {
 	require_once __DIR__ . '/includes/class-gg-optimizer-custom-meta-field.php';
 }
+
+// Feature toggle CRUD.
+require_once __DIR__ . '/includes/class-gg-optimizer-feature-toggle.php';
 
 // Search-facing metadata.
 require_once __DIR__ . '/includes/search.php';
@@ -67,3 +70,5 @@ require_once __DIR__ . '/includes/llms.php';
 
 // Assets.
 require_once __DIR__ . '/assets/assets.php';
+
+add_action( 'rest_api_init', array( 'GG_Optimizer_Feature_Toggle', 'register_routes' ) );

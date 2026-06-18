@@ -159,6 +159,10 @@ if ( ! function_exists( 'gg_optimizer_get_meta_title' ) ) {
 			$override_title = gg_optimizer_meta_normalize_text( get_post_meta( $post->ID, '_gg_optimizer_meta_title', true ) );
 		}
 
+		if ( '' === $override_title && $post instanceof WP_Post ) {
+			$override_title = gg_optimizer_meta_normalize_text( get_post_meta( $post->ID, '_gg_optimizer_google_title', true ) );
+		}
+
 		if ( '' !== $override_title ) {
 			return $override_title;
 		}
@@ -198,6 +202,10 @@ if ( ! function_exists( 'gg_optimizer_get_meta_description' ) ) {
 
 		if ( '' === $override_description && $post instanceof WP_Post ) {
 			$override_description = gg_optimizer_meta_normalize_text( get_post_meta( $post->ID, '_gg_optimizer_meta_description', true ) );
+		}
+
+		if ( '' === $override_description && $post instanceof WP_Post ) {
+			$override_description = gg_optimizer_meta_normalize_text( get_post_meta( $post->ID, '_gg_optimizer_google_description', true ) );
 		}
 
 		// Respect explicit user-entered override value as-is (normalized, no default truncation).
@@ -403,7 +411,7 @@ if ( ! function_exists( 'gg_optimizer_filter_document_title' ) ) {
 	 * @return string
 	 */
 	function gg_optimizer_filter_document_title( $title ) {
-		if ( is_admin() || ! in_the_loop() || ! is_singular() ) {
+		if ( is_admin() || ! is_singular() ) {
 			return $title;
 		}
 
@@ -495,7 +503,19 @@ if ( ! function_exists( 'gg_optimizer_output_head_meta' ) ) {
 			return;
 		}
 
-		echo "<!-- Gregius Optimizer core metadata -->\n";
+		if ( ! GG_Optimizer_Feature_Toggle::is_enabled( 'social_cards' )
+			&& ! GG_Optimizer_Feature_Toggle::is_enabled( 'robots' )
+			&& ! GG_Optimizer_Feature_Toggle::is_enabled( 'schema' )
+			&& ! GG_Optimizer_Feature_Toggle::is_enabled( 'llms' )
+		) {
+			return;
+		}
+
+		if ( GG_Optimizer_Feature_Toggle::is_enabled( 'social_cards' )
+			|| GG_Optimizer_Feature_Toggle::is_enabled( 'robots' )
+		) {
+			echo '<!-- Meta description, Canonical URL & Robots directives -->' . "\n";
+		}
 
 		if ( function_exists( 'gg_optimizer_output_meta_description' ) ) {
 			gg_optimizer_output_meta_description();
@@ -509,25 +529,29 @@ if ( ! function_exists( 'gg_optimizer_output_head_meta' ) ) {
 			gg_optimizer_output_robots_meta();
 		}
 
-		echo "<!-- Open Graph -->\n";
+		if ( GG_Optimizer_Feature_Toggle::is_enabled( 'social_cards' ) ) {
+			echo '<!-- Open Graph & Twitter Cards meta -->' . "\n";
+		}
 
 		if ( function_exists( 'gg_optimizer_output_og_meta' ) ) {
 			gg_optimizer_output_og_meta();
 		}
 
-		echo "<!-- AI Agent Context -->\n";
+		if ( GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ) {
+			echo '<!-- llms.txt AI agent context -->' . "\n";
+		}
 
 		if ( function_exists( 'gg_optimizer_output_llms_head_link' ) ) {
 			gg_optimizer_output_llms_head_link();
 		}
 
-		echo "<!-- Schema.org JSON-LD Graph -->\n";
+		if ( GG_Optimizer_Feature_Toggle::is_enabled( 'schema' ) ) {
+			echo '<!-- Schema.org JSON-LD Graph -->' . "\n";
+		}
 
 		if ( function_exists( 'gg_optimizer_schema_output_json_ld' ) ) {
 			gg_optimizer_schema_output_json_ld();
 		}
-
-		echo "<!-- / Gregius Optimizer core metadata -->\n";
 	}
 
 	add_action( 'wp_head', 'gg_optimizer_output_head_meta', 1 );

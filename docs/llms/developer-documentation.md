@@ -187,6 +187,34 @@ Sitemap: https://example.com/wp-sitemap.xml
 
 The `## Core Architecture` and `## Key Specifications` sections are hardcoded defaults. Customize them by saving a context override via the REST API or the Gutenberg modal.
 
+### 5. Class Reference
+
+#### 5.1 GG_Optimizer_Feature_Toggle
+
+The `GG_Optimizer_Feature_Toggle` class provides a unified interface for enabling or disabling plugin features across all feature modals.
+
+**File:** `includes/class-gg-optimizer-feature-toggle.php`
+
+**Methods:**
+
+- `get_all(): array` — Returns an associative array of all feature names and their boolean states.
+- `is_enabled( string $name ): bool` — Returns whether a specific feature is enabled. Defaults to `false` if no value stored.
+- `set_all( array $toggles ): void` — Saves feature toggle states. Uses **merge behavior** — only keys present in the input array are updated, existing values for other keys are preserved.
+
+**REST API:**
+
+| Method | Route | Permission |
+|---|---|---|
+| GET | `/gg-optimizer/v1/feature-toggles` | `edit_posts` |
+| POST | `/gg-optimizer/v1/feature-toggles` | `manage_options` |
+
+**Usage:**
+```php
+if ( GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ) {
+    // LLMs feature is active.
+}
+```
+
 ---
 
 ## Integration Guide
@@ -203,8 +231,16 @@ GG_Optimizer_DB::set( 'llms_override', "# My Custom Context\n\nCustom descriptio
 ### Disabling the Feature
 
 ```php
-add_filter( 'gg_optimizer_llms_enabled', '__return_false' );
+// Preferred — use the feature toggle
+GG_Optimizer_Feature_Toggle::set_all( [ 'llms' => false ] );
+
+// Check state programmatically
+if ( ! GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ) {
+    return;
+}
 ```
+
+When disabled via the feature toggle, `/llms.txt` serving, `<link rel="help">` output, and the modal controls are all suppressed. The `template_redirect` handler uses `wp_basename()` to match `/llms.txt` at any URL depth for multisite compatibility.
 
 ### Extending Key Documents with Custom Post Types
 
@@ -224,6 +260,7 @@ add_filter( 'gg_optimizer_llms_get_post_types', function ( $post_types ) {
 | Problem | Likely Cause | Solution |
 |---|---|---|
 | `/llms.txt` returns 404 | Another plugin intercepts the route | Check for conflicting `template_redirect` handlers |
+| `/llms.txt` returns 404 | Multisite subdirectory install | The plugin uses `wp_basename()` for multisite-safe URL matching; verify no other plugin conflicts |
 | Key Documents section empty | No posts have the include toggle enabled | Enable the toggle on posts in the LLMs modal |
 | Custom context not saving | Permission issue or missing `manage_options` | Verify user is an administrator |
 | Preview shows old content | REST cache | The 500ms debounce should auto-update; check network tab |

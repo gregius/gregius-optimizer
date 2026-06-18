@@ -2,7 +2,8 @@ import { PluginDocumentSettingPanel } from "@wordpress/edit-post";
 import { __ } from "@wordpress/i18n";
 import { registerPlugin } from "@wordpress/plugins";
 import { useSelect, useDispatch } from "@wordpress/data";
-import { useState, useCallback } from "@wordpress/element";
+import { useState, useCallback, useEffect } from "@wordpress/element";
+import apiFetch from "@wordpress/api-fetch";
 import {
   Button,
   ExternalLink,
@@ -12,6 +13,7 @@ import {
   Dropdown,
   MenuGroup,
   MenuItem,
+  ToggleControl,
 } from "@wordpress/components";
 import { RichText, MediaUpload, MediaUploadCheck } from "@wordpress/block-editor";
 
@@ -445,6 +447,7 @@ const SocialCardsSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [featureEnabled, setFeatureEnabled] = useState( true );
 
   const postType = useSelect(
     (select) => select("core/editor").getCurrentPostType(),
@@ -536,11 +539,28 @@ const SocialCardsSidebar = () => {
     editPost({ meta: { ...meta, [key]: value } });
   }, [meta, editPost]);
 
+  useEffect( () => {
+    if ( ! isOpen ) return;
+    apiFetch( { path: '/gg-optimizer/v1/feature-toggles' } )
+      .then( ( data ) => {
+        if ( data && typeof data.social_cards === 'boolean' ) {
+          setFeatureEnabled( data.social_cards );
+        }
+      } )
+      .catch( () => {} );
+  }, [isOpen] );
+
   const hasOverrides = Object.values(META).some((key) => meta[key]);
 
   const saveSettings = () => {
     setError("");
     setSuccess(__("Settings updated.", "gregius-optimizer"));
+
+    apiFetch( {
+      path: '/gg-optimizer/v1/feature-toggles',
+      method: 'POST',
+      data: { toggles: { social_cards: featureEnabled } },
+    } );
   };
 
   const resetOverrides = () => {
@@ -609,7 +629,19 @@ const SocialCardsSidebar = () => {
               gap: "1.25rem",
             }}
           >
-            <h2 style={{ margin: 0 }}>{__("Global Image", "gregius-optimizer")}</h2>
+            <ToggleControl
+              label={ __( 'Enable Social Cards', 'gregius-optimizer' ) }
+              checked={ featureEnabled }
+              onChange={ ( value ) => setFeatureEnabled( value ) }
+              __nextHasNoMarginBottom
+            />
+
+            <div
+              className={
+                featureEnabled ? '' : 'gg-optimizer-feature-disabled'
+              }
+            >
+              <h2>{__("Global Image", "gregius-optimizer")}</h2>
 
             <div style={{ display: "grid", gridTemplateColumns: "150px 1fr", gap: "1rem", alignItems: "start" }}>
               <div>
@@ -707,7 +739,7 @@ const SocialCardsSidebar = () => {
               </div>
             </div>
 
-            <h2 style={{ margin: 0 }}>{__("Search Snippet", "gregius-optimizer")}</h2>
+            <h2>{__("Search Snippet", "gregius-optimizer")}</h2>
 
             <GoogleCard
               title={meta[META.googleTitle] || ""}
@@ -719,7 +751,7 @@ const SocialCardsSidebar = () => {
               url={formatUrl(permalink)}
             />
 
-            <h2 style={{ margin: 0 }}>{__("Open Graph", "gregius-optimizer")}</h2>
+            <h2>{__("Open Graph", "gregius-optimizer")}</h2>
 
             <OGCard
               title={meta[META.ogTitle] || ""}
@@ -736,7 +768,7 @@ const SocialCardsSidebar = () => {
               url={permalink}
             />
 
-            <h2 style={{ margin: 0 }}>{__("Twitter / X", "gregius-optimizer")}</h2>
+            <h2>{__("Twitter / X", "gregius-optimizer")}</h2>
 
             <TwitterCard
               title={meta[META.twitterTitle] || ""}
@@ -752,6 +784,8 @@ const SocialCardsSidebar = () => {
               fallbackDesc={fallbackDescription}
               url={permalink}
             />
+
+            </div>
 
             <div
               style={{

@@ -28,6 +28,7 @@ node_modules/
 
 # Generated Gutenberg markup for gregius.com documentation site
 docs/*/public-documentation.html
+*-public-documentation.md
 
 # Internal AI assistant instructions
 .github/

@@ -201,14 +201,51 @@ Both fields optional. Subtypes validated against type map.
 
 ---
 
+### 6. Class Reference
+
+#### 6.1 GG_Optimizer_Feature_Toggle
+
+The `GG_Optimizer_Feature_Toggle` class provides a unified interface for enabling or disabling plugin features across all feature modals.
+
+**File:** `includes/class-gg-optimizer-feature-toggle.php`
+
+**Methods:**
+
+- `get_all(): array` — Returns an associative array of all feature names and their boolean states.
+- `is_enabled( string $name ): bool` — Returns whether a specific feature is enabled. Defaults to `false` if no value stored.
+- `set_all( array $toggles ): void` — Saves feature toggle states. Uses **merge behavior** — only keys present in the input array are updated, existing values for other keys are preserved.
+
+**REST API:**
+
+| Method | Route | Permission |
+|---|---|---|
+| GET | `/gg-optimizer/v1/feature-toggles` | `edit_posts` |
+| POST | `/gg-optimizer/v1/feature-toggles` | `manage_options` |
+
+**Usage:**
+```php
+if ( GG_Optimizer_Feature_Toggle::is_enabled( 'schema' ) ) {
+    // Schema output is active.
+}
+```
+
+---
+
 ## Integration Guide
 
 ### Disabling Schema Output
 
 ```php
-// Remove the wp_head action.
-remove_action( 'wp_head', 'gg_optimizer_schema_output_json_ld' );
+// Preferred — use the feature toggle (master gate)
+GG_Optimizer_Feature_Toggle::set_all( [ 'schema' => false ] );
+
+// Programmatic check
+if ( ! GG_Optimizer_Feature_Toggle::is_enabled( 'schema' ) ) {
+    return; // All JSON-LD output suppressed.
+}
 ```
+
+When disabled via the feature toggle, `gg_optimizer_schema_output_json_ld()` returns early before any schema processing — blocking all sub-schemas (Organization, WebSite, BreadcrumbList, article/page, FAQPage, logo, sameAs) at once.
 
 ### Customizing Organization SameAs Sources
 

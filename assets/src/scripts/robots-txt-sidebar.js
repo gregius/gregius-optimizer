@@ -2,6 +2,7 @@ import apiFetch from "@wordpress/api-fetch";
 import { PluginDocumentSettingPanel } from "@wordpress/edit-post";
 import { __ } from "@wordpress/i18n";
 import { registerPlugin } from "@wordpress/plugins";
+import { useSelect, useDispatch } from "@wordpress/data";
 import { useState, useEffect } from "@wordpress/element";
 import {
   Button,
@@ -11,7 +12,10 @@ import {
   PanelRow,
   Spinner,
   TextareaControl,
+  ToggleControl,
 } from "@wordpress/components";
+
+const META_HIDE_FROM_SEARCH_KEY = "_gg_optimizer_hide_from_search";
 
 const RobotsTxtSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,6 +26,30 @@ const RobotsTxtSidebar = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [featureEnabled, setFeatureEnabled] = useState( true );
+
+  const postType = useSelect(
+    (select) => select("core/editor").getCurrentPostType(),
+    [],
+  );
+  const postMeta = useSelect(
+    (select) => select("core/editor").getEditedPostAttribute("meta") || {},
+    [],
+  );
+  const postTypeObject = useSelect(
+    (select) => {
+      if (!postType) {
+        return null;
+      }
+      return select("core").getPostType(postType);
+    },
+    [postType],
+  );
+  const { editPost } = useDispatch("core/editor");
+  const supportsCustomFields =
+    postTypeObject &&
+    postTypeObject.supports &&
+    postTypeObject.supports["custom-fields"];
 
   const lineCount = (content.match(/\n/g) || []).length + 1;
 
@@ -48,10 +76,28 @@ const RobotsTxtSidebar = () => {
       });
   }, [isOpen]);
 
+  useEffect( () => {
+    if ( ! isOpen ) return;
+    apiFetch( { path: '/gg-optimizer/v1/feature-toggles' } )
+      .then( ( data ) => {
+        if ( data && typeof data.robots === 'boolean' ) {
+          setFeatureEnabled( data.robots );
+        }
+      } )
+      .catch( () => {} );
+  }, [isOpen] );
+
   const save = async () => {
     setIsSaving(true);
     setError("");
     setSuccess("");
+
+    apiFetch( {
+      path: '/gg-optimizer/v1/feature-toggles',
+      method: 'POST',
+      data: { toggles: { robots: featureEnabled } },
+    } );
+
     try {
       await apiFetch({
         path: "/gg-optimizer/v1/robots-txt",
@@ -99,6 +145,15 @@ const RobotsTxtSidebar = () => {
     setSuccess("");
   };
 
+  const updateMeta = (value) => {
+    editPost({
+      meta: {
+        ...postMeta,
+        [META_HIDE_FROM_SEARCH_KEY]: !!value,
+      },
+    });
+  };
+
   return (
     <>
       <PluginDocumentSettingPanel
@@ -131,13 +186,25 @@ const RobotsTxtSidebar = () => {
             style={{
               overflowY: "auto",
               paddingRight: "8px",
-              maxWidth: "800px",
+              maxWidth: "600px",
               display: "flex",
               flexDirection: "column",
-              gap: "1rem",
+              gap: "1.25rem",
             }}
           >
-            <p style={{ margin: 0 }}>
+            <ToggleControl
+              label={ __( 'Enable Robots', 'gregius-optimizer' ) }
+              checked={ featureEnabled }
+              onChange={ ( value ) => setFeatureEnabled( value ) }
+              __nextHasNoMarginBottom
+            />
+
+            <div
+              className={
+                featureEnabled ? '' : 'gg-optimizer-feature-disabled'
+              }
+            >
+              <p>
               {__(
                 "Edit the content of your site's robots.txt file served at",
                 "gregius-optimizer",
@@ -161,6 +228,32 @@ const RobotsTxtSidebar = () => {
                   __nextHasNoMarginBottom
                 />
               )}
+            </div>
+
+            {supportsCustomFields && (
+              <>
+                <h2>
+                  {__("Current Document", "gregius-optimizer")}
+                </h2>
+
+                <ToggleControl
+                  label={__(
+                    "Hide page from search engines",
+                    "gregius-optimizer",
+                  )}
+                  checked={!!postMeta[META_HIDE_FROM_SEARCH_KEY]}
+                  onChange={updateMeta}
+                  help={
+                    __(
+                      "A 'noindex' tag will help instruct search engines to not include this document in search results. This page will also be removed from the sitemap.",
+                      "gregius-optimizer",
+                    )
+                  }
+                  __nextHasNoMarginBottom
+                />
+              </>
+            )}
+
             </div>
 
             <div

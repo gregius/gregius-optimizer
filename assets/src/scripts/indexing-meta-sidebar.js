@@ -1,6 +1,5 @@
 import { registerPlugin } from "@wordpress/plugins";
 import { PluginDocumentSettingPanel } from "@wordpress/edit-post";
-import { useSelect, useDispatch } from "@wordpress/data";
 import { useState, useEffect } from "@wordpress/element";
 import { __ } from "@wordpress/i18n";
 import apiFetch from "@wordpress/api-fetch";
@@ -14,8 +13,6 @@ import {
   ToggleControl,
 } from "@wordpress/components";
 
-const META_HIDE_FROM_SEARCH_KEY = "_gg_optimizer_hide_from_search";
-
 const SitemapSidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [settings, setSettings] = useState({});
@@ -28,29 +25,7 @@ const SitemapSidebar = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-  const postType = useSelect(
-    (select) => select("core/editor").getCurrentPostType(),
-    [],
-  );
-  const postMeta = useSelect(
-    (select) => select("core/editor").getEditedPostAttribute("meta") || {},
-    [],
-  );
-  const postTypeObject = useSelect(
-    (select) => {
-      if (!postType) {
-        return null;
-      }
-      return select("core").getPostType(postType);
-    },
-    [postType],
-  );
-  const { editPost } = useDispatch("core/editor");
-  const supportsCustomFields =
-    postTypeObject &&
-    postTypeObject.supports &&
-    postTypeObject.supports["custom-fields"];
+  const [featureEnabled, setFeatureEnabled] = useState( true );
 
   useEffect(() => {
     if (!isOpen) return;
@@ -80,6 +55,17 @@ const SitemapSidebar = () => {
         setIsLoading(false);
       });
   }, [isOpen]);
+
+  useEffect( () => {
+    if ( ! isOpen ) return;
+    apiFetch( { path: '/gg-optimizer/v1/feature-toggles' } )
+      .then( ( data ) => {
+        if ( data && typeof data.sitemap === 'boolean' ) {
+          setFeatureEnabled( data.sitemap );
+        }
+      } )
+      .catch( () => {} );
+  }, [isOpen] );
 
   const getPostTypeDefault = (slug) => {
     if (
@@ -150,7 +136,13 @@ const SitemapSidebar = () => {
     JSON.stringify(editedSettings) !== JSON.stringify(settings);
 
   const handleUpdate = () => {
-    if (!hasSettingsChanged) {
+    apiFetch( {
+      path: '/gg-optimizer/v1/feature-toggles',
+      method: 'POST',
+      data: { toggles: { sitemap: featureEnabled } },
+    } );
+
+    if ( ! hasSettingsChanged ) {
       setSuccess(__("Settings updated.", "gregius-optimizer"));
       return;
     }
@@ -199,15 +191,6 @@ const SitemapSidebar = () => {
 
   const hasSavedOverrides = Object.keys(settings).length > 0;
 
-  const updateMeta = (value) => {
-    editPost({
-      meta: {
-        ...postMeta,
-        [META_HIDE_FROM_SEARCH_KEY]: !!value,
-      },
-    });
-  };
-
   return (
     <>
       <PluginDocumentSettingPanel
@@ -222,7 +205,6 @@ const SitemapSidebar = () => {
               style={{
                 fontSize: "13px",
                 color: "#666",
-                margin: "0 0 0.5rem 0",
               }}
             >
               {__(
@@ -264,7 +246,19 @@ const SitemapSidebar = () => {
               </div>
             ) : (
               <>
-                <p style={{ margin: 0 }}>
+                <ToggleControl
+                  label={ __( 'Enable Sitemap', 'gregius-optimizer' ) }
+                  checked={ featureEnabled }
+                  onChange={ ( value ) => setFeatureEnabled( value ) }
+                  __nextHasNoMarginBottom
+                />
+
+                <div
+                  className={
+                    featureEnabled ? '' : 'gg-optimizer-feature-disabled'
+                  }
+                >
+                  <p>
                   {__(
                     "Edit the content of your site's wp-sitemap.xml file served at",
                     "gregius-optimizer",
@@ -277,12 +271,12 @@ const SitemapSidebar = () => {
                   {!sitemapUrl && "/wp-sitemap.xml"}.
                 </p>
 
-                <h2 style={{ margin: 0 }}>
+                <h2>
                   {__("Global Settings", "gregius-optimizer")}
                 </h2>
 
                 <div>
-                  <h3 style={{ margin: "0 0 0.5rem 0", fontSize: "13px" }}>
+                  <h3 style={{ fontSize: "13px" }}>
                     {__("Post types", "gregius-optimizer")}
                   </h3>
                   <div
@@ -307,7 +301,7 @@ const SitemapSidebar = () => {
                 </div>
 
                 <div>
-                  <h3 style={{ margin: "0 0 0.5rem 0", fontSize: "13px" }}>
+                  <h3 style={{ fontSize: "13px" }}>
                     {__("Taxonomies", "gregius-optimizer")}
                   </h3>
                   <div
@@ -332,7 +326,7 @@ const SitemapSidebar = () => {
                 </div>
 
                 <div>
-                  <h3 style={{ margin: "0 0 0.5rem 0", fontSize: "13px" }}>
+                  <h3 style={{ fontSize: "13px" }}>
                     {__("Author sitemap", "gregius-optimizer")}
                   </h3>
                   <ToggleControl
@@ -368,31 +362,7 @@ const SitemapSidebar = () => {
                   )}
                 </div>
 
-                <hr style={{ margin: 0, border: "none", borderTop: "1px solid #e0e0e0" }} />
-
-                {supportsCustomFields && (
-                  <>
-                    <h2 style={{ margin: 0 }}>
-                      {__("Current Document", "gregius-optimizer")}
-                    </h2>
-
-                    <ToggleControl
-                      label={__(
-                        "Hide page from search engines",
-                        "gregius-optimizer",
-                      )}
-                      checked={!!postMeta[META_HIDE_FROM_SEARCH_KEY]}
-                      onChange={updateMeta}
-                      help={
-                        __(
-                          "A 'noindex' tag will help instruct search engines to not include this document in search results. This page will also be removed from the sitemap.",
-                          "gregius-optimizer",
-                        )
-                      }
-                      __nextHasNoMarginBottom
-                    />
-                  </>
-                )}
+                </div>
 
                 <div
                   style={{

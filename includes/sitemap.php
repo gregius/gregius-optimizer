@@ -8,6 +8,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+add_filter( 'gg_optimizer_sitemap_enabled', static function ( $enabled ) {
+	return GG_Optimizer_Feature_Toggle::is_enabled( 'sitemap' ) ? $enabled : false;
+}, 1 );
+
 // Custom_Meta_Field is loaded from gregius-optimizer.php if not already available.
 
 add_action( 'init', 'gg_optimizer_register_hide_meta' );

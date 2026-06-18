@@ -55,6 +55,7 @@ const LLMSSettings = () => {
   const [previewLoading, setPreviewLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [featureEnabled, setFeatureEnabled] = useState( true );
 
   const currentPostId = useSelect(
     (select) => select("core/editor").getCurrentPostId(),
@@ -125,6 +126,14 @@ const LLMSSettings = () => {
       setContext(loadedContext);
       setHasCustom(!!data.llms_context);
       await loadPreview(loadedContext);
+
+      apiFetch( { path: '/gg-optimizer/v1/feature-toggles' } )
+        .then( ( data ) => {
+          if ( data && typeof data.llms === 'boolean' ) {
+            setFeatureEnabled( data.llms );
+          }
+        } )
+        .catch( () => {} );
     } catch (err) {
       setError(
         err?.message || __("Unable to load settings.", "gregius-optimizer"),
@@ -143,6 +152,13 @@ const LLMSSettings = () => {
     setIsSaving(true);
     setError("");
     setSuccess("");
+
+    apiFetch( {
+      path: '/gg-optimizer/v1/feature-toggles',
+      method: 'POST',
+      data: { toggles: { llms: featureEnabled } },
+    } );
+
     try {
       await apiFetch({
         path: "/gg-optimizer/v1/llms-override",
@@ -265,13 +281,25 @@ const LLMSSettings = () => {
             style={{
               overflowY: "auto",
               paddingRight: "8px",
-              maxWidth: "700px",
+              maxWidth: "600px",
               display: "flex",
               flexDirection: "column",
-              gap: "1.5rem",
+              gap: "1.25rem",
             }}
           >
-            <div>
+            <ToggleControl
+              label={ __( 'Enable llms.txt', 'gregius-optimizer' ) }
+              checked={ featureEnabled }
+              onChange={ ( value ) => setFeatureEnabled( value ) }
+              __nextHasNoMarginBottom
+            />
+
+            <div
+              className={
+                featureEnabled ? '' : 'gg-optimizer-feature-disabled'
+              }
+            >
+              <div>
               <p>
                 {__(
                   "A proposal to standardise on using an /llms.txt file to provide information to help LLMs use a website at inference time.",
@@ -283,7 +311,7 @@ const LLMSSettings = () => {
               </p>
             </div>
 
-            <h2 style={{ margin: 0 }}>{__("Settings", "gregius-optimizer")}</h2>
+            <h2>{__("Settings", "gregius-optimizer")}</h2>
 
             <TextareaControl
               label={__("Global Context", "gregius-optimizer")}
@@ -293,6 +321,7 @@ const LLMSSettings = () => {
                 setPreview(null);
               }}
               rows={15}
+              __nextHasNoMarginBottom
             />
 
             {supportsCustomFields && (
@@ -334,40 +363,33 @@ const LLMSSettings = () => {
                 />
 
                 {isToggleOn && (
-                  <div
-                    style={{
-                      borderTop: "1px solid #eee",
-                      paddingTop: "0.75rem",
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "0.75rem",
+                  <TextareaControl
+                    label={__(
+                      "Description",
+                      "gregius-optimizer",
+                    )}
+                    help={__(
+                      "Leave empty to auto-generate from post excerpt or content.",
+                      "gregius-optimizer",
+                    )}
+                    value={currentPostMeta[META_DESC_KEY] || ""}
+                    onChange={(value) => {
+                      editPost({
+                        meta: {
+                          ...currentPostMeta,
+                          [META_DESC_KEY]: value,
+                        },
+                      });
                     }}
-                  >
-                    <TextareaControl
-                      label={__(
-                        "Description",
-                        "gregius-optimizer",
-                      )}
-                      help={__(
-                        "Leave empty to auto-generate from post excerpt or content.",
-                        "gregius-optimizer",
-                      )}
-                      value={currentPostMeta[META_DESC_KEY] || ""}
-                      onChange={(value) => {
-                        editPost({
-                          meta: {
-                            ...currentPostMeta,
-                            [META_DESC_KEY]: value,
-                          },
-                        });
-                      }}
-                      rows={3}
-                      placeholder={getEffectiveDescription()}
-                    />
-                  </div>
+                    rows={3}
+                    placeholder={getEffectiveDescription()}
+                    __nextHasNoMarginBottom
+                  />
                 )}
               </div>
             )}
+
+            </div>
 
             <div
               style={{
@@ -395,7 +417,7 @@ const LLMSSettings = () => {
 
             {previewLoading && <Spinner />}
 
-            {!previewLoading && preview && (
+            {!previewLoading && preview && featureEnabled && (
               <div>
                 <h2>{__("Preview", "gregius-optimizer")}</h2>
                 <pre
@@ -409,7 +431,6 @@ const LLMSSettings = () => {
                     lineHeight: 1.5,
                     overflow: "auto",
                     background: "#f8f8f8",
-                    margin: 0,
                   }}
                 >
                   {preview}

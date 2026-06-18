@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 class GG_Optimizer_DB {
 
 	const TABLE_NAME        = 'gg_optimizer_settings';
-	const DB_VERSION        = '1.0.0';
+	const DB_VERSION        = '1.1.0';
 	const DB_VERSION_OPTION = 'gg_optimizer_db_version';
 
 	/**
@@ -43,6 +43,23 @@ class GG_Optimizer_DB {
 		dbDelta( $sql );
 
 		update_option( self::DB_VERSION_OPTION, self::DB_VERSION );
+
+		if ( version_compare( $installed, '1.0.0', '>=' ) && '0' !== $installed ) {
+			if ( ! self::get( 'feature_toggles' ) ) {
+				self::set(
+					'feature_toggles',
+					wp_json_encode(
+						array(
+							'sitemap'      => true,
+							'robots'       => true,
+							'schema'       => true,
+							'social_cards' => true,
+							'llms'         => true,
+						)
+					)
+				);
+			}
+		}
 	}
 
 	/**
@@ -53,7 +70,11 @@ class GG_Optimizer_DB {
 	public static function drop_tables() {
 		global $wpdb;
 		$table_name = $wpdb->prefix . self::TABLE_NAME;
-		$wpdb->query( "DROP TABLE IF EXISTS {$table_name}" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+		$wpdb->query(
+			$wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table_name )
+		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
 		delete_option( self::DB_VERSION_OPTION );
 	}
 

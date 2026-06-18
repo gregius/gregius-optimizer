@@ -13,6 +13,7 @@ import {
   SelectControl,
   SnackbarList,
   Spinner,
+  ToggleControl,
 } from "@wordpress/components";
 
 const CopyIcon = ({ fill = "#666" }) => (
@@ -42,6 +43,7 @@ const SchemaSettingsSidebar = () => {
   const [schemaPreview, setSchemaPreview] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [featureEnabled, setFeatureEnabled] = useState( true );
   const postId = useSelect(
     (select) => select("core/editor").getCurrentPostId(),
     [],
@@ -140,6 +142,17 @@ const SchemaSettingsSidebar = () => {
     }
   }, [isOpen, postId]);
 
+  useEffect( () => {
+    if ( ! isOpen ) return;
+    apiFetch( { path: '/gg-optimizer/v1/feature-toggles' } )
+      .then( ( data ) => {
+        if ( data && typeof data.schema === 'boolean' ) {
+          setFeatureEnabled( data.schema );
+        }
+      } )
+      .catch( () => {} );
+  }, [isOpen] );
+
   const getDefaultForPostType = useCallback(
     (pt) => {
       if (editedDefaults[pt]) return editedDefaults[pt];
@@ -187,6 +200,13 @@ const SchemaSettingsSidebar = () => {
       setSuccess(__("Settings updated.", "gregius-optimizer"));
       return;
     }
+
+    apiFetch( {
+      path: '/gg-optimizer/v1/feature-toggles',
+      method: 'POST',
+      data: { toggles: { schema: featureEnabled } },
+    } );
+
     setIsSaving(true);
     apiFetch({
       path: "/gg-optimizer/v1/schema-global-settings",
@@ -294,11 +314,23 @@ const SchemaSettingsSidebar = () => {
               </div>
             ) : (
               <>
-                <h2 style={{ margin: 0 }}>
+                <ToggleControl
+                  label={ __( 'Enable Structured Data', 'gregius-optimizer' ) }
+                  checked={ featureEnabled }
+                  onChange={ ( value ) => setFeatureEnabled( value ) }
+                  __nextHasNoMarginBottom
+                />
+
+                <div
+                  className={
+                    featureEnabled ? '' : 'gg-optimizer-feature-disabled'
+                  }
+                >
+                  <h2>
                   {__("Global Settings", "gregius-optimizer")}
                 </h2>
 
-                <p style={{ fontSize: "13px", color: "#666", margin: 0 }}>
+                <p style={{ fontSize: "13px", color: "#666" }}>
                   {__(
                     "Set the schema.org type for the site-wide Organization node.",
                     "gregius-optimizer",
@@ -340,7 +372,7 @@ const SchemaSettingsSidebar = () => {
                   />
                 </div>
 
-                <p style={{ fontSize: "13px", color: "#666", margin: 0 }}>
+                <p style={{ fontSize: "13px", color: "#666" }}>
                   {__(
                     "Set the default schema.org subtype for each post type. Individual posts can be overridden below.",
                     "gregius-optimizer",
@@ -405,11 +437,9 @@ const SchemaSettingsSidebar = () => {
                   </div>
                 )}
 
-                <hr style={{ margin: 0, border: "none", borderTop: "1px solid #e0e0e0" }} />
-
                 {supportsCustomFields && (
                   <>
-                    <h2 style={{ margin: 0 }}>
+                    <h2>
                       {__("Current Document", "gregius-optimizer")}
                     </h2>
 
@@ -457,6 +487,8 @@ const SchemaSettingsSidebar = () => {
                   </>
                 )}
 
+                </div>
+
                 <div
                   style={{
                     display: "flex",
@@ -485,9 +517,11 @@ const SchemaSettingsSidebar = () => {
                 {error && <Notice status="error" isDismissible onRemove={() => setError("")}>{error}</Notice>}
                 {success && <Notice status="success" isDismissible onRemove={() => setSuccess("")}>{success}</Notice>}
 
-                <h2 style={{ margin: 0 }}>
-                  {__("Preview", "gregius-optimizer")}
-                </h2>
+                {featureEnabled && (
+                  <>
+                    <h2>
+                      {__("Preview", "gregius-optimizer")}
+                    </h2>
 
                 {previewLoading ? (
                   <div style={{ textAlign: "center", padding: "1rem" }}>
@@ -506,7 +540,6 @@ const SchemaSettingsSidebar = () => {
                         lineHeight: "1.5",
                         overflow: "auto",
                         background: "#f8f8f8",
-                        margin: 0,
                       }}
                     >
                       {JSON.stringify(schemaPreview, null, 2)}
@@ -559,6 +592,8 @@ const SchemaSettingsSidebar = () => {
                     ]}
                     onRemove={() => setCopied(false)}
                   />
+                )}
+                  </>
                 )}
               </>
             )}

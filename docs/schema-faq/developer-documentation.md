@@ -205,6 +205,7 @@ add_filter( 'gg_optimizer_schema_faq_question', function ( $question, $block ) {
 | FAQPage not appearing in source | Accordion block missing `faqSchema` attribute | Verify the toggle is enabled in the block inspector |
 | FAQPage not appearing in source | `gg_optimizer_schema_output_faq` filter returning false | Check for `add_filter` callbacks on this hook |
 | FAQPage not appearing in source | Schema output removed via `remove_action('wp_head', ...)` | Check for conflicting plugins |
+| FAQPage not appearing in source | Schema feature toggle disabled in the Schema modal | Verify the Schema feature is enabled (`GG_Optimizer_Feature_Toggle::is_enabled('schema')`); the master gate blocks all sub-schemas |
 | Wrong question text extracted | Theme markup changed; `.toggle-title` span missing | Check the accordion heading HTML structure |
 | Empty answer | Accordion panel uses non-paragraph blocks (lists, images) | Extract currently only collects `core/paragraph` text |
 | Nested accordion items duplicated | Multiple accordion blocks with `faqSchema` inside each other | Verify only the intended accordion has the toggle enabled |

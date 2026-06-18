@@ -33,7 +33,8 @@ gg_optimizer_get_meta_title( WP_Post|null $post = null, array $overrides = [] ) 
 Resolves the canonical meta title. Priority:
 1. Explicit override in `$overrides['meta_title']`
 2. Saved `_gg_optimizer_meta_title` post meta
-3. `wp_get_document_title()`
+3. Saved `_gg_optimizer_google_title` post meta (Google snippet title fallback)
+4. `wp_get_document_title()`
 
 #### 1.3 `gg_optimizer_get_meta_description`
 
@@ -44,7 +45,8 @@ gg_optimizer_get_meta_description( WP_Post|null $post = null, array $overrides =
 Resolves meta description. Priority:
 1. Explicit override in `$overrides['meta_description']`
 2. Saved `_gg_optimizer_meta_description` post meta
-3. Excerpt → content → site tagline
+3. Saved `_gg_optimizer_google_description` post meta (Google snippet fallback)
+4. Excerpt → content → site tagline
 Truncated to 155 characters with ellipsis.
 
 #### 1.4 `gg_optimizer_get_platform_title`
@@ -104,7 +106,7 @@ Master output function hooked to `wp_head` at priority 1. Calls output functions
 gg_optimizer_filter_document_title( string $title ) : string
 ```
 
-Filter for `pre_get_document_title`. Substitutes `_gg_optimizer_google_title` when set. Only applies on singular, non-admin pages.
+Filter for `pre_get_document_title`. Substitutes `_gg_optimizer_google_title` when set on singular posts. As of v1.1.0, the `in_the_loop()` guard was removed since `<title>` renders during `wp_head` before The Loop.
 
 ### 2. Functions — includes/social-cards.php
 
@@ -300,9 +302,16 @@ All fields except `postId` are optional.
 ### Disabling Meta Tag Output
 
 ```php
-// Remove all custom meta output from wp_head.
-remove_action( 'wp_head', 'gg_optimizer_output_head_meta', 1 );
+// Preferred — use the feature toggle
+GG_Optimizer_Feature_Toggle::set_all( [ 'social_cards' => false ] );
+
+// Programmatic check
+if ( ! GG_Optimizer_Feature_Toggle::is_enabled( 'social_cards' ) ) {
+    return; // All meta output suppressed.
+}
 ```
+
+When disabled via the feature toggle, `gg_optimizer_output_head_meta()` returns early — all HTML comments and meta tags are suppressed. Individual post meta fields (OG title, Twitter description, etc.) remain editable but produce no output.
 
 ### Disabling Specific Tag Groups
 

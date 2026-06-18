@@ -8,6 +8,43 @@
 
 defined( 'ABSPATH' ) || exit;
 
+add_action( 'template_redirect', function () {
+	if ( is_robots() ) {
+		return;
+	}
+
+	$request_path = wp_parse_url( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ), PHP_URL_PATH );
+	if ( 'robots.txt' !== wp_basename( $request_path ) ) {
+		return;
+	}
+
+	$public = get_option( 'blog_public' );
+	$output = "User-agent: *\n";
+	if ( '0' === $public ) {
+		$output .= "Disallow: /\n";
+	} else {
+		$site_url = wp_parse_url( site_url() );
+		$path     = ( ! empty( $site_url['path'] ) ) ? $site_url['path'] : '';
+		$output  .= "Disallow: $path/wp-admin/\n";
+		$output  .= "Allow: $path/wp-admin/admin-ajax.php\n";
+	}
+
+	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Intentionally using core robots_txt filter for interoperability.
+	$output = apply_filters( 'robots_txt', $output, $public );
+
+	header( 'Content-Type: text/plain; charset=utf-8' );
+	echo esc_html( $output );
+	exit;
+}, 0 );
+
+add_filter( 'gg_optimizer_robots_txt_enabled', static function ( $enabled ) {
+	return GG_Optimizer_Feature_Toggle::is_enabled( 'robots' ) ? $enabled : false;
+}, 1 );
+
+add_filter( 'gg_optimizer_robots_meta_enabled', static function ( $enabled ) {
+	return GG_Optimizer_Feature_Toggle::is_enabled( 'robots' ) ? $enabled : false;
+}, 1 );
+
 if ( ! function_exists( 'gg_optimizer_is_hidden_from_search' ) ) {
 	/**
 	 * Check whether a post is flagged to hide from search engines.

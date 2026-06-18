@@ -88,15 +88,15 @@ The feature generates `<meta>` tags for description, canonical, Open Graph, and 
 | ID | Requirement | Priority |
 |---|---|---|
 | FR-18 | The software MUST filter `pre_get_document_title` to use `_gg_optimizer_google_title` when set. | Must |
-| FR-19 | The title filter MUST only apply on singular, non-admin pages when `in_the_loop()`. | Must |
+| FR-19 | The title filter MUST only apply on singular, non-admin pages. | Must |
 
 #### 2.1.5 Open Graph Output
 
 | ID | Requirement | Priority |
 |---|---|---|
 | FR-20 | The software MUST output OG meta tags via `wp_head` with configurable filter `gg_optimizer_meta_output_og`. | Must |
-| FR-21 | OG title MUST resolve with priority: `_gg_optimizer_og_title` → `_gg_optimizer_meta_title` → `wp_get_document_title()`. | Must |
-| FR-22 | OG description MUST resolve with priority: `_gg_optimizer_og_description` → `_gg_optimizer_meta_description` → excerpt → content → site tagline. | Must |
+| FR-21 | OG title MUST resolve with priority: `_gg_optimizer_og_title` → `_gg_optimizer_meta_title` → `_gg_optimizer_google_title` → `wp_get_document_title()`. | Must |
+| FR-22 | OG description MUST resolve with priority: `_gg_optimizer_og_description` → `_gg_optimizer_meta_description` → `_gg_optimizer_google_description` → excerpt → content → site tagline. | Must |
 | FR-23 | OG image MUST resolve with priority: `_gg_optimizer_og_image` → featured image → `_gg_optimizer_meta_image`. | Must |
 | FR-24 | OG type MUST be `article` for singular non-page posts, `website` otherwise. | Must |
 | FR-25 | OG locale MUST derive from site locale with filter `gg_optimizer_meta_og_locale`. | Must |
@@ -108,8 +108,8 @@ The feature generates `<meta>` tags for description, canonical, Open Graph, and 
 |---|---|---|
 | FR-27 | The software MUST output Twitter Card meta tags via `wp_head` with configurable filter `gg_optimizer_meta_output_twitter`. | Must |
 | FR-28 | Twitter card type MUST be `summary_large_image` when image exists, `summary` otherwise. | Must |
-| FR-29 | Twitter title MUST resolve with priority: `_gg_optimizer_twitter_title` → `_gg_optimizer_meta_title` → `wp_get_document_title()`. | Must |
-| FR-30 | Twitter description MUST resolve with priority: `_gg_optimizer_twitter_description` → `_gg_optimizer_meta_description` → excerpt → content → site tagline. | Must |
+| FR-29 | Twitter title MUST resolve with priority: `_gg_optimizer_twitter_title` → `_gg_optimizer_meta_title` → `_gg_optimizer_google_title` → `wp_get_document_title()`. | Must |
+| FR-30 | Twitter description MUST resolve with priority: `_gg_optimizer_twitter_description` → `_gg_optimizer_meta_description` → `_gg_optimizer_google_description` → excerpt → content → site tagline. | Must |
 | FR-31 | Twitter image MUST resolve with priority: `_gg_optimizer_twitter_image` → `_gg_optimizer_og_image` → featured image → `_gg_optimizer_meta_image`. | Must |
 
 #### 2.1.7 Image Size Registration

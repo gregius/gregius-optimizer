@@ -1,3 +1,4 @@
+import '../styles/editor.scss';
 import './faq-schema-editor';
 import './logo-schema-editor';
 import './sameas-schema-editor';

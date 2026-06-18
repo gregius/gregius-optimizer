@@ -8,6 +8,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
+add_filter( 'gg_optimizer_meta_output_description', static function ( $enabled ) {
+	return GG_Optimizer_Feature_Toggle::is_enabled( 'social_cards' ) ? $enabled : false;
+}, 1 );
+
+add_filter( 'gg_optimizer_meta_output_canonical', static function ( $enabled ) {
+	return GG_Optimizer_Feature_Toggle::is_enabled( 'social_cards' ) ? $enabled : false;
+}, 1 );
+
 if ( ! function_exists( 'gg_optimizer_output_meta_description' ) ) {
 	/**
 	 * Output meta description in document head.

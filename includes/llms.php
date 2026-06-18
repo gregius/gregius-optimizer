@@ -8,6 +8,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+add_filter( 'gg_optimizer_llms_enabled', static function ( $enabled ) {
+	return GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ? $enabled : false;
+}, 1 );
+
 // 1. Register meta fields for all public post types.
 add_action( 'init', 'gg_optimizer_register_llms_meta_fields' );
 
@@ -52,7 +56,7 @@ add_action(
 			return;
 		}
 
-		if ( '/llms.txt' === $request_uri ) {
+		if ( 'llms.txt' === wp_basename( $request_uri ) ) {
 			header( 'Content-Type: text/plain; charset=utf-8' );
 			gg_optimizer_output_llms_txt();
 			exit;
@@ -217,16 +221,16 @@ if ( ! function_exists( 'gg_optimizer_output_llms_txt' ) ) {
 		}
 
 		if ( '' !== $context ) {
-			echo $context; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			echo esc_html( $context );
 		} else {
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo gg_optimizer_get_llms_context();
+			echo esc_html( gg_optimizer_get_llms_context() );
 		}
 
 		echo "\n\n";
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo gg_optimizer_get_llms_key_documents( $unsaved_toggles, $unsaved_descriptions );
+		echo esc_html( gg_optimizer_get_llms_key_documents( $unsaved_toggles, $unsaved_descriptions ) );
 		echo "\nSitemap: " . esc_url( home_url( '/wp-sitemap.xml' ) ) . "\n";
 	}
 }
@@ -292,7 +296,7 @@ add_action(
 						}
 
 						// Strip everything from ## Key Documents onward as a safety measure.
-						if ( preg_match( '/^## Key Documents$/m', $text, $matches, PREG_OFFSET_CAPTURE ) ) {
+						if ( preg_match( '/^## Key Documents$/m', $text, $matches, PREG_OFFSET_CAPTURE ) && isset( $matches[0][1] ) ) {
 							$text = rtrim( substr( $text, 0, (int) $matches[0][1] ) );
 						}
 

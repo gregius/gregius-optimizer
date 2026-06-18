@@ -53,7 +53,7 @@ The feature serves `/llms.txt` at the site root, outputs a `<link rel="help">` t
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-01 | The software MUST serve `/llms.txt` at the site root via `template_redirect` with `Content-Type: text/plain`. | Must |
+| FR-01 | The software MUST serve `/llms.txt` at the site root via `template_redirect` with `Content-Type: text/plain`, using `wp_basename()` for multisite-safe URL matching at any path depth. | Must |
 | FR-02 | The software MUST disable `/llms.txt` serving when the `gg_optimizer_llms_enabled` filter returns `false`. | Must |
 | FR-03 | The software MUST output `<link rel="help" type="text/plain" href="/llms.txt">` in the document `<head>` via `wp_head`. | Must |
 
@@ -127,7 +127,7 @@ The feature serves `/llms.txt` at the site root, outputs a `<link rel="help">` t
 
 | Hook | Type | Behavioral Contract |
 |---|---|---|
-| `template_redirect` | action | Intercept `/llms.txt` requests and serve plain text |
+| `template_redirect` | action | Intercept `/llms.txt` requests (using `wp_basename()` for multisite-safe URL matching) and serve plain text |
 | `wp_head` | action | Output `<link rel="help">` pointing to `/llms.txt` |
 
 #### 2.2.2 Filters

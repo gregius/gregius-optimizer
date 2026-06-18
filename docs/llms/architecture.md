@@ -44,7 +44,7 @@ The LLMs feature serves an `/llms.txt` file that provides LLMs with structured i
 | External System | Direction | Description |
 |---|---|---|
 | LLM Agents / AI Crawlers | → consumes | Read `/llms.txt` for site context and key documents |
-| WordPress Core (`template_redirect`) | → intercept | Serve `/llms.txt` before WordPress renders the page |
+| WordPress Core (`template_redirect`) | → intercept | Serve `/llms.txt` before WordPress renders the page, using `wp_basename()` for multisite-safe URL matching at any path depth |
 | WordPress Block Editor | → provides | LLMs modal for context editing and per-post toggles |
 | WordPress REST API | → responds | 3 endpoints for override + preview |
 | GG_Optimizer_DB | → writes ← reads | `llms_override` context text |

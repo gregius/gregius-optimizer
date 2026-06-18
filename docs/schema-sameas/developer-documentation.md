@@ -205,6 +205,7 @@ add_action( 'enqueue_block_editor_assets', function () {
 |---|---|---|
 | sameAs URLs not appearing | Social-links block missing `sameAsSchema` attribute | Verify the toggle is enabled in the block inspector |
 | sameAs URLs not appearing | `gg_optimizer_schema_output_organization` filter returning false | Check for `add_filter` callbacks on this hook |
+| sameAs URLs not appearing | Schema feature toggle disabled in the Schema modal | Check `GG_Optimizer_Feature_Toggle::is_enabled('schema')` — the parent toggle blocks all sub-schemas |
 | Duplicate URLs in output | Both extraction paths found same URL | Verify `array_unique` is called (it is — in `extract_sameas_urls`) |
 | Infinite loop on page render | Pattern or synced block circular reference | Check for patterns that include themselves; cycle detection should prevent this |
 | Missing URLs from patterns | Pattern registered but not in `WP_Block_Patterns_Registry` | Verify the pattern is registered before the schema output runs |
