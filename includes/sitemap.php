@@ -8,9 +8,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'gg_optimizer_sitemap_enabled', static function ( $enabled ) {
-	return GG_Optimizer_Feature_Toggle::is_enabled( 'sitemap' ) ? $enabled : false;
-}, 1 );
+add_filter(
+	'gg_optimizer_sitemap_enabled',
+	static function ( $enabled ) {
+		return GG_Optimizer_Feature_Toggle::is_enabled( 'sitemap' ) ? $enabled : false;
+	},
+	1
+);
 
 // Custom_Meta_Field is loaded from gregius-optimizer.php if not already available.
 
@@ -59,7 +63,8 @@ add_action(
 			return;
 		}
 
-		$request_path = rtrim( (string) parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/' );
+		$request_uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+		$request_path = rtrim( (string) wp_parse_url( $request_uri, PHP_URL_PATH ), '/' );
 
 		if ( '/wp-sitemap.xml' !== $request_path ) {
 			return;
@@ -529,24 +534,24 @@ add_action(
 							);
 						}
 
-					$sitemap_urls = isset( $saved['sitemap_urls'] ) && is_array( $saved['sitemap_urls'] )
+						$sitemap_urls = isset( $saved['sitemap_urls'] ) && is_array( $saved['sitemap_urls'] )
 						? $saved['sitemap_urls']
 						: array( '/wp-sitemap.xml' );
 
-					$sitemap_url_links = array();
-					foreach ( $sitemap_urls as $p ) {
-						$sitemap_url_links[ $p ] = home_url( $p );
-					}
+						$sitemap_url_links = array();
+						foreach ( $sitemap_urls as $p ) {
+							$sitemap_url_links[ $p ] = home_url( $p );
+						}
 
-					return rest_ensure_response(
-						array(
-							'settings'       => $saved,
-							'post_types'     => $post_types,
-							'taxonomies'     => $taxonomies,
-							'users'          => $users,
-							'sitemap_urls'   => $sitemap_url_links,
-						)
-					);
+						return rest_ensure_response(
+							array(
+								'settings'     => $saved,
+								'post_types'   => $post_types,
+								'taxonomies'   => $taxonomies,
+								'users'        => $users,
+								'sitemap_urls' => $sitemap_url_links,
+							)
+						);
 					},
 				),
 				array(
