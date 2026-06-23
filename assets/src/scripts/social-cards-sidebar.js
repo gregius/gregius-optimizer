@@ -449,17 +449,6 @@ const SocialCardsSidebar = () => {
   const [success, setSuccess] = useState("");
   const [featureEnabled, setFeatureEnabled] = useState( true );
 
-  const postType = useSelect(
-    (select) => select("core/editor").getCurrentPostType(),
-    [],
-  );
-  const postTypeObject = useSelect(
-    (select) => {
-      if (!postType) return null;
-      return select("core").getPostType(postType);
-    },
-    [postType],
-  );
   const meta = useSelect(
     (select) => select("core/editor").getEditedPostAttribute("meta") || {},
     [],

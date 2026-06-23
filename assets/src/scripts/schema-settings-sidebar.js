@@ -53,17 +53,6 @@ const SchemaSettingsSidebar = () => {
     (select) => select("core/editor").getCurrentPostType(),
     [],
   );
-  const postTypeObject = useSelect(
-    (select) => {
-      if (!postType) return null;
-      return select("core").getPostType(postType);
-    },
-    [postType],
-  );
-  const supportsCustomFields =
-    postTypeObject &&
-    postTypeObject.supports &&
-    postTypeObject.supports["custom-fields"];
   const meta = useSelect(
     (select) => select("core/editor").getEditedPostAttribute("meta") || {},
     [],
@@ -437,55 +426,51 @@ const SchemaSettingsSidebar = () => {
                   </div>
                 )}
 
-                {supportsCustomFields && (
-                  <>
-                    <h2>
-                      {__("Current Document", "gregius-optimizer")}
-                    </h2>
+                <h2>
+                  {__("Current Document", "gregius-optimizer")}
+                </h2>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "0.5rem",
-                        fontSize: "13px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "1fr 130px 1fr",
-                          gap: "0.5rem",
-                          alignItems: "center",
-                        }}
-                      >
-                        <span style={{ fontWeight: 600 }}>
-                          {__("Type", "gregius-optimizer")}
-                        </span>
-                        <SelectControl
-                          value={perPostType}
-                          options={typeMap.map((t) => ({
-                            label: t.label,
-                            value: t.key,
-                          }))}
-                          onChange={handlePostTypeChange}
-                          __nextHasNoMarginBottom
-                        />
-                        <SelectControl
-                          value={perPostSubtype}
-                          options={getSubtypesForType(perPostType).map(
-                            (s) => ({
-                              label: s,
-                              value: s,
-                            }),
-                          )}
-                          onChange={handlePostSubtypeChange}
-                          __nextHasNoMarginBottom
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "0.5rem",
+                    fontSize: "13px",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "1fr 130px 1fr",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span style={{ fontWeight: 600 }}>
+                      {__("Type", "gregius-optimizer")}
+                    </span>
+                    <SelectControl
+                      value={perPostType}
+                      options={typeMap.map((t) => ({
+                        label: t.label,
+                        value: t.key,
+                      }))}
+                      onChange={handlePostTypeChange}
+                      __nextHasNoMarginBottom
+                    />
+                    <SelectControl
+                      value={perPostSubtype}
+                      options={getSubtypesForType(perPostType).map(
+                        (s) => ({
+                          label: s,
+                          value: s,
+                        }),
+                      )}
+                      onChange={handlePostSubtypeChange}
+                      __nextHasNoMarginBottom
+                    />
+                  </div>
+                </div>
 
                 </div>
 

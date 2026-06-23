@@ -61,19 +61,6 @@ const LLMSSettings = () => {
     (select) => select("core/editor").getCurrentPostId(),
     [],
   );
-  const postType = useSelect(
-    (select) => select("core/editor").getCurrentPostType(),
-    [],
-  );
-  const postTypeObject = useSelect(
-    (select) => {
-      if (!postType) {
-        return null;
-      }
-      return select("core").getPostType(postType);
-    },
-    [postType],
-  );
   const currentPostMeta = useSelect(
     (select) => select("core/editor").getEditedPostAttribute("meta") || {},
     [],
@@ -103,11 +90,6 @@ const LLMSSettings = () => {
     if (currentPostContent) return trimWords(stripBlocks(currentPostContent), 20);
     return "";
   };
-
-  const supportsCustomFields =
-    postTypeObject &&
-    postTypeObject.supports &&
-    postTypeObject.supports["custom-fields"];
 
   const isToggleOn = !!currentPostMeta[META_INCLUDE_KEY];
 
@@ -324,70 +306,68 @@ const LLMSSettings = () => {
               __nextHasNoMarginBottom
             />
 
-            {supportsCustomFields && (
-              <div
-                style={{
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  padding: "1rem",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.75rem",
+            <div
+              style={{
+                border: "1px solid #ddd",
+                borderRadius: "4px",
+                padding: "1rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.75rem",
+              }}
+            >
+              <ToggleControl
+                label={__(
+                  "Include the current document in site's llms.txt",
+                  "gregius-optimizer",
+                )}
+                checked={isToggleOn}
+                onChange={(value) => {
+                  editPost({
+                    meta: {
+                      ...currentPostMeta,
+                      [META_INCLUDE_KEY]: !!value,
+                    },
+                  });
                 }}
-              >
-                <ToggleControl
+                help={
+                  <Fragment>
+                    {__(
+                      "Include this document in your site's llms.txt to improve understanding and relevant retrieval.",
+                      "gregius-optimizer",
+                    )}{" "}
+                    <ExternalLink href="https://llmstxt.org/">
+                      {__("Learn more at llmstxt.org", "gregius-optimizer")}
+                    </ExternalLink>
+                  </Fragment>
+                }
+              />
+
+              {isToggleOn && (
+                <TextareaControl
                   label={__(
-                    "Include the current document in site's llms.txt",
+                    "Description",
                     "gregius-optimizer",
                   )}
-                  checked={isToggleOn}
+                  help={__(
+                    "Leave empty to auto-generate from post excerpt or content.",
+                    "gregius-optimizer",
+                  )}
+                  value={currentPostMeta[META_DESC_KEY] || ""}
                   onChange={(value) => {
                     editPost({
                       meta: {
                         ...currentPostMeta,
-                        [META_INCLUDE_KEY]: !!value,
+                        [META_DESC_KEY]: value,
                       },
                     });
                   }}
-                  help={
-                    <Fragment>
-                      {__(
-                        "Include this document in your site's llms.txt to improve understanding and relevant retrieval.",
-                        "gregius-optimizer",
-                      )}{" "}
-                      <ExternalLink href="https://llmstxt.org/">
-                        {__("Learn more at llmstxt.org", "gregius-optimizer")}
-                      </ExternalLink>
-                    </Fragment>
-                  }
+                  rows={3}
+                  placeholder={getEffectiveDescription()}
+                  __nextHasNoMarginBottom
                 />
-
-                {isToggleOn && (
-                  <TextareaControl
-                    label={__(
-                      "Description",
-                      "gregius-optimizer",
-                    )}
-                    help={__(
-                      "Leave empty to auto-generate from post excerpt or content.",
-                      "gregius-optimizer",
-                    )}
-                    value={currentPostMeta[META_DESC_KEY] || ""}
-                    onChange={(value) => {
-                      editPost({
-                        meta: {
-                          ...currentPostMeta,
-                          [META_DESC_KEY]: value,
-                        },
-                      });
-                    }}
-                    rows={3}
-                    placeholder={getEffectiveDescription()}
-                    __nextHasNoMarginBottom
-                  />
-                )}
-              </div>
-            )}
+              )}
+            </div>
 
             </div>
 

@@ -316,7 +316,7 @@ The sitemap feature lives inside the Gregius Optimizer plugin. It intercepts six
 - WordPress 5.5+ (sitemaps introduced in 5.5; project requires 6.9+)
 - `GG_Optimizer_DB` class exists and the settings table is created on plugin activation
 - The custom meta field helper class (`GG_Optimizer_Custom_Meta_Field`) is available
-- All public post types support `custom-fields` (required for the hide-from-search meta)
+- The `_gg_optimizer_hide_from_search` meta field is registered on all public post types via `register_post_meta()` with `show_in_rest`. No `custom-fields` support declaration is required.
 
 ### 6.2 Open Issues (TBD List)
 

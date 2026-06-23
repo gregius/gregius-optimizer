@@ -28,28 +28,11 @@ const RobotsTxtSidebar = () => {
   const [success, setSuccess] = useState("");
   const [featureEnabled, setFeatureEnabled] = useState( true );
 
-  const postType = useSelect(
-    (select) => select("core/editor").getCurrentPostType(),
-    [],
-  );
   const postMeta = useSelect(
     (select) => select("core/editor").getEditedPostAttribute("meta") || {},
     [],
   );
-  const postTypeObject = useSelect(
-    (select) => {
-      if (!postType) {
-        return null;
-      }
-      return select("core").getPostType(postType);
-    },
-    [postType],
-  );
   const { editPost } = useDispatch("core/editor");
-  const supportsCustomFields =
-    postTypeObject &&
-    postTypeObject.supports &&
-    postTypeObject.supports["custom-fields"];
 
   const lineCount = (content.match(/\n/g) || []).length + 1;
 
@@ -230,29 +213,25 @@ const RobotsTxtSidebar = () => {
               )}
             </div>
 
-            {supportsCustomFields && (
-              <>
-                <h2>
-                  {__("Current Document", "gregius-optimizer")}
-                </h2>
+            <h2>
+              {__("Current Document", "gregius-optimizer")}
+            </h2>
 
-                <ToggleControl
-                  label={__(
-                    "Hide page from search engines",
-                    "gregius-optimizer",
-                  )}
-                  checked={!!postMeta[META_HIDE_FROM_SEARCH_KEY]}
-                  onChange={updateMeta}
-                  help={
-                    __(
-                      "A 'noindex' tag will help instruct search engines to not include this document in search results. This page will also be removed from the sitemap.",
-                      "gregius-optimizer",
-                    )
-                  }
-                  __nextHasNoMarginBottom
-                />
-              </>
-            )}
+            <ToggleControl
+              label={__(
+                "Hide page from search engines",
+                "gregius-optimizer",
+              )}
+              checked={!!postMeta[META_HIDE_FROM_SEARCH_KEY]}
+              onChange={updateMeta}
+              help={
+                __(
+                  "A 'noindex' tag will help instruct search engines to not include this document in search results. This page will also be removed from the sitemap.",
+                  "gregius-optimizer",
+                )
+              }
+              __nextHasNoMarginBottom
+            />
 
             </div>
 
