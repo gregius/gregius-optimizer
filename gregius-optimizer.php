@@ -30,6 +30,7 @@ register_activation_hook(
 	__FILE__,
 	function () {
 		GG_Optimizer_DB::maybe_create_tables();
+		flush_rewrite_rules( false );
 	}
 );
 

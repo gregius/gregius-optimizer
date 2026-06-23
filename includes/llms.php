@@ -231,7 +231,13 @@ if ( ! function_exists( 'gg_optimizer_output_llms_txt' ) ) {
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo esc_html( gg_optimizer_get_llms_key_documents( $unsaved_toggles, $unsaved_descriptions ) );
-		echo "\nSitemap: " . esc_url( home_url( '/wp-sitemap.xml' ) ) . "\n";
+		$settings     = json_decode( GG_Optimizer_DB::get( 'sitemap_settings', '{}' ), true );
+		$sitemap_urls = isset( $settings['sitemap_urls'] ) && is_array( $settings['sitemap_urls'] )
+			? $settings['sitemap_urls']
+			: array( '/wp-sitemap.xml' );
+		foreach ( $sitemap_urls as $path ) {
+			echo "\nSitemap: " . esc_url( home_url( $path ) ) . "\n";
+		}
 	}
 }
 

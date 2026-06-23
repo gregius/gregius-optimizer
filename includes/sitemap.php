@@ -17,6 +17,84 @@ add_filter( 'gg_optimizer_sitemap_enabled', static function ( $enabled ) {
 add_action( 'init', 'gg_optimizer_register_hide_meta' );
 
 /**
+ * Register rewrite rules for enabled sitemap URLs.
+ *
+ * WordPress core handles /wp-sitemap.xml via its own rewrite rule
+ * at init:11. We register additional rules at init:9 for legacy URLs.
+ */
+add_action(
+	'init',
+	function () {
+		$settings = json_decode( GG_Optimizer_DB::get( 'sitemap_settings', '{}' ), true );
+		$enabled  = isset( $settings['sitemap_urls'] ) && is_array( $settings['sitemap_urls'] )
+			? $settings['sitemap_urls']
+			: array( '/wp-sitemap.xml' );
+
+		foreach ( $enabled as $path ) {
+			if ( '/wp-sitemap.xml' === $path ) {
+				continue;
+			}
+			$clean = ltrim( (string) $path, '/' );
+			add_rewrite_rule(
+				'^' . preg_quote( $clean, '/' ) . '$',
+				'index.php?sitemap=index',
+				'top'
+			);
+		}
+	},
+	9
+);
+
+/**
+ * Block /wp-sitemap.xml when unchecked by the user.
+ *
+ * Core always registers its rewrite rule for wp-sitemap.xml. When
+ * the user unchecks this URL, we must prevent core from serving it
+ * while allowing the feature to still render at enabled URLs.
+ */
+add_action(
+	'template_redirect',
+	function () {
+		if ( ! get_query_var( 'sitemap' ) ) {
+			return;
+		}
+
+		$request_path = rtrim( (string) parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH ), '/' );
+
+		if ( '/wp-sitemap.xml' !== $request_path ) {
+			return;
+		}
+
+		$settings = json_decode( GG_Optimizer_DB::get( 'sitemap_settings', '{}' ), true );
+		$enabled  = isset( $settings['sitemap_urls'] ) && is_array( $settings['sitemap_urls'] )
+			? $settings['sitemap_urls']
+			: array( '/wp-sitemap.xml' );
+
+		if ( ! in_array( '/wp-sitemap.xml', $enabled, true ) ) {
+			add_filter( 'wp_sitemaps_enabled', '__return_false', 999 );
+		}
+	},
+	0
+);
+
+/**
+ * Soft-flush rewrite rules when sitemap URLs change.
+ *
+ * The REST POST handler sets a transient. On the next init, we flush
+ * so the database-stored rewrite rules include the newly registered paths.
+ */
+add_action(
+	'init',
+	function () {
+		if ( get_transient( 'gg_optimizer_sitemap_flush' ) ) {
+			delete_transient( 'gg_optimizer_sitemap_flush' );
+			flush_rewrite_rules( false );
+		}
+	},
+	999
+);
+
+/**
  * Register the hide-from-search meta field for all public post types.
  *
  * @return void
@@ -451,15 +529,24 @@ add_action(
 							);
 						}
 
-						return rest_ensure_response(
-							array(
-								'settings'    => $saved,
-								'post_types'  => $post_types,
-								'taxonomies'  => $taxonomies,
-								'users'       => $users,
-								'sitemap_url' => home_url( '/wp-sitemap.xml' ),
-							)
-						);
+					$sitemap_urls = isset( $saved['sitemap_urls'] ) && is_array( $saved['sitemap_urls'] )
+						? $saved['sitemap_urls']
+						: array( '/wp-sitemap.xml' );
+
+					$sitemap_url_links = array();
+					foreach ( $sitemap_urls as $p ) {
+						$sitemap_url_links[ $p ] = home_url( $p );
+					}
+
+					return rest_ensure_response(
+						array(
+							'settings'       => $saved,
+							'post_types'     => $post_types,
+							'taxonomies'     => $taxonomies,
+							'users'          => $users,
+							'sitemap_urls'   => $sitemap_url_links,
+						)
+					);
 					},
 				),
 				array(
@@ -530,7 +617,27 @@ add_action(
 							}
 						}
 
+						// Validate sitemap_urls.
+						$valid_paths = array( '/wp-sitemap.xml', '/sitemap_index.xml', '/sitemap.xml', '/sitemaps.xml' );
+						if ( isset( $settings['sitemap_urls'] ) && is_array( $settings['sitemap_urls'] ) ) {
+							$clean_urls = array();
+							foreach ( $settings['sitemap_urls'] as $p ) {
+								$p = (string) $p;
+								if ( '/' !== substr( $p, 0, 1 ) ) {
+									$p = '/' . $p;
+								}
+								if ( in_array( $p, $valid_paths, true ) ) {
+									$clean_urls[] = $p;
+								}
+							}
+							$settings['sitemap_urls'] = array_values( array_unique( $clean_urls ) );
+						} else {
+							$settings['sitemap_urls'] = array( '/wp-sitemap.xml' );
+						}
+
 						GG_Optimizer_DB::set( 'sitemap_settings', wp_json_encode( $settings ) );
+
+						set_transient( 'gg_optimizer_sitemap_flush', true, 30 );
 
 						return rest_ensure_response( array( 'success' => true ) );
 					},

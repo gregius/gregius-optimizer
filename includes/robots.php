@@ -113,13 +113,9 @@ if ( ! function_exists( 'gg_optimizer_get_default_robots_txt' ) ) {
 	 * @return string
 	 */
 	function gg_optimizer_get_default_robots_txt() {
-		$sitemap = home_url( '/wp-sitemap.xml' );
-
 		$rules  = "User-agent: *\n";
 		$rules .= "Disallow: /wp-admin/\n";
 		$rules .= "Allow: /wp-admin/admin-ajax.php\n";
-		$rules .= "\n";
-		$rules .= "Sitemap: $sitemap\n";
 		$rules .= "\n";
 		$rules .= "# Traditional Search & Live RAG Retrieval\n";
 		$rules .= "User-agent: Googlebot\n";
@@ -186,10 +182,23 @@ if ( ! function_exists( 'gg_optimizer_output_robots_txt' ) ) {
 
 		$custom = GG_Optimizer_DB::get( 'robots_txt_content', '' );
 		if ( '' !== $custom ) {
-			return $custom;
+			$output = $custom . "\n";
+		} else {
+			$output = gg_optimizer_get_default_robots_txt();
 		}
 
-		return gg_optimizer_get_default_robots_txt();
+		$output = preg_replace( '/^Sitemap:.*\n/m', '', $output );
+
+		$settings     = json_decode( GG_Optimizer_DB::get( 'sitemap_settings', '{}' ), true );
+		$sitemap_urls = isset( $settings['sitemap_urls'] ) && is_array( $settings['sitemap_urls'] )
+			? $settings['sitemap_urls']
+			: array( '/wp-sitemap.xml' );
+		$output .= "\n";
+		foreach ( $sitemap_urls as $path ) {
+			$output .= 'Sitemap: ' . home_url( $path ) . "\n";
+		}
+
+		return $output;
 	}
 
 	add_filter( 'robots_txt', 'gg_optimizer_output_robots_txt', 10, 2 );

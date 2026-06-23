@@ -20,12 +20,19 @@ const SitemapSidebar = () => {
   const [postTypes, setPostTypes] = useState([]);
   const [taxonomies, setTaxonomies] = useState([]);
   const [users, setUsers] = useState([]);
-  const [sitemapUrl, setSitemapUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [featureEnabled, setFeatureEnabled] = useState( true );
+  const [sitemapUrls, setSitemapUrls] = useState({});
+
+  const SITEMAP_PRESETS = [
+    { path: "/wp-sitemap.xml",    label: __("WordPress core, since 5.5", "gregius-optimizer") },
+    { path: "/sitemap_index.xml", label: __("Yoast SEO, Rank Math", "gregius-optimizer") },
+    { path: "/sitemap.xml",       label: __("AIOSEO, legacy plugins", "gregius-optimizer") },
+    { path: "/sitemaps.xml",      label: __("SEOPress", "gregius-optimizer") },
+  ];
 
   useEffect(() => {
     if (!isOpen) return;
@@ -44,7 +51,7 @@ const SitemapSidebar = () => {
         setPostTypes(data.post_types || []);
         setTaxonomies(data.taxonomies || []);
         setUsers(data.users || []);
-        setSitemapUrl(data.sitemap_url || "");
+        setSitemapUrls(data.sitemap_urls || {});
       })
       .catch(() => {
         setError(
@@ -114,6 +121,16 @@ const SitemapSidebar = () => {
     setEditedSettings((prev) => ({ ...prev, authors: value }));
   };
 
+  const handleSitemapUrlToggle = (path, enabled) => {
+    setEditedSettings((prev) => {
+      const urls = prev.sitemap_urls || ["/wp-sitemap.xml"];
+      if (enabled) {
+        return { ...prev, sitemap_urls: [...urls, path] };
+      }
+      return { ...prev, sitemap_urls: urls.filter((u) => u !== path) };
+    });
+  };
+
   const isUserIncluded = (userId) => {
     const excluded = editedSettings.excluded_users || [];
     return !excluded.includes(userId);
@@ -181,6 +198,7 @@ const SitemapSidebar = () => {
       }
       setSettings(s);
       setEditedSettings(JSON.parse(JSON.stringify(s)));
+      setSitemapUrls({});
       setSuccess(__("Reset to defaults.", "gregius-optimizer"));
     } catch {
       setError(__("Failed to reset settings.", "gregius-optimizer"));
@@ -258,18 +276,36 @@ const SitemapSidebar = () => {
                     featureEnabled ? '' : 'gg-optimizer-feature-disabled'
                   }
                 >
-                  <p>
-                  {__(
-                    "Edit the content of your site's wp-sitemap.xml file served at",
-                    "gregius-optimizer",
-                  )}{" "}
-                  {sitemapUrl && (
-                    <ExternalLink href={sitemapUrl}>
-                      {sitemapUrl}
-                    </ExternalLink>
-                  )}
-                  {!sitemapUrl && "/wp-sitemap.xml"}.
-                </p>
+                  <div>
+                    <h2 style={{ fontSize: "13px" }}>
+                      {__("Sitemap URLs", "gregius-optimizer")}
+                    </h2>
+                    <p style={{ fontSize: "13px", color: "#666", marginBottom: "0.75rem" }}>
+                      {__(
+                        "Choose which sitemap URLs Gregius Optimizer generates. Leave off if handled elsewhere.",
+                        "gregius-optimizer",
+                      )}
+                    </p>
+                    {SITEMAP_PRESETS.map((preset) => (
+                      <ToggleControl
+                        key={preset.path}
+                        label={
+                          <span>
+                            <code>{preset.path}</code>
+                            {" \u2014 "}
+                            <span style={{ color: "#666" }}>
+                              {preset.label}
+                            </span>
+                          </span>
+                        }
+                        checked={
+                          (editedSettings.sitemap_urls || ["/wp-sitemap.xml"]).includes(preset.path)
+                        }
+                        onChange={(val) => handleSitemapUrlToggle(preset.path, val)}
+                        __nextHasNoMarginBottom
+                      />
+                    ))}
+                  </div>
 
                 <h2>
                   {__("Global Settings", "gregius-optimizer")}
