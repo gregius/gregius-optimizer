@@ -94,8 +94,10 @@ class GG_Optimizer_Feature_Toggle {
 	 */
 	public static function rest_sanitize_toggles( $toggles ): array {
 		$clean = array();
-		foreach ( self::FEATURES as $f ) {
-			$clean[ $f ] = ! empty( $toggles[ $f ] );
+		foreach ( $toggles as $key => $value ) {
+			if ( in_array( $key, self::FEATURES, true ) ) {
+				$clean[ $key ] = ! empty( $value );
+			}
 		}
 		return $clean;
 	}
