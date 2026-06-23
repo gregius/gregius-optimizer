@@ -227,17 +227,6 @@ The sitemap feature has no external service dependencies and no special deployme
 | Rationale | Fewer REST endpoints to maintain and document. Atomic save for the full configuration. Consistent with other Gregius Optimizer features (schema, robots). |
 | Consequences | The GET response payload includes the full list of post types, taxonomies, and users — potentially large on sites with many CPTs/taxonomies. Acceptable because the endpoint is only called on-demand (when the modal opens). |
 
-### AD-05: Site-Specific Taxonomy Exclusions
-
-| Field | Value |
-|---|---|
-| ID | AD-05 |
-| Linked Requirements | FR-09 |
-| Decision | Exclude `category` and `post_tag` from the taxonomy sitemap by default via a `gg_optimizer_sitemap_disabled_taxonomies` filter added at the end of `sitemap.php`. |
-| Alternatives | Include all taxonomies by default, configuration constant |
-| Rationale | Most content sites have sparse taxonomy content. Including category and tag archives adds low-value URLs to the sitemap. The filter can be removed or modified by the site owner. |
-| Consequences | Site owners who want category/tag URLs in their sitemap must remove this filter or re-enable them through the UI. |
-
 ---
 
 ## 5. Architecture Coverage Mapping
@@ -252,7 +241,6 @@ The sitemap feature has no external service dependencies and no special deployme
 | AD-02 Full-Map Save | FR-17, FR-19 |
 | AD-03 JSON Blob Storage | FR-16, FR-17 |
 | AD-04 Single REST Endpoint | FR-16, FR-17, FR-18 |
-| AD-05 Site-Specific Exclusions | FR-09 |
 
 ---
 
@@ -285,7 +273,7 @@ The sitemap feature has no external service dependencies and no special deployme
 | Component view defined | Complete | AV-02 |
 | Runtime interaction view defined | Complete | AV-03 (Flow A + Flow B) |
 | Deployment view relevant | N/A | No external services or special deployment |
-| All major decisions have ADRs | Complete | AD-01 through AD-05 |
+| All major decisions have ADRs | Complete | AD-01 through AD-04 |
 | Coverage mapping exists | Complete | Section 5 |
 | Constraints documented | Complete | Section 6.1 |
 | Risks documented | Complete | Section 6.2 |

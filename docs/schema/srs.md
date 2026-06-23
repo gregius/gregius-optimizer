@@ -21,7 +21,7 @@
 
 ### 1.1 System Purpose
 
-The schema feature enables site administrators and content editors to control structured data markup (JSON-LD) on their WordPress site. It provides a full schema.org type hierarchy (9 categories, 176 subtypes), per-post-type default assignment, per-post override, organization type selection, and a live JSON-LD preview.
+The schema feature enables site administrators and content editors to control structured data markup (JSON-LD) on their WordPress site. It provides a full schema.org type hierarchy (9 categories, 174 subtypes), per-post-type default assignment, per-post override, organization type selection, and a live JSON-LD preview.
 
 ### 1.2 System Scope
 
@@ -37,7 +37,7 @@ The feature generates JSON-LD structured data for Organization, Website, Breadcr
 - Output WebSite JSON-LD with search URL
 - Output BreadcrumbList JSON-LD for singular content
 - Output article/page JSON-LD for singular content with resolved subtype
-- Full schema.org type map (9 categories, 176 subtypes)
+- Full schema.org type map (9 categories, 174 subtypes)
 - Global post-type default subtype assignment
 - Per-post schema subtype override via post meta
 - Organization type selection dropdown
@@ -68,7 +68,7 @@ The feature generates JSON-LD structured data for Organization, Website, Breadcr
 | ID | Requirement | Priority |
 |---|---|---|
 | FR-09 | The software MUST provide a type map of 9 categories: Article, WebPage, CreativeWork, Event, Organization, Person, Place, Product, Review. | Must |
-| FR-10 | The type map MUST include all 176 subtypes across the 9 categories. | Must |
+| FR-10 | The type map MUST include all 174 subtypes across the 9 categories. | Must |
 | FR-11 | The software MUST provide functions to get all subtypes flat, get the parent category for a subtype, and get the hardcoded default for a post type. | Must |
 
 #### 2.1.3 Subtype Resolution Chain

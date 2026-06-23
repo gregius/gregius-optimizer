@@ -105,18 +105,6 @@ Recursively walks a block tree, finds the first `core/site-logo` block with `org
 | Hook | Type | File:Line | Description |
 |---|---|---|---|
 | `gg_optimizer_schema_output_organization` | filter | `schema.php:320` | Suppress entire Organization JSON-LD output (including logo and sameAs). Parameters: `(bool $output)`. Default `true`. |
-| `gg_optimizer_schema_image` | filter | `schema.php:784` | Override the resolved image URL for schema output. Parameters: `(string $url, int $post_id)`. |
-
-**Logo-specific usage:**
-```php
-// Force a specific logo URL for all pages.
-add_filter( 'gg_optimizer_schema_image', function ( $url, $post_id ) {
-    return 'https://example.com/custom-logo.png';
-}, 10, 2 );
-
-// Disable Organization schema output entirely.
-add_filter( 'gg_optimizer_schema_output_organization', '__return_false' );
-```
 
 ---
 
@@ -155,15 +143,6 @@ add_filter( 'gg_optimizer_schema_output_organization', '__return_false' );
 ```
 
 This removes the entire Organization JSON-LD node, including `logo`, `sameAs`, `name`, and `url`.
-
-#### Customizing the Logo URL
-
-```php
-add_filter( 'gg_optimizer_schema_image', function ( $url, $post_id ) {
-    $custom_logo = get_post_meta( $post_id, 'my_custom_logo', true );
-    return $custom_logo ?: $url;
-}, 10, 2 );
-```
 
 #### Removing the Logo Schema Toggle from the Editor
 

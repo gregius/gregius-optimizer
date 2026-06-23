@@ -74,7 +74,7 @@ The schema feature generates structured data (JSON-LD) for Organization, WebSite
 ┌───────────────────────────────────────────────────────────────┐
 │                  includes/schema-settings.php                 │
 │                                                               │
-│  - gg_optimizer_schema_get_type_map() (9 categories, 176)    │
+│  - gg_optimizer_schema_get_type_map() (9 categories, 174)    │
 │  - gg_optimizer_schema_get_all_subtypes()                    │
 │  - gg_optimizer_schema_get_subtype_parent()                  │
 │  - gg_optimizer_schema_get_default_subtype()                 │
@@ -151,7 +151,7 @@ The schema feature generates structured data (JSON-LD) for Organization, WebSite
 |---|---|
 | ID | AD-01 |
 | Linked Requirements | FR-09, FR-10 |
-| Decision | Include all 176 subtypes across 9 categories rather than a curated subset. |
+| Decision | Include all 174 subtypes across 9 categories rather than a curated subset. |
 | Rationale | Prevents the need for updates as schema.org evolves. Users can select any valid subtype. |
 | Consequences | Larger UI (scrollable subtype lists). Validation must accept any known subtype. |
 

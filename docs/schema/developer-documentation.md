@@ -6,7 +6,7 @@
 
 ## Overview
 
-The schema feature generates JSON-LD structured data for Organization, WebSite, BreadcrumbList, and content pages. It includes a full schema.org type map (9 categories, 176 subtypes), configurable defaults per post type, and per-post subtype override.
+The schema feature generates JSON-LD structured data for Organization, WebSite, BreadcrumbList, and content pages. It includes a full schema.org type map (9 categories, 174 subtypes), configurable defaults per post type, and per-post subtype override.
 
 **SRS reference:** `docs/schema/srs.md` (FR-01 through FR-30)
 
@@ -83,7 +83,7 @@ gg_optimizer_schema_get_breadcrumb_items( WP_Post $post ) : array
 gg_optimizer_schema_get_type_map() : array
 ```
 
-Returns the full type map: 9 categories with 176 subtypes.
+Returns the full type map: 9 categories with 174 subtypes.
 
 **Structure:**
 ```php
@@ -100,7 +100,7 @@ Returns the full type map: 9 categories with 176 subtypes.
 gg_optimizer_schema_get_all_subtypes() : array
 ```
 
-Returns a flat array of all 176 subtype strings.
+Returns a flat array of all 174 subtype strings.
 
 #### 2.3 `gg_optimizer_schema_get_subtype_parent`
 
@@ -135,8 +135,13 @@ Resolves the subtype for a post using the priority chain:
 
 | Hook | Type | File | Description |
 |---|---|---|---|
-| `gg_optimizer_schema_article_type` | filter | `schema-settings.php:215` | Override the resolved `@type` for article/page schema. Parameters: `(string $type, WP_Post $post)` |
-| `gg_optimizer_schema_organization_type` | filter | `schema-settings.php:315` | Override the Organization `@type`. Parameters: `(string $type)` |
+| `gg_optimizer_schema_output_organization` | filter | `schema.php:328` | Disable Organization JSON-LD output. Default: `true` |
+| `gg_optimizer_schema_output_website` | filter | `schema.php:425` | Disable WebSite JSON-LD output. Default: `true` |
+| `gg_optimizer_schema_output_article` | filter | `schema.php:933` | Disable article/page content entity output. Default: `true` |
+| `gg_optimizer_schema_output_breadcrumb` | filter | `schema.php:779` | Disable BreadcrumbList output. Default: `true` |
+| `gg_optimizer_schema_output_faq` | filter | `schema.php:1013` | Disable FAQPage output. Default: `true` |
+| `gg_optimizer_schema_article_type` | filter | `schema.php:574` | Override the resolved `@type` for article/page schema. Parameters: `(string $type, WP_Post $post)` |
+| `gg_optimizer_schema_organization_type` | filter | `schema.php:859` | Override the Organization `@type`. Parameters: `(string $type)` |
 
 **Usage:**
 ```php
@@ -256,15 +261,6 @@ add_filter( 'gg_optimizer_schema_get_organization_content_sources', function ( $
     $sources[] = '<p>Custom content with social links</p>';
     return $sources;
 } );
-```
-
-### Overriding the Image Resolver
-
-```php
-add_filter( 'gg_optimizer_schema_image', function ( $url, $post_id ) {
-    $custom = get_post_meta( $post_id, 'my_custom_image', true );
-    return $custom ?: $url;
-}, 10, 2 );
 ```
 
 ---

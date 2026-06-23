@@ -92,7 +92,6 @@ The feature operates by reading `core/site-logo` block attributes from the post 
 | `editor.BlockEdit` | filter | Wraps `core/site-logo` block edit with logo schema toggle control |
 | `wp_head` | action | Outputs Organization JSON-LD with `logo` property via schema output pipeline |
 | `gg_optimizer_schema_output_organization` | filter | Override to disable Organization schema output (default `true`) |
-| `gg_optimizer_schema_image` | filter | Override the resolved image URL for schema output |
 
 #### 2.3.2 Block Attributes
 
