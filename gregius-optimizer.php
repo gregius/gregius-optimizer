@@ -3,7 +3,7 @@
  * Plugin Name:       Gregius Optimizer
  * Plugin URI:        https://gregius.com/gregius-optimizer
  * Description:       SEO, AEO, SMO, and LLMO editor extensions — schema, meta, indexing, and social cards.
- * Version:           1.1.1
+ * Version:           1.2.0
  * Requires at least: 6.9
  * Requires PHP:      8.2
  * Author:            Hector Jarquin, Gregius

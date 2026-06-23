@@ -8,7 +8,7 @@ Gregius Optimizer gives content editors and site administrators a unified contro
 
 - Toggle sitemap post types, taxonomies, and author archives
 - Edit robots.txt from a modal textarea with live preview
-- Assign schema.org subtypes from a 176-type map across 9 categories
+- Assign schema.org subtypes from a 174-type map across 9 categories
 - Manage per-platform social card metadata (Google, Open Graph, Twitter/X)
 - Auto-generate `/llms.txt` for AI agent discoverability
 - All settings persist in a dedicated database table with REST API endpoints
@@ -22,7 +22,7 @@ Toggle post types, taxonomies, and authors in your XML sitemap. Exclude individu
 Full robots.txt editor with dynamic row sizing in a modal. Reset to WordPress defaults at any time. Built-in directives for search crawlers (Googlebot, Bingbot), AI crawlers (ChatGPT-User, ClaudeBot, PerplexityBot), and LLM trainers (GPTBot, Google-Extended).
 
 ### Schema
-176 schema.org subtypes across 9 categories — Article, WebPage, CreativeWork, Event, Organization, Person, Place, Product, and Review. Assign global defaults per post type, override per post. Organization JSON-LD includes sameAs and logo. JSON preview with clipboard copy.
+174 schema.org subtypes across 9 categories — Article, WebPage, CreativeWork, Event, Organization, Person, Place, Product, and Review. Assign global defaults per post type, override per post. Organization JSON-LD includes sameAs and logo. JSON preview with clipboard copy.
 
 ### Social Cards
 Per-platform title, description, and image overrides for Google Search Snippets, Open Graph (Facebook, LinkedIn), and Twitter/X Cards. Inline RichText previews with character counters (Google 60/160, OG 55/65, Twitter 70/200). Global fallback image section with kebab dropdown.

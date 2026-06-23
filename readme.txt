@@ -3,7 +3,7 @@ Contributors: hectorjarquin, gregiusteam
 Tags: seo, aeo, smo, llmo, optimization
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.1.1
+Stable tag: 1.2.0
 Requires PHP: 8.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -18,7 +18,7 @@ Gregius Optimizer gives content editors and site administrators a unified contro
 
 * **Sitemap** — Toggle post types, taxonomies, and authors in your XML sitemap. Exclude individual posts from search engines with a single click.
 * **Robots.txt** — Edit your robots.txt file from a modal textarea with dynamic row sizing. Reset to WordPress defaults at any time.
-* **Schema** — Full schema.org type map with 176 subtypes across 9 categories (Article, WebPage, CreativeWork, Event, Organization, Person, Place, Product, Review). Assign global defaults per post type, override per post, and preview JSON-LD with clipboard copy. Organization JSON-LD includes sameAs and logo.
+* **Schema** — Full schema.org type map with 174 subtypes across 9 categories (Article, WebPage, CreativeWork, Event, Organization, Person, Place, Product, Review). Assign global defaults per post type, override per post, and preview JSON-LD with clipboard copy. Organization JSON-LD includes sameAs and logo.
 * **Social Cards** — Per-platform title, description, and image overrides for Google Search Snippets, Open Graph (Facebook, LinkedIn), and Twitter/X Cards. Inline live previews with character counters (Google 60/160, OG 55/65, Twitter 70/200). Global fallback image with kebab menu.
 * **LLMs** — Auto-generate `/llms.txt` from site content for AI agent discoverability. Custom context editing with live preview. Per-post include toggle with custom descriptions.
 
@@ -30,7 +30,7 @@ All panels are accessible from `PluginDocumentSettingPanel` in the Gutenberg sid
 * `pre_get_document_title` filter for Google-specific title override
 * Open Graph (`og:*`) and Twitter Card meta tags with per-platform fallback chains
 * `gg_optimizer_og` image size (1200×630, cropped) registered on `after_setup_theme`
-* JSON-LD structured data: Organization (configurable subtype), WebSite, BreadcrumbList, article/page (176 subtypes)
+* JSON-LD structured data: Organization (configurable subtype), WebSite, BreadcrumbList, article/page (174 subtypes)
 * `@graph` wrapper for multiple JSON-LD nodes
 * Custom DB table (`gg_optimizer_settings`) shared across all features
 * REST endpoints for all settings: sitemap, robots, schema, social cards preview, llms override and preview
@@ -85,6 +85,13 @@ Visit the contributor profiles on WordPress.org:
 
 == Changelog ==
 
+= 1.2.0 =
+* Added: Sitemap URL selector — toggle which URLs serve your sitemap
+* Fixed: Saving one feature toggle no longer disables other features
+* Fixed: Per-post meta UI now renders on all public post types
+* Fixed: Stale Sitemap lines in robots.txt now replaced with current settings
+* Improved: robots.txt and llms.txt Sitemap lines dynamically reflect active URLs
+
 = 1.1.1 =
 * Fixed: Schema validation warnings for primaryImageOfPage and breadcrumb on BlogPosting
 * Improved: JSON-LD structure now uses proper WebPage wrapper + content entity pair
@@ -103,7 +110,7 @@ Visit the contributor profiles on WordPress.org:
 * Initial release
 * Sitemap panel with per-post-type/taxonomy/author toggles and noindex per-post
 * Robots.txt modal editor with reset to defaults
-* Schema panel with 176 subtypes across 9 categories, Organization type, per-post override, JSON-LD preview
+* Schema panel with 174 subtypes across 9 categories, Organization type, per-post override, JSON-LD preview
 * Social Cards panel with Google Search Snippet, Open Graph, Twitter/X Cards, Global Image, character counters
 * LLMs panel with auto-generated llms.txt, custom context, per-post include toggle, live preview
 * Meta description and canonical URL output
