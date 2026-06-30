@@ -1,3 +1,14 @@
+---
+type: DeveloperReference
+title: "Developer Documentation — Schema FAQ"
+description: "The Schema FAQ feature adds a `faqSchema` boolean attribute to `core/accordion` blocks. When enabled, the plugin extracts question-and-answer pairs from the accordion's inner block structure at render"
+subsystem: schema-faq
+standard: "ISO/IEC/IEEE 26514:2022"
+parent: schema
+tags: [schema-faq, developerreference]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Developer Documentation — Schema FAQ
 
 **Standard:** ISO/IEC/IEEE 26514:2022
@@ -227,3 +238,9 @@ add_filter( 'gg_optimizer_schema_faq_question', function ( $question, $block ) {
 | FAQPage node in `@graph` | FR-08, FR-09 |
 | `gg_optimizer_schema_output_faq` filter | FR-10 |
 | `wp_strip_all_tags` + `wp_json_encode` | SEC-01, SEC-02 |
+
+# Related
+
+- Upstream specification: [srs.md](srs.md) — software requirements specification
+- Upstream architecture: [architecture.md](architecture.md) — architecture views and design decisions
+- Parent subsystem: [Schema](../schema/) — parent schema subsystem documentation

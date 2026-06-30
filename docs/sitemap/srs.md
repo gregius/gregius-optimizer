@@ -1,3 +1,13 @@
+---
+type: Specification
+title: "Software Requirements Specification (SRS) — Sitemap"
+description: "Define precisely what the sitemap control feature must do — not how to build it. Every requirement is necessary, unambiguous, singular, and verifiable."
+subsystem: sitemap
+standard: "ISO/IEC/IEEE 29148:2018"
+tags: [sitemap, specification]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Software Requirements Specification (SRS) — Sitemap
 
 **Standard:** ISO/IEC/IEEE 29148:2018 — Software Requirements Specification
@@ -331,3 +341,7 @@ The sitemap feature lives inside the Gregius Optimizer plugin. It intercepts six
 | 2026-06-06 | User toggles always save the full settings map (not incremental diffs) | Simplifies the data model; avoids merge complexity for concurrent edits | Engineering |
 | 2026-06-06 | Filter defaults take precedence over missing DB keys (user override only when explicitly toggled) | Clear semantics: no toggle = filter default; explicit toggle = saved override wins | Engineering |
 | 2026-06-06 | Category and post_tag excluded by default via site-specific filter | Reduces low-value sitemap noise for most content sites | Product |
+
+# Related
+
+- Upstream specification for this subsystem: [architecture.md](architecture.md) — architecture views and design decisions

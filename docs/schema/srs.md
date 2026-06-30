@@ -1,3 +1,13 @@
+---
+type: Specification
+title: "Software Requirements Specification (SRS) — Schema"
+description: "Functional, data, and operational requirements for Organization, WebSite, BreadcrumbList, and content JSON-LD schema generation and output."
+subsystem: schema
+standard: "ISO/IEC/IEEE 29148:2018"
+tags: [schema, specification]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Software Requirements Specification (SRS) — Schema
 
 **Standard:** ISO/IEC/IEEE 29148:2018
@@ -166,3 +176,7 @@ The feature generates JSON-LD structured data for Organization, Website, Breadcr
 | FR-18–FR-19 | Product brief — per-post override |
 | FR-20–FR-22 | Product brief — REST API |
 | FR-23–FR-30 | Product brief — UI |
+
+# Related
+
+- Upstream specification for this subsystem: [architecture.md](architecture.md) — architecture views and design decisions

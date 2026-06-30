@@ -1,3 +1,14 @@
+---
+type: Specification
+title: "Software Requirements Specification (SRS) — Schema Logo"
+description: "Functional, data, and operational requirements for Logo extraction from core/site-logo block into schema JSON-LD."
+subsystem: schema-logo
+standard: "ISO/IEC/IEEE 29148:2018"
+parent: schema
+tags: [schema-logo, specification]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Software Requirements Specification (SRS) — Schema Logo
 
 **Standard:** ISO/IEC/IEEE 29148:2018
@@ -124,3 +135,8 @@ The feature operates by reading `core/site-logo` block attributes from the post 
 | FR-07–FR-08 | Feature brief — JSON-LD output requirements |
 | FR-09 | Feature brief — filter gate |
 | SEC-01–SEC-02 | WordPress security best practices |
+
+# Related
+
+- Upstream specification for this subsystem: [architecture.md](architecture.md) — architecture views and design decisions
+- Parent subsystem: [Schema](../schema/) — parent schema subsystem documentation

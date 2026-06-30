@@ -58,11 +58,18 @@ Auto-generate `/llms.txt` from site content for AI agent discoverability. Custom
 
 ## Documentation
 
-- **Sitemap**: [SRS](./docs/sitemap/srs.md) · [Architecture](./docs/sitemap/architecture.md) · [Developer Docs](./docs/sitemap/developer-documentation.md)
-- **Robots**: [SRS](./docs/robots/srs.md) · [Architecture](./docs/robots/architecture.md) · [Developer Docs](./docs/robots/developer-documentation.md)
-- **Schema**: [SRS](./docs/schema/srs.md) · [Architecture](./docs/schema/architecture.md) · [Developer Docs](./docs/schema/developer-documentation.md)
-- **Social Cards**: [SRS](./docs/social-cards/srs.md) · [Architecture](./docs/social-cards/architecture.md) · [Developer Docs](./docs/social-cards/developer-documentation.md)
-- **LLMs**: [SRS](./docs/llms/srs.md) · [Architecture](./docs/llms/architecture.md) · [Developer Docs](./docs/llms/developer-documentation.md)
+Full technical documentation is structured as an [OKF v0.1 knowledge base](./docs/index.md) catalog — progressive disclosure with YAML frontmatter, cross-linked SRS/architecture/developer-documentation per subsystem.
+
+| Subsystem | Artifacts |
+|:----------|:----------|
+| **Schema** (parent) | [SRS](./docs/schema/srs.md) · [Architecture](./docs/schema/architecture.md) · [Developer Docs](./docs/schema/developer-documentation.md) |
+| ↳ Schema FAQ | [SRS](./docs/schema-faq/srs.md) · [Architecture](./docs/schema-faq/architecture.md) · [Developer Docs](./docs/schema-faq/developer-documentation.md) |
+| ↳ Schema Logo | [SRS](./docs/schema-logo/srs.md) · [Architecture](./docs/schema-logo/architecture.md) · [Developer Docs](./docs/schema-logo/developer-documentation.md) |
+| ↳ Schema SameAs | [SRS](./docs/schema-sameas/srs.md) · [Architecture](./docs/schema-sameas/architecture.md) · [Developer Docs](./docs/schema-sameas/developer-documentation.md) |
+| **Sitemap** | [SRS](./docs/sitemap/srs.md) · [Architecture](./docs/sitemap/architecture.md) · [Developer Docs](./docs/sitemap/developer-documentation.md) |
+| **Robots** | [SRS](./docs/robots/srs.md) · [Architecture](./docs/robots/architecture.md) · [Developer Docs](./docs/robots/developer-documentation.md) |
+| **Social Cards** | [SRS](./docs/social-cards/srs.md) · [Architecture](./docs/social-cards/architecture.md) · [Developer Docs](./docs/social-cards/developer-documentation.md) |
+| **LLMs** | [SRS](./docs/llms/srs.md) · [Architecture](./docs/llms/architecture.md) · [Developer Docs](./docs/llms/developer-documentation.md) |
 
 ## Development
 

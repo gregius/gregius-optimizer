@@ -1,3 +1,14 @@
+---
+type: Architecture
+title: "Architecture Description — Schema SameAs"
+description: "Architecture views, ADRs, constraints, and risks for SameAs extraction from core/social-links block into schema JSON-LD."
+subsystem: schema-sameas
+standard: "ISO/IEC/IEEE 42010:2022"
+parent: schema
+tags: [schema-sameas, architecture]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Architecture Description — Schema SameAs
 
 **Standard:** ISO/IEC/IEEE 42010:2022
@@ -210,3 +221,9 @@ The Schema SameAs feature allows content editors to mark a `core/social-links` b
 | AD-01 Dual Extraction | FR-03 |
 | AD-02 Cycle Detection | FR-04, FR-05 |
 | AD-03 Block Attribute | FR-01 |
+
+# Related
+
+- Upstream requirements: [srs.md](srs.md) — software requirements specification
+- Downstream developer reference: [developer-documentation.md](developer-documentation.md) — API reference and integration guide
+- Parent subsystem: [Schema](../schema/) — parent schema subsystem documentation

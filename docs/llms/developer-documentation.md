@@ -1,3 +1,13 @@
+---
+type: DeveloperReference
+title: "Developer Documentation — LLMs"
+description: "The LLMs feature serves `/llms.txt` for large language model context, auto-generates site architecture summaries, and provides per-post inclusion toggles. It implements the [llms.txt proposal](https:/"
+subsystem: llms
+standard: "ISO/IEC/IEEE 26514:2022"
+tags: [llms, developerreference]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Developer Documentation — LLMs
 
 **Standard:** ISO/IEC/IEEE 26514:2022
@@ -283,3 +293,8 @@ add_filter( 'gg_optimizer_llms_get_post_types', function ( $post_types ) {
 | `/llms-override` POST | FR-20 |
 | `/llms-preview` POST | FR-21 |
 | PluginDocumentSettingPanel + Modal | FR-22–FR-32 |
+
+# Related
+
+- Upstream specification: [srs.md](srs.md) — software requirements specification
+- Upstream architecture: [architecture.md](architecture.md) — architecture views and design decisions

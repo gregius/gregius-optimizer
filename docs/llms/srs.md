@@ -1,3 +1,13 @@
+---
+type: Specification
+title: "Software Requirements Specification (SRS) — LLMs"
+description: "Functional, data, and operational requirements for Auto-generated llms.txt content with per-post toggles for LLM consumption."
+subsystem: llms
+standard: "ISO/IEC/IEEE 29148:2018"
+tags: [llms, specification]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Software Requirements Specification (SRS) — LLMs
 
 **Standard:** ISO/IEC/IEEE 29148:2018
@@ -178,3 +188,7 @@ The feature serves `/llms.txt` at the site root, outputs a `<link rel="help">` t
 | FR-19–FR-21 | Product brief — REST API |
 | FR-22–FR-24 | Product brief — sidebar panel |
 | FR-25–FR-32 | Product brief — modal configuration |
+
+# Related
+
+- Upstream specification for this subsystem: [architecture.md](architecture.md) — architecture views and design decisions

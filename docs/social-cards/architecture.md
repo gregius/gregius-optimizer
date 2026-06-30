@@ -1,3 +1,13 @@
+---
+type: Architecture
+title: "Architecture Description — Social Cards"
+description: "Architecture views, ADRs, constraints, and risks for Google, Open Graph, and Twitter social card metadata generation and preview."
+subsystem: social-cards
+standard: "ISO/IEC/IEEE 42010:2022"
+tags: [social-cards, architecture]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Architecture Description — Social Cards
 
 **Standard:** ISO/IEC/IEEE 42010:2022
@@ -217,3 +227,8 @@ The Social Cards feature generates `<meta>` tags for Google Search snippets, Ope
 | AD-03 Platform Image Resolvers | FR-23, FR-31 |
 | AD-04 Unified Context | FR-34 |
 | AD-05 Google Title Override | FR-18, FR-19 |
+
+# Related
+
+- Upstream requirements: [srs.md](srs.md) — software requirements specification
+- Downstream developer reference: [developer-documentation.md](developer-documentation.md) — API reference and integration guide

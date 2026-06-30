@@ -1,3 +1,13 @@
+---
+type: Architecture
+title: "Architecture Description — Sitemap"
+description: "Document the system architecture, key decisions, constraints, and risks for the sitemap control feature."
+subsystem: sitemap
+standard: "ISO/IEC/IEEE 42010:2022"
+tags: [sitemap, architecture]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Architecture Description — Sitemap
 
 **Standard:** ISO/IEC/IEEE 42010:2022 — Architecture Description
@@ -292,3 +302,8 @@ The architecture is ready for implementation. Downstream skills:
 | React sidebar panel | `wp-block-development` (JS component registration) |
 | Post meta registration | `wp-plugin-development` (meta via `register_post_meta`) |
 | Code quality | `wp-coding-standards` |
+
+# Related
+
+- Upstream requirements: [srs.md](srs.md) — software requirements specification
+- Downstream developer reference: [developer-documentation.md](developer-documentation.md) — API reference and integration guide

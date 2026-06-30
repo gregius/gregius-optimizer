@@ -1,3 +1,13 @@
+---
+type: Architecture
+title: "Architecture Description — LLMs"
+description: "Architecture views, ADRs, constraints, and risks for Auto-generated llms.txt content with per-post toggles for LLM consumption."
+subsystem: llms
+standard: "ISO/IEC/IEEE 42010:2022"
+tags: [llms, architecture]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Architecture Description — LLMs
 
 **Standard:** ISO/IEC/IEEE 42010:2022
@@ -196,3 +206,8 @@ The LLMs feature serves an `/llms.txt` file that provides LLMs with structured i
 | AD-02 Default Context | FR-04–FR-07 |
 | AD-03 Boolean Toggle | FR-17, FR-18 |
 | AD-04 REST Preview | FR-30 |
+
+# Related
+
+- Upstream requirements: [srs.md](srs.md) — software requirements specification
+- Downstream developer reference: [developer-documentation.md](developer-documentation.md) — API reference and integration guide

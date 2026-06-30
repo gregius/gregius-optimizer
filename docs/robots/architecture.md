@@ -1,3 +1,13 @@
+---
+type: Architecture
+title: "Architecture Description — Robots"
+description: "Architecture views, ADRs, constraints, and risks for Robots.txt editing, live preview, validation, and per-page meta robots controls."
+subsystem: robots
+standard: "ISO/IEC/IEEE 42010:2022"
+tags: [robots, architecture]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Architecture Description — Robots
 
 **Standard:** ISO/IEC/IEEE 42010:2022 — Architecture Description
@@ -247,3 +257,8 @@ The robots feature manages two outputs: the `robots.txt` file served at the site
 ## 8. Handoff Note
 
 Downstream skills: `wp-plugin-development` (hooks + REST), `wp-block-development` (JS component), `wp-coding-standards`.
+
+# Related
+
+- Upstream requirements: [srs.md](srs.md) — software requirements specification
+- Downstream developer reference: [developer-documentation.md](developer-documentation.md) — API reference and integration guide

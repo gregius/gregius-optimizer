@@ -1,3 +1,13 @@
+---
+type: DeveloperReference
+title: "Developer Documentation — Social Cards"
+description: "The Social Cards feature provides per-platform title, description, and image overrides for Google Search snippets, Open Graph, and Twitter Cards. It registers 11 meta keys on all public post types, ou"
+subsystem: social-cards
+standard: "ISO/IEC/IEEE 26514:2022"
+tags: [social-cards, developerreference]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Developer Documentation — Social Cards
 
 **Standard:** ISO/IEC/IEEE 26514:2022
@@ -360,3 +370,8 @@ add_filter( 'gg_optimizer_get_meta_description', function ( $description, $post,
 | `gg_optimizer_register_image_sizes` | FR-32–FR-33 |
 | `/meta-preview` POST endpoint | FR-34–FR-36 |
 | PluginDocumentSettingPanel + Modal | FR-37–FR-50 |
+
+# Related
+
+- Upstream specification: [srs.md](srs.md) — software requirements specification
+- Upstream architecture: [architecture.md](architecture.md) — architecture views and design decisions

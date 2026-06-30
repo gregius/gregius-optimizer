@@ -1,3 +1,14 @@
+---
+type: Architecture
+title: "Architecture Description — Schema FAQ"
+description: "Architecture views, ADRs, constraints, and risks for FAQ extraction from core/accordion blocks into schema JSON-LD."
+subsystem: schema-faq
+standard: "ISO/IEC/IEEE 42010:2022"
+parent: schema
+tags: [schema-faq, architecture]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Architecture Description — Schema FAQ
 
 **Standard:** ISO/IEC/IEEE 42010:2022
@@ -204,3 +215,9 @@ The Schema FAQ feature allows content editors to mark `core/accordion` blocks fo
 | AD-01 Block Attribute | FR-01 |
 | AD-02 Extraction Strategy | FR-04, FR-05 |
 | AD-03 Filter Gate | FR-10 |
+
+# Related
+
+- Upstream requirements: [srs.md](srs.md) — software requirements specification
+- Downstream developer reference: [developer-documentation.md](developer-documentation.md) — API reference and integration guide
+- Parent subsystem: [Schema](../schema/) — parent schema subsystem documentation

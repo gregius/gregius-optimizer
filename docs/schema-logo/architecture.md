@@ -1,3 +1,14 @@
+---
+type: Architecture
+title: "Architecture Description — Schema Logo"
+description: "Architecture views, ADRs, constraints, and risks for Logo extraction from core/site-logo block into schema JSON-LD."
+subsystem: schema-logo
+standard: "ISO/IEC/IEEE 42010:2022"
+parent: schema
+tags: [schema-logo, architecture]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Architecture Description — Schema Logo
 
 **Standard:** ISO/IEC/IEEE 42010:2022
@@ -195,3 +206,9 @@ The Schema Logo feature allows content editors to mark a `core/site-logo` block 
 | AD-01 Block Attribute | FR-01 |
 | AD-02 First-Match | FR-06 |
 | AD-03 Fallback Chain | FR-04 |
+
+# Related
+
+- Upstream requirements: [srs.md](srs.md) — software requirements specification
+- Downstream developer reference: [developer-documentation.md](developer-documentation.md) — API reference and integration guide
+- Parent subsystem: [Schema](../schema/) — parent schema subsystem documentation

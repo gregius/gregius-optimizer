@@ -1,3 +1,13 @@
+---
+type: DeveloperReference
+title: "Developer Documentation — Schema"
+description: "The schema feature generates JSON-LD structured data for Organization, WebSite, BreadcrumbList, and content pages. It includes a full schema.org type map (9 categories, 174 subtypes), configurable def"
+subsystem: schema
+standard: "ISO/IEC/IEEE 26514:2022"
+tags: [schema, developerreference]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Developer Documentation — Schema
 
 **Standard:** ISO/IEC/IEEE 26514:2022
@@ -291,3 +301,8 @@ add_filter( 'gg_optimizer_schema_get_organization_content_sources', function ( $
 | `_gg_optimizer_schema_subtype` meta | FR-18, FR-19 |
 | Schema preview REST endpoint | FR-22, FR-29 |
 | PluginDocumentSettingPanel + Modal | FR-23–FR-30 |
+
+# Related
+
+- Upstream specification: [srs.md](srs.md) — software requirements specification
+- Upstream architecture: [architecture.md](architecture.md) — architecture views and design decisions

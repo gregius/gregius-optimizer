@@ -1,3 +1,13 @@
+---
+type: DeveloperReference
+title: "Developer Documentation — Sitemap"
+description: "The sitemap feature extends WordPress core sitemaps (5.5+) by intercepting the sitemap filter chain. It allows site administrators to toggle post types, taxonomies, author pages, and individual docume"
+subsystem: sitemap
+standard: "ISO/IEC/IEEE 26514:2022"
+tags: [sitemap, developerreference]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Developer Documentation — Sitemap
 
 **Standard:** ISO/IEC/IEEE 26514:2022 — Developer Reference Documentation
@@ -401,3 +411,8 @@ add_filter( 'gg_optimizer_sitemap_excluded_terms', function () {
 | `_gg_optimizer_hide_from_search` | FR-13, FR-14, FR-15 |
 | PluginDocumentSettingPanel "Sitemap" | FR-21, FR-22, FR-23, FR-24 |
 | Sitemap modal UI | FR-25, FR-26, FR-27, FR-28, FR-29 |
+
+# Related
+
+- Upstream specification: [srs.md](srs.md) — software requirements specification
+- Upstream architecture: [architecture.md](architecture.md) — architecture views and design decisions

@@ -1,3 +1,14 @@
+---
+type: DeveloperReference
+title: "Developer Documentation — Schema Logo"
+description: "The Schema Logo feature adds an `organizationLogoSchema` boolean attribute to `core/site-logo` blocks. When enabled, the plugin extracts the logo image URL from the block at render time and includes i"
+subsystem: schema-logo
+standard: "ISO/IEC/IEEE 26514:2022"
+parent: schema
+tags: [schema-logo, developerreference]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Developer Documentation — Schema Logo
 
 **Standard:** ISO/IEC/IEEE 26514:2022
@@ -178,3 +189,9 @@ add_action( 'enqueue_block_editor_assets', function () {
 | Organization `logo` property in JSON-LD | FR-07, FR-08 |
 | `gg_optimizer_schema_output_organization` filter | FR-09 |
 | `esc_url_raw` + `wp_json_encode` | SEC-01, SEC-02 |
+
+# Related
+
+- Upstream specification: [srs.md](srs.md) — software requirements specification
+- Upstream architecture: [architecture.md](architecture.md) — architecture views and design decisions
+- Parent subsystem: [Schema](../schema/) — parent schema subsystem documentation

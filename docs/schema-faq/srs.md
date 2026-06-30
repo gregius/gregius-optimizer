@@ -1,3 +1,14 @@
+---
+type: Specification
+title: "Software Requirements Specification (SRS) — Schema FAQ"
+description: "Functional, data, and operational requirements for FAQ extraction from core/accordion blocks into schema JSON-LD."
+subsystem: schema-faq
+standard: "ISO/IEC/IEEE 29148:2018"
+parent: schema
+tags: [schema-faq, specification]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Software Requirements Specification (SRS) — Schema FAQ
 
 **Standard:** ISO/IEC/IEEE 29148:2018
@@ -125,3 +136,8 @@ The feature operates by reading `core/accordion` block attributes from the post 
 | FR-08–FR-09 | Feature brief — JSON-LD output requirements |
 | FR-10 | Feature brief — filter gate |
 | SEC-01–SEC-02 | WordPress security best practices |
+
+# Related
+
+- Upstream specification for this subsystem: [architecture.md](architecture.md) — architecture views and design decisions
+- Parent subsystem: [Schema](../schema/) — parent schema subsystem documentation

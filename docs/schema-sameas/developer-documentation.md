@@ -1,3 +1,14 @@
+---
+type: DeveloperReference
+title: "Developer Documentation — Schema SameAs"
+description: "The Schema SameAs feature adds a `sameAsSchema` boolean attribute to `core/social-links` blocks. When enabled, the plugin extracts social profile URLs from the block's inner `core/social-link` blocks"
+subsystem: schema-sameas
+standard: "ISO/IEC/IEEE 26514:2022"
+parent: schema
+tags: [schema-sameas, developerreference]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Developer Documentation — Schema SameAs
 
 **Standard:** ISO/IEC/IEEE 26514:2022
@@ -229,3 +240,9 @@ add_action( 'enqueue_block_editor_assets', function () {
 | `gg_optimizer_schema_output_organization` filter | FR-11 |
 | `gg_optimizer_schema_get_organization_content_sources` filter | FR-12 |
 | `esc_url_raw` + `wp_json_encode` | SEC-01, SEC-02 |
+
+# Related
+
+- Upstream specification: [srs.md](srs.md) — software requirements specification
+- Upstream architecture: [architecture.md](architecture.md) — architecture views and design decisions
+- Parent subsystem: [Schema](../schema/) — parent schema subsystem documentation

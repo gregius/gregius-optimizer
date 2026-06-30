@@ -1,3 +1,13 @@
+---
+type: Architecture
+title: "Architecture Description — Schema"
+description: "Architecture views, ADRs, constraints, and risks for Organization, WebSite, BreadcrumbList, and content JSON-LD schema generation and output."
+subsystem: schema
+standard: "ISO/IEC/IEEE 42010:2022"
+tags: [schema, architecture]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Architecture Description — Schema
 
 **Standard:** ISO/IEC/IEEE 42010:2022
@@ -202,3 +212,8 @@ The schema feature generates structured data (JSON-LD) for Organization, WebSite
 | AD-02 @graph Wrapper | FR-05 |
 | AD-03 SameAs from Blocks | FR-07 |
 | AD-04 Three-Layer Resolution | FR-12, FR-13, FR-14 |
+
+# Related
+
+- Upstream requirements: [srs.md](srs.md) — software requirements specification
+- Downstream developer reference: [developer-documentation.md](developer-documentation.md) — API reference and integration guide

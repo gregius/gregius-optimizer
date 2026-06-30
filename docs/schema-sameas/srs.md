@@ -1,3 +1,14 @@
+---
+type: Specification
+title: "Software Requirements Specification (SRS) — Schema SameAs"
+description: "Functional, data, and operational requirements for SameAs extraction from core/social-links block into schema JSON-LD."
+subsystem: schema-sameas
+standard: "ISO/IEC/IEEE 29148:2018"
+parent: schema
+tags: [schema-sameas, specification]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Software Requirements Specification (SRS) — Schema SameAs
 
 **Standard:** ISO/IEC/IEEE 29148:2018
@@ -131,3 +142,8 @@ The feature operates by reading `core/social-links` block attributes and `core/s
 | FR-09–FR-10 | Feature brief — JSON-LD output requirements |
 | FR-11–FR-12 | Feature brief — filter gates |
 | SEC-01–SEC-02 | WordPress security best practices |
+
+# Related
+
+- Upstream specification for this subsystem: [architecture.md](architecture.md) — architecture views and design decisions
+- Parent subsystem: [Schema](../schema/) — parent schema subsystem documentation

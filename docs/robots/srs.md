@@ -1,3 +1,13 @@
+---
+type: Specification
+title: "Software Requirements Specification (SRS) — Robots"
+description: "Define precisely what the robots control feature must do."
+subsystem: robots
+standard: "ISO/IEC/IEEE 29148:2018"
+tags: [robots, specification]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Software Requirements Specification (SRS) — Robots
 
 **Standard:** ISO/IEC/IEEE 29148:2018 — Software Requirements Specification
@@ -164,3 +174,7 @@ The robots feature extends the WordPress `robots_txt` filter and provides its ow
 | FR-07–FR-12 | Product brief — robots meta |
 | FR-13–FR-15 | Product brief — REST API |
 | FR-16–FR-22 | Product brief — sidebar panel + modal |
+
+# Related
+
+- Upstream specification for this subsystem: [architecture.md](architecture.md) — architecture views and design decisions

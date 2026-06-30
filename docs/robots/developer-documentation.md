@@ -1,3 +1,13 @@
+---
+type: DeveloperReference
+title: "Developer Documentation — Robots"
+description: "The robots feature manages two outputs: the site's `robots.txt` file (via the WordPress `robots_txt` filter) and per-page robots meta tags (via `wp_head`). Site administrators can override the robots."
+subsystem: robots
+standard: "ISO/IEC/IEEE 26514:2022"
+tags: [robots, developerreference]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Developer Documentation — Robots
 
 **Standard:** ISO/IEC/IEEE 26514:2022 — Developer Reference Documentation
@@ -255,3 +265,8 @@ add_filter( 'gg_optimizer_robots_txt_enabled', function () {
 | `POST /gg-optimizer/v1/robots-txt` | FR-14, FR-15 |
 | PluginDocumentSettingPanel "Robots" | FR-16, FR-17, FR-18 |
 | Robots modal | FR-19, FR-20, FR-21, FR-22 |
+
+# Related
+
+- Upstream specification: [srs.md](srs.md) — software requirements specification
+- Upstream architecture: [architecture.md](architecture.md) — architecture views and design decisions

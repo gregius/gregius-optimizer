@@ -1,3 +1,13 @@
+---
+type: Specification
+title: "Software Requirements Specification (SRS) — Social Cards"
+description: "Functional, data, and operational requirements for Google, Open Graph, and Twitter social card metadata generation and preview."
+subsystem: social-cards
+standard: "ISO/IEC/IEEE 29148:2018"
+tags: [social-cards, specification]
+timestamp: 2026-06-30T00:00:00Z
+---
+
 # Software Requirements Specification (SRS) — Social Cards
 
 **Standard:** ISO/IEC/IEEE 29148:2018
@@ -223,3 +233,7 @@ The feature generates `<meta>` tags for description, canonical, Open Graph, and 
 | FR-34–FR-36 | Product brief — REST API |
 | FR-37–FR-39 | Product brief — sidebar panel |
 | FR-40–FR-50 | Product brief — modal configuration |
+
+# Related
+
+- Upstream specification for this subsystem: [architecture.md](architecture.md) — architecture views and design decisions
