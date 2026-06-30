@@ -32,5 +32,6 @@ docs/*/public-documentation.html
 
 # Internal AI assistant instructions
 .github/
+.opencode/
 build/zip/
 build/svn/
