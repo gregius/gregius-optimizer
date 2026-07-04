@@ -3,7 +3,7 @@ Contributors: hectorjarquin, gregiusteam
 Tags: seo, aeo, smo, llmo, optimization
 Requires at least: 6.9
 Tested up to: 7.0
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 Requires PHP: 8.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -84,6 +84,10 @@ Visit the contributor profiles on WordPress.org:
 5. LLMs settings via the editor
 
 == Changelog ==
+
+= 1.2.1 =
+* Fixed: llms.txt blockquotes and markdown corrupted by HTML entity escaping
+* Improved: documentation restructured as OKF v0.1 knowledge base
 
 = 1.2.0 =
 * Added: Sitemap URL selector — toggle which URLs serve your sitemap

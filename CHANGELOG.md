@@ -5,12 +5,16 @@ All notable changes to Gregius Optimizer will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.1] - 2026-07-03
 
 ### Changed
 - Documentation restructured as OKF v0.1 knowledge base with YAML frontmatter,
   cross-linked SRS/architecture/developer-documentation per subsystem, and
   progressive-disclosure index catalogs
+
+### Fixed
+- llms.txt markdown corrupted by HTML entity escaping — `>` blockquotes rendered as
+  `&gt;`, breaking AI crawler consumption. Regression from v1.1.0 phpcs cleanup.
 
 ## [1.2.0] - 2026-06-23
 
