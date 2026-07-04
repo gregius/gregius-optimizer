@@ -221,16 +221,16 @@ if ( ! function_exists( 'gg_optimizer_output_llms_txt' ) ) {
 		}
 
 		if ( '' !== $context ) {
-			echo esc_html( $context );
+			echo $context; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/plain response
 		} else {
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo esc_html( gg_optimizer_get_llms_context() );
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/plain response
+			echo gg_optimizer_get_llms_context();
 		}
 
 		echo "\n\n";
 
-		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-		echo esc_html( gg_optimizer_get_llms_key_documents( $unsaved_toggles, $unsaved_descriptions ) );
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/plain response
+		echo gg_optimizer_get_llms_key_documents( $unsaved_toggles, $unsaved_descriptions );
 		$settings     = json_decode( GG_Optimizer_DB::get( 'sitemap_settings', '{}' ), true );
 		$sitemap_urls = isset( $settings['sitemap_urls'] ) && is_array( $settings['sitemap_urls'] )
 			? $settings['sitemap_urls']
