@@ -54,7 +54,7 @@ The LLMs feature serves an `/llms.txt` file that provides LLMs with structured i
 | External System | Direction | Description |
 |---|---|---|
 | LLM Agents / AI Crawlers | → consumes | Read `/llms.txt` for site context and key documents |
-| WordPress Core (`template_redirect`) | → intercept | Serve `/llms.txt` before WordPress renders the page, using `wp_basename()` for multisite-safe URL matching at any path depth |
+| WordPress Core (`pre_handle_404` + `template_redirect`) | → intercept | Short-circuit the 404 and serve `/llms.txt` at its canonical URL (exact path match) before WordPress renders the page |
 | WordPress Block Editor | → provides | LLMs modal for context editing and per-post toggles |
 | WordPress REST API | → responds | 3 endpoints for override + preview |
 | GG_Optimizer_DB | → writes ← reads | `llms_override` context text |
@@ -67,7 +67,7 @@ The LLMs feature serves an `/llms.txt` file that provides LLMs with structured i
 │                       includes/llms.php                       │
 │                                                               │
 │  - Meta field registration (2 fields)                         │
-│  - template_redirect: /llms.txt intercept                     │
+│  - pre_handle_404 + template_redirect: /llms.txt intercept    │
 │  - gg_optimizer_llms_normalize_text()                         │
 │  - gg_optimizer_get_llms_context()        (auto-generated)    │
 │  - gg_optimizer_get_llms_key_documents()  (from posts)        │
@@ -97,7 +97,7 @@ The LLMs feature serves an `/llms.txt` file that provides LLMs with structured i
 **Flow A: AI agent requests /llms.txt**
 
 ```
-  LLM Agent           template_redirect          DB             WordPress
+  LLM Agent           pre_handle_404             DB             WordPress
     │                     │                      │                 │
     │— GET /llms.txt      │                      │                 │
     │                     │— intercept           │                 │
@@ -111,7 +111,7 @@ The LLMs feature serves an `/llms.txt` file that provides LLMs with structured i
     │                     │  context()            │                 │
     │                     │  → site title, desc   │                 │
     │                     │  → homepage summary   │                 │
-    │                     │  → hardcoded defaults  │                 │
+    │                     │  → auto-gen context  │                 │
     │                     │                      │                 │
     │                     │— get_llms_key_       │                 │
     │                     │  documents()          │                 │
@@ -165,14 +165,16 @@ The LLMs feature serves an `/llms.txt` file that provides LLMs with structured i
 | Rationale | The Key Documents section is auto-generated from post meta. If a user accidentally pastes a full llms.txt including Key Documents into the context field, the safety strip prevents duplicate or conflicting document listings. |
 | Consequences | Users cannot customize the Key Documents section structure. The "Sitemap:" line is also auto-appended after Key Documents. |
 
-### AD-02: Auto-Generated Context with Defaults
+### AD-02: No Vendor Defaults in Auto-Generated Context
 
+| Field | Value |
+|---|---|
 | ID | AD-02 |
-| Linked Requirements | FR-04–FR-07 |
-| Decision | Include hardcoded "## Core Architecture" and "## Key Specifications" sections in the auto-generated context. |
-| Alternatives | Empty auto-generated context |
-| Rationale | Provides immediate value out of the box. Site administrators can customize or replace the defaults by saving an override. |
-| Consequences | The defaults are generic architectural descriptions. Administrators should customize them for their specific site. |
+| Linked Requirements | FR-04–FR-05 |
+| Decision | The auto-generated context contains only site title, description, and homepage summary. Hardcoded vendor "## Core Architecture" and "## Key Specifications" sections were removed in 1.3.0. |
+| Alternatives | Ship generic architecture defaults out of the box |
+| Rationale | The defaults described the vendor's own product (PostgreSQL/pgvector, AI pipeline claims) and were factually wrong on every other site. Custom context is supplied via the `llms_override` override. |
+| Consequences | Fresh installs produce a thinner context until the administrator provides a tagline, homepage summary, or custom override. |
 
 ### AD-03: Per-Post Toggle via Boolean Meta
 
@@ -203,7 +205,7 @@ The LLMs feature serves an `/llms.txt` file that provides LLMs with structured i
 | AV-03 Flow A | FR-01–FR-12 |
 | AV-03 Flow B | FR-13–FR-16, FR-19–FR-32 |
 | AD-01 Safety Strip | FR-16 |
-| AD-02 Default Context | FR-04–FR-07 |
+| AD-02 No Vendor Defaults | FR-04–FR-05 |
 | AD-03 Boolean Toggle | FR-17, FR-18 |
 | AD-04 REST Preview | FR-30 |
 

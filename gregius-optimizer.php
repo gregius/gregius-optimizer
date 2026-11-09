@@ -3,7 +3,7 @@
  * Plugin Name:       Gregius Optimizer
  * Plugin URI:        https://gregius.com/gregius-optimizer
  * Description:       SEO, AEO, SMO, and LLMO editor extensions — schema, meta, indexing, and social cards.
- * Version:           1.2.1
+ * Version:           1.3.0
  * Requires at least: 6.9
  * Requires PHP:      8.2
  * Author:            Hector Jarquin, Gregius
@@ -44,6 +44,9 @@ if ( ! class_exists( 'GG_Optimizer_Custom_Meta_Field' ) ) {
 
 // Feature toggle CRUD.
 require_once __DIR__ . '/includes/class-gg-optimizer-feature-toggle.php';
+
+// Virtual root files (llms.txt, robots.txt).
+require_once __DIR__ . '/includes/virtual-files.php';
 
 // Search-facing metadata.
 require_once __DIR__ . '/includes/search.php';

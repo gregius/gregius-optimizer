@@ -39,13 +39,14 @@ The LLMs feature enables site administrators to generate and customize an `/llms
 
 **Repository path:** `includes/llms.php`, `src/llms-settings.js`
 
-The feature serves `/llms.txt` at the site root, outputs a `<link rel="help">` tag in `<head>`, and provides a Gutenberg sidebar UI for configuring the context text and per-post inclusion.
+The feature serves `/llms.txt` at the site root with HTTP status 200, outputs a `<link rel="describedby">` tag in `<head>`, and provides a Gutenberg sidebar UI for configuring the context text and per-post inclusion.
 
 ### 1.3 System Functions Summary
 
-- Serve `/llms.txt` at the site root with `Content-Type: text/plain`
-- Output `<link rel="help" type="text/plain" href="/llms.txt">` in document head
-- Auto-generate llms.txt from site title, description, homepage, and architecture defaults
+- Serve `/llms.txt` at the site root with `Content-Type: text/plain` and HTTP status 200
+- Respect the "Discourage search engines" setting (`blog_public = 0`) by returning 404 for `/llms.txt`
+- Output `<link rel="describedby" type="text/plain" href="/llms.txt">` in document head
+- Auto-generate llms.txt from site title, description, and homepage
 - Generate a "Key Documents" section from posts with include toggle enabled
 - Custom context override saved to database
 - Per-post toggle to include/exclude from Key Documents
@@ -63,9 +64,9 @@ The feature serves `/llms.txt` at the site root, outputs a `<link rel="help">` t
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-01 | The software MUST serve `/llms.txt` at the site root via `template_redirect` with `Content-Type: text/plain`, using `wp_basename()` for multisite-safe URL matching at any path depth. | Must |
+| FR-01 | The software MUST serve `/llms.txt` at the canonical site root URL with `Content-Type: text/plain` and HTTP status `200`, by short-circuiting `pre_handle_404` and serving at `template_redirect`. Non-canonical paths such as `/anything/llms.txt` MUST NOT resolve. | Must |
 | FR-02 | The software MUST disable `/llms.txt` serving when the `gg_optimizer_llms_enabled` filter returns `false`. | Must |
-| FR-03 | The software MUST output `<link rel="help" type="text/plain" href="/llms.txt">` in the document `<head>` via `wp_head`. | Must |
+| FR-03 | The software MUST output `<link rel="describedby" type="text/plain" href="/llms.txt">` in the document `<head>` via `wp_head`. | Must |
 
 #### 2.1.2 Auto-Generated Context
 
@@ -73,8 +74,6 @@ The feature serves `/llms.txt` at the site root, outputs a `<link rel="help">` t
 |---|---|---|
 | FR-04 | The software MUST auto-generate a context header using site title (H1), site description (blockquote), and homepage summary (list item). | Must |
 | FR-05 | The homepage summary MUST use the page excerpt when available, otherwise the first 40 words of content. | Must |
-| FR-06 | The auto-generated context MUST include a "## Core Architecture" section with default architectural descriptions. | Must |
-| FR-07 | The auto-generated context MUST include a "## Key Specifications" section with default specification descriptions. | Must |
 
 #### 2.1.3 Key Documents Generation
 
@@ -137,8 +136,9 @@ The feature serves `/llms.txt` at the site root, outputs a `<link rel="help">` t
 
 | Hook | Type | Behavioral Contract |
 |---|---|---|
-| `template_redirect` | action | Intercept `/llms.txt` requests (using `wp_basename()` for multisite-safe URL matching) and serve plain text |
-| `wp_head` | action | Output `<link rel="help">` pointing to `/llms.txt` |
+| `pre_handle_404` | filter | Short-circuit 404 handling so `/llms.txt` responds `200` (exact path match) |
+| `template_redirect` | action | Serve `/llms.txt` plain text after the status short-circuit |
+| `wp_head` | action | Output `<link rel="describedby">` pointing to `/llms.txt` |
 
 #### 2.2.2 Filters
 
@@ -173,6 +173,7 @@ The feature serves `/llms.txt` at the site root, outputs a `<link rel="help">` t
 |---|---|
 | SEC-01 | All REST endpoints MUST check `current_user_can('manage_options')`. |
 | SEC-02 | llms.txt output MUST NOT escape auto-generated content (intentional raw text). |
+| SEC-03 | The software MUST NOT serve `/llms.txt` when `blog_public` is `0` ("Discourage search engines"). |
 
 ---
 
@@ -181,7 +182,7 @@ The feature serves `/llms.txt` at the site root, outputs a `<link rel="help">` t
 | SRS ID | Source |
 |---|---|
 | FR-01–FR-03 | Product brief — llms.txt serving |
-| FR-04–FR-07 | Product brief — auto-generated context |
+| FR-04–FR-05 | Product brief — auto-generated context |
 | FR-08–FR-12 | Product brief — key documents |
 | FR-13–FR-16 | Product brief — context override |
 | FR-17–FR-18 | Product brief — meta fields |

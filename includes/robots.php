@@ -8,34 +8,43 @@
 
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'template_redirect', function () {
-	if ( is_robots() ) {
-		return;
+if ( ! function_exists( 'gg_optimizer_output_robots_txt_file' ) ) {
+	/**
+	 * Serve robots.txt when core's is_robots() path does not fire.
+	 *
+	 * Core handles robots.txt on single sites via do_robots(). On subdirectory
+	 * multisite subsites, is_robots() returns false (bug #74), so this mirrors
+	 * core: fire do_robotstxt, build the subdir-aware default, then apply the
+	 * robots_txt filter.
+	 *
+	 * @return void
+	 */
+	function gg_optimizer_output_robots_txt_file() {
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Intentionally using core do_robotstxt action for interoperability.
+		do_action( 'do_robotstxt' );
+
+		$output  = "User-agent: *\n";
+		$output .= 'Disallow: ' . wp_parse_url( admin_url(), PHP_URL_PATH ) . "\n";
+		$output .= 'Allow: ' . wp_parse_url( admin_url( 'admin-ajax.php' ), PHP_URL_PATH ) . "\n";
+
+		// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Intentionally using core robots_txt filter for interoperability.
+		$output = apply_filters( 'robots_txt', $output, (bool) get_option( 'blog_public' ) );
+
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- text/plain response.
+		echo $output;
 	}
+}
 
-	$request_path = wp_parse_url( sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) ), PHP_URL_PATH );
-	if ( 'robots.txt' !== wp_basename( $request_path ) ) {
-		return;
+// Serve robots.txt on subdirectory multisite subsites, where is_robots() is false.
+gg_optimizer_register_virtual_file(
+	'robots.txt',
+	static function () {
+		return ! is_robots();
+	},
+	static function () {
+		gg_optimizer_output_robots_txt_file();
 	}
-
-	$public = get_option( 'blog_public' );
-	$output = "User-agent: *\n";
-	if ( '0' === $public ) {
-		$output .= "Disallow: /\n";
-	} else {
-		$site_url = wp_parse_url( site_url() );
-		$path     = ( ! empty( $site_url['path'] ) ) ? $site_url['path'] : '';
-		$output  .= "Disallow: $path/wp-admin/\n";
-		$output  .= "Allow: $path/wp-admin/admin-ajax.php\n";
-	}
-
-	// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Intentionally using core robots_txt filter for interoperability.
-	$output = apply_filters( 'robots_txt', $output, $public );
-
-	header( 'Content-Type: text/plain; charset=utf-8' );
-	echo esc_html( $output );
-	exit;
-}, 0 );
+);
 
 add_filter( 'gg_optimizer_robots_txt_enabled', static function ( $enabled ) {
 	return GG_Optimizer_Feature_Toggle::is_enabled( 'robots' ) ? $enabled : false;
@@ -114,8 +123,8 @@ if ( ! function_exists( 'gg_optimizer_get_default_robots_txt' ) ) {
 	 */
 	function gg_optimizer_get_default_robots_txt() {
 		$rules  = "User-agent: *\n";
-		$rules .= "Disallow: /wp-admin/\n";
-		$rules .= "Allow: /wp-admin/admin-ajax.php\n";
+		$rules .= 'Disallow: ' . wp_parse_url( admin_url(), PHP_URL_PATH ) . "\n";
+		$rules .= 'Allow: ' . wp_parse_url( admin_url( 'admin-ajax.php' ), PHP_URL_PATH ) . "\n";
 		$rules .= "\n";
 		$rules .= "# Traditional Search & Live RAG Retrieval\n";
 		$rules .= "User-agent: Googlebot\n";
@@ -166,12 +175,12 @@ if ( ! function_exists( 'gg_optimizer_output_robots_txt' ) ) {
 	 * @filter gg_optimizer_robots_txt_enabled  Disable extra robots.txt directives. Default true.
 	 *
 	 * @param string $output    Existing robots output from WordPress.
-	 * @param string $is_public Whether search indexing is enabled.
+	 * @param bool   $is_public Whether search indexing is enabled.
 	 * @return string
 	 */
 	function gg_optimizer_output_robots_txt( $output, $is_public ) {
-		if ( '0' === (string) $is_public ) {
-			return $output;
+		if ( ! $is_public ) {
+			return "User-agent: *\nDisallow: /\n";
 		}
 
 		// phpcs:ignore -- Example usage documentation.
@@ -195,7 +204,7 @@ if ( ! function_exists( 'gg_optimizer_output_robots_txt' ) ) {
 			: array( '/wp-sitemap.xml' );
 		$output .= "\n";
 		foreach ( $sitemap_urls as $path ) {
-			$output .= 'Sitemap: ' . home_url( $path ) . "\n";
+			$output .= 'Sitemap: ' . esc_url_raw( home_url( $path ) ) . "\n";
 		}
 
 		return $output;

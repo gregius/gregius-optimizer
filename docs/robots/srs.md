@@ -85,7 +85,7 @@ The robots feature extends the WordPress `robots_txt` filter and provides its ow
 | FR-02 | The software MUST check for a stored override in the database before returning robots.txt output. If an override exists, it MUST be returned instead of the default. | Must |
 | FR-03 | When no override is stored, the software MUST return the default robots.txt directives defined by `gg_optimizer_get_default_robots_txt()`. | Must |
 | FR-04 | The default robots.txt MUST include rules for traditional search bots (`Googlebot`, `Bingbot`), AI answer engines (`OAI-SearchBot`, `ChatGPT-User`, `PerplexityBot`, `ClaudeBot`, `Claude-Web`), and AI model trainers (`Google-Extended`, `GPTBot`, `Applebot-Extended`, `Cohere-ai`). | Must |
-| FR-05 | The software MUST respect WordPress's `blog_public` setting: if the site is not public, the original WordPress robots.txt output MUST be returned without modification. | Must |
+| FR-05 | The software MUST respect WordPress's `blog_public` setting: if the site is not public (`blog_public = 0`), robots.txt MUST return `Disallow: /`. | Must |
 | FR-06 | The software MUST provide a filter (`gg_optimizer_robots_txt_enabled`) to disable the robots.txt override entirely. | Must |
 
 #### 3.1.2 Robots Meta Tag
@@ -123,9 +123,9 @@ The robots feature extends the WordPress `robots_txt` filter and provides its ow
 | FR-20 | The modal MUST contain a textarea for editing robots.txt content with dynamic row count (minimum 20 rows, grows with content). | Must |
 | FR-21 | The modal MUST have an "Update" button that saves the content and a "Reset to defaults" button that clears the override. | Must |
 | FR-22 | The "Reset to defaults" button MUST be disabled when no custom override exists. | Must |
-| FR-23 | The software MUST intercept /robots.txt requests via `template_redirect` using `wp_basename()` for multisite subdirectory compatibility. | Must |
+| FR-23 | The software MUST serve `/robots.txt` with HTTP status 200 on subdirectory multisite subsites (where core `is_robots()` is false) by short-circuiting `pre_handle_404` and serving at `template_redirect` with an exact path match. | Must |
 | FR-24 | The Robots modal MUST display a 'Hide page from search engines' toggle for the current document. | Must |
-| FR-25 | When the Robots feature toggle is OFF, all robots meta tag and robots.txt output MUST be suppressed, and modal controls MUST be dimmed (opacity: 0.5, pointer-events: none). | Must |
+| FR-25 | When the Robots feature toggle is OFF, the robots meta tag MUST be suppressed and the robots.txt content MUST revert to the core default (robots.txt itself still serves), and modal controls MUST be dimmed (opacity: 0.5, pointer-events: none). | Must |
 
 ### 3.2 Performance Requirements
 
@@ -140,6 +140,8 @@ The robots feature extends the WordPress `robots_txt` filter and provides its ow
 | Hook | Type | Behavioral Contract | Condition |
 |---|---|---|---|
 | `robots_txt` | filter | Override robots.txt content with custom or default directives | On `/robots.txt` request |
+| `pre_handle_404` | filter | Short-circuit 404 so `/robots.txt` responds 200 on multisite subsites | When `is_robots()` is false |
+| `template_redirect` | action | Serve `/robots.txt` plain text after the status short-circuit | On multisite subsites |
 | `wp_head` | action | Output `<meta name="robots">` tag | On every frontend page load |
 | `wp_robots` | filter | N/A — feature uses legacy `wp_head` approach | — |
 
@@ -161,7 +163,7 @@ The robots feature extends the WordPress `robots_txt` filter and provides its ow
 | ID | Requirement |
 |---|---|
 | SEC-01 | All REST endpoints MUST check `current_user_can('manage_options')`. |
-| SEC-02 | All output MUST be escaped using `esc_attr`/`esc_url` at the point of output. |
+| SEC-02 | HTML output MUST be escaped using `esc_attr`/`esc_url`. robots.txt text/plain output MUST NOT be HTML-escaped (intentional raw text). |
 | SEC-03 | Direct file access MUST be blocked via `defined( 'ABSPATH' ) || exit;`. |
 
 ---

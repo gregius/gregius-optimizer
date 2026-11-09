@@ -65,7 +65,7 @@ The robots feature manages two outputs: the `robots.txt` file served at the site
 
 | External System | Direction | Protocol | Description |
 |---|---|---|---|
-| WordPress Core (`template_redirect`, priority 0) | ← intercepts | PHP action | Serves `/robots.txt` using `wp_basename()` for multisite-safe URL matching when core `is_robots()` returns false |
+| WordPress Core (`pre_handle_404` + `template_redirect`) | ← intercepts | PHP filter/action | Short-circuits the 404 and serves `/robots.txt` at its canonical URL (exact path match) when core `is_robots()` returns false |
 | WordPress Core (`robots_txt`) | ← intercepts | PHP filter | Replaces robots.txt content when override exists or defaults defined |
 | WordPress Core (`wp_head`) | ← adds | PHP action | Outputs `<meta name="robots">` on every page |
 | WordPress REST API | ← responds → receives | HTTP JSON | `GET/POST /gg-optimizer/v1/robots-txt`, `GET/POST /gg-optimizer/v1/feature-toggles` |

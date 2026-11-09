@@ -46,21 +46,14 @@ function gg_optimizer_register_llms_meta_fields() {
 }
 
 // 2. Serve llms.txt at the root.
-add_action(
-	'template_redirect',
-	function () {
-		$request_uri = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
-		$request_uri = (string) wp_parse_url( $request_uri, PHP_URL_PATH );
-
-		if ( ! apply_filters( 'gg_optimizer_llms_enabled', true ) ) {
-			return;
-		}
-
-		if ( 'llms.txt' === wp_basename( $request_uri ) ) {
-			header( 'Content-Type: text/plain; charset=utf-8' );
-			gg_optimizer_output_llms_txt();
-			exit;
-		}
+gg_optimizer_register_virtual_file(
+	'llms.txt',
+	static function () {
+		return apply_filters( 'gg_optimizer_llms_enabled', true )
+			&& '0' !== (string) get_option( 'blog_public' );
+	},
+	static function () {
+		gg_optimizer_output_llms_txt();
 	}
 );
 
@@ -116,23 +109,9 @@ if ( ! function_exists( 'gg_optimizer_get_llms_context' ) ) {
 			}
 
 			$summary = gg_optimizer_llms_normalize_text( $summary );
-			$lines[] = sprintf( '- [Home](%1$s): %2$s', esc_url( $site_url ), $summary );
+			$lines[] = sprintf( '- [Home](%1$s): %2$s', esc_url_raw( $site_url ), $summary );
 			$lines[] = '';
 		}
-
-		$defaults = array(
-			'## Core Architecture',
-			'- Gives developers full control of AI pipelines natively inside WordPress.',
-			'- Agnostic database and language model registry integrations.',
-			'- Full data telemetry control from top to bottom.',
-			'',
-			'## Key Specifications',
-			'- Designed to support the enterprise shift to agentic web applications.',
-			'- Bridges core WordPress data structures with modern AI engineering protocols.',
-			'- Features a decoupled dual-layer storage design using PostgreSQL for vector operations alongside native WordPress content infrastructures.',
-		);
-
-		$lines = array_merge( $lines, $defaults );
 
 		return implode( "\n", $lines );
 	}
@@ -159,6 +138,12 @@ if ( ! function_exists( 'gg_optimizer_get_llms_key_documents' ) ) {
 			'order'               => 'DESC',
 			'ignore_sticky_posts' => true,
 			'no_found_rows'       => true,
+			'meta_query'          => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- EXISTS narrows the query to posts carrying the toggle key.
+				array(
+					'key'     => '_gg_optimizer_include_in_llms',
+					'compare' => 'EXISTS',
+				),
+			),
 		);
 		$query = new WP_Query( $args );
 
@@ -178,7 +163,7 @@ if ( ! function_exists( 'gg_optimizer_get_llms_key_documents' ) ) {
 				}
 
 				$title = gg_optimizer_llms_normalize_text( get_the_title() );
-				$url   = esc_url( get_permalink() );
+				$url   = esc_url_raw( get_permalink() );
 
 				// Description: unsaved > stored custom > auto-gen from excerpt > auto-gen from content.
 				if ( isset( $unsaved_descriptions[ $post_id ] ) && '' !== $unsaved_descriptions[ $post_id ] ) {
@@ -236,7 +221,7 @@ if ( ! function_exists( 'gg_optimizer_output_llms_txt' ) ) {
 			? $settings['sitemap_urls']
 			: array( '/wp-sitemap.xml' );
 		foreach ( $sitemap_urls as $path ) {
-			echo "\nSitemap: " . esc_url( home_url( $path ) ) . "\n";
+			echo "\nSitemap: " . esc_url_raw( home_url( $path ) ) . "\n";
 		}
 	}
 }
@@ -252,7 +237,7 @@ if ( ! function_exists( 'gg_optimizer_output_llms_head_link' ) ) {
 			return;
 		}
 
-		echo '<link rel="help" type="text/plain" href="' . esc_url( home_url( '/llms.txt' ) ) . '" title="LLMs Context Summary">' . "\n";
+		echo '<link rel="describedby" type="text/plain" href="' . esc_url( home_url( '/llms.txt' ) ) . '" title="LLMs Context Summary">' . "\n";
 	}
 }
 

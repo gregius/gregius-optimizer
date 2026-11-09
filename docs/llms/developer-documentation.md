@@ -44,8 +44,6 @@ Generates the auto-generated context portion of llms.txt. Includes:
 - `# {Site Title}` — H1 with site name
 - `> {Site Description}` — Blockquote with tagline
 - `- [Home](url): {summary}` — Homepage link with excerpt or first 40 words
-- `## Core Architecture` — Default architecture section
-- `## Key Specifications` — Default specifications section
 
 Used as fallback when no stored override exists.
 
@@ -55,7 +53,7 @@ Used as fallback when no stored override exists.
 gg_optimizer_get_llms_key_documents( array $unsaved_toggles = [], array $unsaved_descriptions = [] ) : string
 ```
 
-Generates the "## Key Documents" section. Queries all published posts and filters those with `_gg_optimizer_include_in_llms` enabled.
+Generates the "## Key Documents" section. Queries only posts that have the `_gg_optimizer_include_in_llms` meta key (SQL `EXISTS`), then filters by truthiness (same `empty()` semantics as before).
 
 **Description priority:**
 1. `$unsaved_descriptions[post_id]` — Runtime override
@@ -87,7 +85,7 @@ Outputs the full llms.txt content. Echoes directly (used by both the live endpoi
 gg_optimizer_output_llms_head_link() : void
 ```
 
-Outputs `<link rel="help" type="text/plain" href="/llms.txt" title="LLMs Context Summary">` in the document `<head>`. Respects the `gg_optimizer_llms_enabled` filter.
+Outputs `<link rel="describedby" type="text/plain" href="/llms.txt" title="LLMs Context Summary">` in the document `<head>`. Respects the `gg_optimizer_llms_enabled` filter.
 
 ---
 
@@ -95,7 +93,7 @@ Outputs `<link rel="help" type="text/plain" href="/llms.txt" title="LLMs Context
 
 | Hook | Type | File | Description |
 |---|---|---|---|
-| `gg_optimizer_llms_enabled` | filter | `llms.php:38` | Disable the entire LLMs feature. Default `true`. |
+| `gg_optimizer_llms_enabled` | filter | `llms.php` | Disable the entire LLMs feature. Default `true`. |
 
 **Usage:**
 ```php
@@ -124,7 +122,7 @@ add_filter( 'gg_optimizer_llms_enabled', '__return_false' );
 ```json
 {
   "llms_override": "",
-  "llms_context": "# Site Title\n\n> Site tagline\n\n- [Home](https://example.com/): ...\n\n## Core Architecture\n..."
+  "llms_context": "# Site Title\n\n> Site tagline\n\n- [Home](https://example.com/): ..."
 }
 ```
 
@@ -181,21 +179,13 @@ The generated file follows this structure:
 
 - [Home](https://example.com/): Homepage summary
 
-## Core Architecture
-- Architectural description line 1
-- Architectural description line 2
-
-## Key Specifications
-- Specification description line 1
-- Specification description line 2
-
 ## Key Documents
 - [Post Title](permalink): Description
 
 Sitemap: https://example.com/wp-sitemap.xml
 ```
 
-The `## Core Architecture` and `## Key Specifications` sections are hardcoded defaults. Customize them by saving a context override via the REST API or the Gutenberg modal.
+The context above the "## Key Documents" section is auto-generated from site title, description, and homepage. Customize it by saving a context override via the REST API or the Gutenberg modal.
 
 ### 5. Class Reference
 
@@ -231,7 +221,7 @@ if ( GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ) {
 
 ### Customizing the Auto-Generated Context
 
-The auto-generated context (FR-04–FR-07) includes hardcoded architecture descriptions. To override the entire context:
+The auto-generated context (FR-04–FR-05) includes site title, description, and homepage summary. To override the entire context:
 
 ```php
 // Save a custom override programmatically.
@@ -250,7 +240,7 @@ if ( ! GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ) {
 }
 ```
 
-When disabled via the feature toggle, `/llms.txt` serving, `<link rel="help">` output, and the modal controls are all suppressed. The `template_redirect` handler uses `wp_basename()` to match `/llms.txt` at any URL depth for multisite compatibility.
+When disabled via the feature toggle, `/llms.txt` serving, `<link rel="describedby">` output, and the modal controls are all suppressed. The handler short-circuits `pre_handle_404` and serves `/llms.txt` at its canonical URL via exact path match. Separately, `/llms.txt` is suppressed (404) when the site opts out of search indexing (`blog_public = 0`); the admin REST preview is unaffected so admins can still preview a private site.
 
 ### Extending Key Documents with Custom Post Types
 
@@ -269,8 +259,8 @@ add_filter( 'gg_optimizer_llms_get_post_types', function ( $post_types ) {
 
 | Problem | Likely Cause | Solution |
 |---|---|---|
-| `/llms.txt` returns 404 | Another plugin intercepts the route | Check for conflicting `template_redirect` handlers |
-| `/llms.txt` returns 404 | Multisite subdirectory install | The plugin uses `wp_basename()` for multisite-safe URL matching; verify no other plugin conflicts |
+| `/llms.txt` returns 404 | Feature toggle disabled | Enable the LLMs feature in the LLMs modal |
+| `/llms.txt` returns 404 | Non-canonical path (e.g. `/sub/llms.txt`) | Only the canonical site-root URL serves; request `/llms.txt` exactly |
 | Key Documents section empty | No posts have the include toggle enabled | Enable the toggle on posts in the LLMs modal |
 | Custom context not saving | Permission issue or missing `manage_options` | Verify user is an administrator |
 | Preview shows old content | REST cache | The 500ms debounce should auto-update; check network tab |
@@ -282,9 +272,9 @@ add_filter( 'gg_optimizer_llms_get_post_types', function ( $post_types ) {
 
 | Function / Endpoint / Hook | SRS Requirement |
 |---|---|
-| `template_redirect` intercept | FR-01, FR-02 |
+| `pre_handle_404` + `template_redirect` intercept | FR-01, FR-02 |
 | `gg_optimizer_output_llms_head_link` | FR-03 |
-| `gg_optimizer_get_llms_context` | FR-04–FR-07 |
+| `gg_optimizer_get_llms_context` | FR-04–FR-05 |
 | `gg_optimizer_get_llms_key_documents` | FR-08–FR-12 |
 | `gg_optimizer_output_llms_txt` | FR-01, FR-13–FR-15 |
 | Safety strip on save | FR-16 |

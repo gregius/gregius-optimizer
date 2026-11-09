@@ -86,7 +86,7 @@ gg_optimizer_get_default_robots_txt() : string
 
 Returns the built-in default robots.txt content. Includes:
 
-- `User-agent: *` with `Disallow: /wp-admin/` and `Allow: /wp-admin/admin-ajax.php`
+- `User-agent: *` with subdir-aware `Disallow`/`Allow` for the WordPress admin path (via `admin_url()`)
 - Sitemap URL
 - Traditional search bots: `Googlebot`, `Bingbot` — `Allow: /`
 - AI answer engines: `OAI-SearchBot`, `ChatGPT-User`, `PerplexityBot`, `ClaudeBot`, `Claude-Web` — `Allow: /`
@@ -100,13 +100,13 @@ $default_rules = gg_optimizer_get_default_robots_txt();
 #### 1.4 `gg_optimizer_output_robots_txt`
 
 ```php
-gg_optimizer_output_robots_txt( string $output, string $is_public ) : string
+gg_optimizer_output_robots_txt( string $output, bool $is_public ) : string
 ```
 
-Hooked to `robots_txt` at priority 10. Determines the final robots.txt output. For multisite compatibility, a `template_redirect` handler at priority 0 uses `wp_basename()` to match `/robots.txt` at any URL depth — this ensures robots.txt works even when WordPress core's `is_robots()` returns `false` (common on multisite subdirectory installs).
+Hooked to `robots_txt` at priority 10. Determines the final robots.txt output. On subdirectory multisite subsites (where core's `is_robots()` returns false), `gg_optimizer_output_robots_txt_file()` serves `/robots.txt` via `gg_optimizer_register_virtual_file()` — short-circuiting `pre_handle_404` for a correct 200 status and matching the canonical URL exactly.
 
 **Merge order:**
-1. If `blog_public` is `'0'`, return original WordPress output unchanged
+1. If `blog_public` is falsy (site private), return `Disallow: /`
 2. If `gg_optimizer_robots_txt_enabled` returns `false`, return original output
 3. If DB override exists (`robots_txt_content`), return it
 4. Otherwise, return `gg_optimizer_get_default_robots_txt()`

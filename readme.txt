@@ -2,8 +2,8 @@
 Contributors: hectorjarquin, gregiusteam
 Tags: seo, aeo, smo, llmo, optimization
 Requires at least: 6.9
-Tested up to: 7.0
-Stable tag: 1.2.1
+Tested up to: 7.1
+Stable tag: 1.3.0
 Requires PHP: 8.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -57,9 +57,17 @@ All public post types that support `custom-fields`. Meta fields, schema subtype,
 
 Yes. Each output group (meta description, canonical, Open Graph, Twitter Cards, Schema, LLMs, Sitemap, Robots) can be toggled on/off from their respective settings modal in the block editor. Each modal has an on/off switch at the top.
 
+= Does llms.txt respect the "Discourage search engines" setting? =
+
+Yes. When "Discourage search engines from indexing this site" is enabled (Settings → Reading), `/llms.txt` returns a 404, just as robots.txt emits `Disallow: /`.
+
 = Does the plugin add a database table? =
 
 Yes. Settings for sitemap, robots.txt, schema defaults, and LLMs context are stored in `{$prefix}gg_optimizer_settings`. The table is created on activation and removed on uninstall.
+
+= How does the plugin behave on a multisite network? =
+
+Each site manages its own settings independently. Feature toggles, robots.txt, llms.txt, and other configuration are stored per-site, so enabling a feature on one site does not affect the others.
 
 = Is there a translation file? =
 
@@ -84,6 +92,14 @@ Visit the contributor profiles on WordPress.org:
 5. LLMs settings via the editor
 
 == Changelog ==
+
+= 1.3.0 =
+* Updated: llms.txt serves with HTTP 200 at the canonical URL (exact path match)
+* Updated: robots.txt serving on multisite subsites aligned to core with subdir-aware paths
+* Added: llms.txt and robots.txt respect "Discourage search engines" (blog_public = 0)
+* Changed: removed hardcoded Core Architecture / Key Specifications from auto-generated llms.txt
+* Changed: llms.txt head link now uses rel="describedby"
+* Improved: Key Documents query narrowed to toggled posts (performance)
 
 = 1.2.1 =
 * Fixed: llms.txt blockquotes and markdown corrupted by HTML entity escaping
