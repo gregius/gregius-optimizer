@@ -1,0 +1,115 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint (phpcs + php -l)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+      - run: composer install --no-interaction --prefer-dist
+      - run: vendor/bin/phpcs
+      - name: Syntax check all PHP files
+        run: |
+          find . -path ./vendor -prune -o -path ./node_modules -prune \
+            -o -path ./assets/node_modules -prune -o -path ./build -prune \
+            -o -path ./tests/wp-phpunit -prune -o -name '*.php' -print0 \
+            | xargs -0 -n1 php -l
+
+  unit-integration:
+    name: Unit + Integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer test
+
+  wp-integration:
+    name: WP Integration tests
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wp_tests
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli
+          tools: composer
+      - run: composer install --no-interaction --prefer-dist
+      - run: composer test:wp
+        env:
+          TEST_DB_NAME: wp_tests
+          TEST_DB_USER: root
+          TEST_DB_PASSWORD: root
+          TEST_DB_HOST: 127.0.0.1
+          WP_VERSION: 7.1.5
+
+  smoke:
+    name: Smoke test (single-site)
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: wordpress
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mysqli
+          tools: composer
+      - name: Install wp-cli
+        run: |
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x wp-cli.phar
+          sudo mv wp-cli.phar /usr/local/bin/wp
+      - name: Install and activate WordPress
+        run: |
+          wp core download --version=7.1.5 --path=/tmp/wp --quiet
+          wp config create --dbname=wordpress --dbuser=root --dbpass=root --dbhost=127.0.0.1 --path=/tmp/wp --skip-check --quiet
+          wp core install --url=http://127.0.0.1:8080 --title=Gregius --admin_user=admin --admin_password=admin --admin_email=admin@example.com --path=/tmp/wp --skip-email --quiet
+          ln -s "$GITHUB_WORKSPACE" /tmp/wp/wp-content/plugins/gregius-optimizer
+          wp plugin activate gregius-optimizer --path=/tmp/wp --quiet
+      - name: Run smoke test
+        run: |
+          wp server --host=127.0.0.1 --port=8080 --path=/tmp/wp >/tmp/wp-server.log 2>&1 &
+          SERVER_PID=$!
+          sleep 5
+          bin/smoke-test.sh http://127.0.0.1:8080
+          kill "$SERVER_PID" || true
