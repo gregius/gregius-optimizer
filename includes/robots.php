@@ -46,13 +46,21 @@ gg_optimizer_register_virtual_file(
 	}
 );
 
-add_filter( 'gg_optimizer_robots_txt_enabled', static function ( $enabled ) {
-	return GG_Optimizer_Feature_Toggle::is_enabled( 'robots' ) ? $enabled : false;
-}, 1 );
+add_filter(
+	'gg_optimizer_robots_txt_enabled',
+	static function ( $enabled ) {
+		return GG_Optimizer_Feature_Toggle::is_enabled( 'robots' ) ? $enabled : false;
+	},
+	1
+);
 
-add_filter( 'gg_optimizer_robots_meta_enabled', static function ( $enabled ) {
-	return GG_Optimizer_Feature_Toggle::is_enabled( 'robots' ) ? $enabled : false;
-}, 1 );
+add_filter(
+	'gg_optimizer_robots_meta_enabled',
+	static function ( $enabled ) {
+		return GG_Optimizer_Feature_Toggle::is_enabled( 'robots' ) ? $enabled : false;
+	},
+	1
+);
 
 if ( ! function_exists( 'gg_optimizer_is_hidden_from_search' ) ) {
 	/**
@@ -202,7 +210,7 @@ if ( ! function_exists( 'gg_optimizer_output_robots_txt' ) ) {
 		$sitemap_urls = isset( $settings['sitemap_urls'] ) && is_array( $settings['sitemap_urls'] )
 			? $settings['sitemap_urls']
 			: array( '/wp-sitemap.xml' );
-		$output .= "\n";
+		$output      .= "\n";
 		foreach ( $sitemap_urls as $path ) {
 			$output .= 'Sitemap: ' . esc_url_raw( home_url( $path ) ) . "\n";
 		}

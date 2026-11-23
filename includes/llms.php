@@ -8,9 +8,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'gg_optimizer_llms_enabled', static function ( $enabled ) {
-	return GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ? $enabled : false;
-}, 1 );
+add_filter(
+	'gg_optimizer_llms_enabled',
+	static function ( $enabled ) {
+		return GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ? $enabled : false;
+	},
+	1
+);
 
 // 1. Register meta fields for all public post types.
 add_action( 'init', 'gg_optimizer_register_llms_meta_fields' );

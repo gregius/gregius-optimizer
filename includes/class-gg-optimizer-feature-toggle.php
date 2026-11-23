@@ -52,7 +52,10 @@ class GG_Optimizer_Feature_Toggle {
 		$toggles = $request->get_param( 'toggles' );
 		if ( ! is_array( $toggles ) ) {
 			return new \WP_REST_Response(
-				array( 'code' => 'invalid_toggles', 'message' => 'toggles must be an object' ),
+				array(
+					'code'    => 'invalid_toggles',
+					'message' => 'toggles must be an object',
+				),
 				400
 			);
 		}

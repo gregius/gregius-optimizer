@@ -25,21 +25,21 @@ function gg_optimizer_register_smo_meta_fields() {
 
 	$post_types  = get_post_types( array( 'public' => true ), 'names' );
 	$meta_fields = array(
-		'_gg_optimizer_meta_title'       => array(
+		'_gg_optimizer_meta_title'          => array(
 			'type'              => 'string',
 			'default'           => '',
 			'label'             => __( 'Social Meta Title', 'gregius-optimizer' ),
 			'description'       => __( 'Optional override for social and search preview title.', 'gregius-optimizer' ),
 			'revisions_enabled' => true,
 		),
-		'_gg_optimizer_meta_description' => array(
+		'_gg_optimizer_meta_description'    => array(
 			'type'              => 'string',
 			'default'           => '',
 			'label'             => __( 'Social Meta Description', 'gregius-optimizer' ),
 			'description'       => __( 'Optional override for social and search preview description.', 'gregius-optimizer' ),
 			'revisions_enabled' => true,
 		),
-		'_gg_optimizer_meta_image'       => array(
+		'_gg_optimizer_meta_image'          => array(
 			'type'              => 'string',
 			'default'           => '',
 			'label'             => __( 'Social Meta Image', 'gregius-optimizer' ),
@@ -477,7 +477,14 @@ if ( ! function_exists( 'gg_optimizer_get_metadata_context' ) ) {
 			: str_replace( '-', '_', (string) get_locale() );
 		$image       = ( $post_obj && function_exists( 'gg_optimizer_get_social_image_data' ) )
 			? gg_optimizer_get_social_image_data( $post_obj->ID, $overrides )
-			: array( 'id' => 0, 'url' => '', 'alt' => '', 'width' => 0, 'height' => 0, 'type' => '' );
+			: array(
+				'id'     => 0,
+				'url'    => '',
+				'alt'    => '',
+				'width'  => 0,
+				'height' => 0,
+				'type'   => '',
+			);
 
 		return array(
 			'title'       => $title,
@@ -596,19 +603,19 @@ if ( ! function_exists( 'gg_optimizer_rest_meta_preview' ) ) {
 			'content'           => sanitize_textarea_field( (string) $request->get_param( 'content' ) ),
 		);
 
-		$context      = gg_optimizer_get_metadata_context( $post, $overrides );
-		$title        = $context['title'];
-		$description  = $context['description'];
-		$url          = $context['og_url'];
-		$canonical    = $context['canonical'];
-		$site_name    = $context['site_name'];
-		$type         = $context['og_type'];
-		$locale       = $context['locale'];
-		$image_data   = $context['image'];
-		$image        = $image_data['url'];
-		$image_alt    = $image_data['alt'];
-		$image_width  = $image_data['width'];
-		$image_height = $image_data['height'];
+		$context           = gg_optimizer_get_metadata_context( $post, $overrides );
+		$title             = $context['title'];
+		$description       = $context['description'];
+		$url               = $context['og_url'];
+		$canonical         = $context['canonical'];
+		$site_name         = $context['site_name'];
+		$type              = $context['og_type'];
+		$locale            = $context['locale'];
+		$image_data        = $context['image'];
+		$image             = $image_data['url'];
+		$image_alt         = $image_data['alt'];
+		$image_width       = $image_data['width'];
+		$image_height      = $image_data['height'];
 		$tw_card           = '' !== $image ? 'summary_large_image' : 'summary';
 		$twitter_site      = trim( (string) apply_filters( 'gg_optimizer_meta_twitter_site', '' ) );
 		$article_publisher = trim( (string) apply_filters( 'gg_optimizer_meta_article_publisher', '' ) );
