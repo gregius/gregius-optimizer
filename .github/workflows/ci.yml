@@ -106,6 +106,9 @@ jobs:
           wp core install --url=http://127.0.0.1:8080 --title=Gregius --admin_user=admin --admin_password=admin --admin_email=admin@example.com --path=/tmp/wp --skip-email --quiet
           ln -s "$GITHUB_WORKSPACE" /tmp/wp/wp-content/plugins/gregius-optimizer
           wp plugin activate gregius-optimizer --path=/tmp/wp --quiet
+          # Features default OFF on a fresh install; enable llms so the smoke
+          # test exercises the virtual-file path.
+          wp eval 'GG_Optimizer_Feature_Toggle::set_all( array( "llms" => true ) );' --path=/tmp/wp
       - name: Run smoke test
         run: |
           wp server --host=127.0.0.1 --port=8080 --path=/tmp/wp >/tmp/wp-server.log 2>&1 &
