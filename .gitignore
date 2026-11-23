@@ -7,12 +7,17 @@ yarn-error.log*
 
 # Coverage directory used by tools like istanbul
 coverage
+.phpunit.result.cache
+
+# WordPress test suite (downloaded by bin/install-wp-tests.sh)
+tests/wp-phpunit/
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 
 # Dependency directories
 node_modules/
+vendor/
 
 # Optional npm cache directory
 .npm

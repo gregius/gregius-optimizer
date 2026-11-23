@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="wp-integration">
+            <directory suffix=".php">tests/WpIntegration</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <env name="WP_TESTS_RUN" value="1"/>
+    </php>
+</phpunit>
