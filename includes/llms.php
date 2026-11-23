@@ -132,7 +132,7 @@ if ( ! function_exists( 'gg_optimizer_get_llms_key_documents' ) ) {
 
 		$args  = array(
 			'post_type'           => get_post_types( array( 'public' => true ), 'names' ),
-			'posts_per_page'      => -1,
+			'posts_per_page'      => (int) apply_filters( 'gg_optimizer_llms_max_documents', 200 ),
 			'post_status'         => 'publish',
 			'orderby'             => 'date',
 			'order'               => 'DESC',

@@ -79,7 +79,7 @@ The feature serves `/llms.txt` at the site root with HTTP status 200, outputs a 
 
 | ID | Requirement | Priority |
 |---|---|---|
-| FR-08 | The software MUST generate a "## Key Documents" section listing all published posts with `_gg_optimizer_include_in_llms` enabled. | Must |
+| FR-08 | The software MUST generate a "## Key Documents" section listing published posts with `_gg_optimizer_include_in_llms` enabled, bounded to a configurable maximum (default 200). | Must |
 | FR-09 | Each entry MUST be formatted as `- [Title](permalink): description`. | Must |
 | FR-10 | The description MUST resolve with priority: runtime override → `_gg_optimizer_llms_description` meta → excerpt → first 20 words of content. | Must |
 | FR-11 | The Key Documents section MUST support runtime toggle and description overrides for preview without saving. | Must |
