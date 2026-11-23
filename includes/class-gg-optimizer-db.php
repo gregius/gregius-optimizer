@@ -16,6 +16,7 @@ class GG_Optimizer_DB {
 	const TABLE_NAME        = 'gg_optimizer_settings';
 	const DB_VERSION        = '1.1.0';
 	const DB_VERSION_OPTION = 'gg_optimizer_db_version';
+	const UNINSTALL_OPTION  = 'gg_optimizer_remove_data_on_uninstall';
 
 	/**
 	 * Create or upgrade the settings table if needed.
@@ -63,29 +64,52 @@ class GG_Optimizer_DB {
 	}
 
 	/**
-	 * Drop the settings table.
+	 * Remove (or preserve) plugin data on uninstall.
+	 *
+	 * Default keeps data. Only when the `gg_optimizer_remove_data_on_uninstall`
+	 * option is enabled are the settings table, version option, and all
+	 * `_gg_optimizer_*` post meta removed for the current site.
 	 *
 	 * @return void
 	 */
-	public static function drop_tables() {
+	public static function uninstall() {
+		$remove = (bool) get_option( self::UNINSTALL_OPTION, false );
+
+		delete_option( self::UNINSTALL_OPTION );
+		delete_transient( 'gg_optimizer_sitemap_flush' );
+
+		if ( ! $remove ) {
+			return;
+		}
+
 		global $wpdb;
-		$table_name = $wpdb->prefix . self::TABLE_NAME;
-		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+
+		// Remove all plugin post meta for the current site (incl. revision rows).
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching -- Uninstall-time batch cleanup; no cache invalidation needed (plugin removed).
 		$wpdb->query(
-			$wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table_name )
+			$wpdb->prepare(
+				"DELETE FROM {$wpdb->postmeta} WHERE meta_key LIKE %s",
+				$wpdb->esc_like( '_gg_optimizer_' ) . '%'
+			)
 		);
-		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		// Drop the settings table.
+		$table = $wpdb->prefix . self::TABLE_NAME;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.SchemaChange -- Uninstall cleanup.
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table ) );
+
 		delete_option( self::DB_VERSION_OPTION );
 	}
 
 	/**
 	 * Get a single setting.
 	 *
-	 * @param string $key     Setting key.
-	 * @param mixed  $default Default value.
+	 * @param string $key      Setting key.
+	 * @param mixed  $fallback Fallback value.
 	 * @return string
 	 */
-	public static function get( $key, $default = '' ) {
+	public static function get( $key, $fallback = '' ) {
 		global $wpdb;
 
 		$table = $wpdb->prefix . self::TABLE_NAME;
@@ -97,7 +121,7 @@ class GG_Optimizer_DB {
 			)
 		);
 
-		return ( null !== $value ) ? $value : $default;
+		return ( null !== $value ) ? $value : $fallback;
 	}
 
 	/**
@@ -117,69 +141,6 @@ class GG_Optimizer_DB {
 				'setting_value' => (string) $value,
 			),
 			array( '%s', '%s' )
-		);
-	}
-
-	/**
-	 * Get all settings with a key prefix.
-	 *
-	 * @param string $prefix Key prefix.
-	 * @return array
-	 */
-	public static function get_group( $prefix ) {
-		global $wpdb;
-
-		$table = $wpdb->prefix . self::TABLE_NAME;
-		$rows  = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				'SELECT setting_key, setting_value FROM %i WHERE setting_key LIKE %s',
-				$table,
-				$wpdb->esc_like( $prefix ) . '%'
-			),
-			OBJECT_K
-		);
-
-		$result = array();
-
-		foreach ( $rows as $key => $row ) {
-			$result[ $key ] = $row->setting_value;
-		}
-
-		return $result;
-	}
-
-	/**
-	 * Delete a single setting.
-	 *
-	 * @param string $key Setting key.
-	 * @return int|false
-	 */
-	public static function delete( $key ) {
-		global $wpdb;
-
-		return $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prefix . self::TABLE_NAME,
-			array( 'setting_key' => $key ),
-			array( '%s' )
-		);
-	}
-
-	/**
-	 * Delete all settings with a key prefix.
-	 *
-	 * @param string $prefix Key prefix.
-	 * @return int|false
-	 */
-	public static function delete_group( $prefix ) {
-		global $wpdb;
-
-		$table = $wpdb->prefix . self::TABLE_NAME;
-		return $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
-			$wpdb->prepare(
-				'DELETE FROM %i WHERE setting_key LIKE %s',
-				$table,
-				$wpdb->esc_like( $prefix ) . '%'
-			)
 		);
 	}
 }

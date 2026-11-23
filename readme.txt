@@ -3,7 +3,7 @@ Contributors: hectorjarquin, gregiusteam
 Tags: seo, aeo, smo, llmo, optimization
 Requires at least: 6.9
 Tested up to: 7.1
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 Requires PHP: 8.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -65,6 +65,10 @@ Yes. When "Discourage search engines from indexing this site" is enabled (Settin
 
 Yes. Settings for sitemap, robots.txt, schema defaults, and LLMs context are stored in `{$prefix}gg_optimizer_settings`. The table is created on activation and removed on uninstall.
 
+= Does deactivating Gregius Optimizer delete my data? =
+
+No. Deactivating never removes settings or per-post metadata. On deactivation you are asked whether DELETING the plugin should remove its data (kept by default); that choice only takes effect if you later delete the plugin.
+
 = How does the plugin behave on a multisite network? =
 
 Each site manages its own settings independently. Feature toggles, robots.txt, llms.txt, and other configuration are stored per-site, so enabling a feature on one site does not affect the others.
@@ -92,6 +96,14 @@ Visit the contributor profiles on WordPress.org:
 5. LLMs settings via the editor
 
 == Changelog ==
+
+= 1.4.0 =
+* Added: opt-in data retention — choose to keep or remove data when deleting the plugin (default: keep)
+* Changed: uninstall preserves data unless removal was enabled
+* Removed: unused internal DB methods
+* Improved: llms.txt Key Documents query bounded to a configurable maximum (default 200)
+* Added: bundled full GPL-2.0 license text
+* Added: GitHub Actions CI running lint, tests, and a smoke test
 
 = 1.3.0 =
 * Updated: llms.txt serves with HTTP 200 at the canonical URL (exact path match)

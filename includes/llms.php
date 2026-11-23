@@ -8,9 +8,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'gg_optimizer_llms_enabled', static function ( $enabled ) {
-	return GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ? $enabled : false;
-}, 1 );
+add_filter(
+	'gg_optimizer_llms_enabled',
+	static function ( $enabled ) {
+		return GG_Optimizer_Feature_Toggle::is_enabled( 'llms' ) ? $enabled : false;
+	},
+	1
+);
 
 // 1. Register meta fields for all public post types.
 add_action( 'init', 'gg_optimizer_register_llms_meta_fields' );
@@ -132,7 +136,7 @@ if ( ! function_exists( 'gg_optimizer_get_llms_key_documents' ) ) {
 
 		$args  = array(
 			'post_type'           => get_post_types( array( 'public' => true ), 'names' ),
-			'posts_per_page'      => -1,
+			'posts_per_page'      => (int) apply_filters( 'gg_optimizer_llms_max_documents', 200 ),
 			'post_status'         => 'publish',
 			'orderby'             => 'date',
 			'order'               => 'DESC',

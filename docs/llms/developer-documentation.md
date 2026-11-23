@@ -94,11 +94,15 @@ Outputs `<link rel="describedby" type="text/plain" href="/llms.txt" title="LLMs 
 | Hook | Type | File | Description |
 |---|---|---|---|
 | `gg_optimizer_llms_enabled` | filter | `llms.php` | Disable the entire LLMs feature. Default `true`. |
+| `gg_optimizer_llms_max_documents` | filter | `llms.php` | Cap the number of Key Documents queried. Default `200`. |
 
 **Usage:**
 ```php
 // Disable llms.txt serving.
 add_filter( 'gg_optimizer_llms_enabled', '__return_false' );
+
+// Cap the Key Documents section to 50 entries.
+add_filter( 'gg_optimizer_llms_max_documents', fn() => 50 );
 ```
 
 ---

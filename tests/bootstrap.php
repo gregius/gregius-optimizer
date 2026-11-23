@@ -1,0 +1,107 @@
+<?php
+/**
+ * PHPUnit bootstrap for Gregius Optimizer.
+ *
+ * - Unit & Integration tiers: load Composer autoloader + stubs only.
+ * - Full WP tier: load wp-phpunit to bootstrap a WordPress test environment.
+ *
+ * Set WP_TESTS_RUN=1 to enable the full WordPress test tier, or set
+ * WP_TESTS_CONFIG_FILE_PATH to point at wp-tests-config.php.
+ *
+ * @package gregius-optimizer
+ */
+
+$running_wp_tests = ( getenv( 'WP_TESTS_RUN' ) || defined( 'WP_TESTS_CONFIG_FILE_PATH' ) );
+
+if ( ! $running_wp_tests && ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', true );
+}
+
+$autoload = dirname( __DIR__ ) . '/vendor/autoload.php';
+if ( file_exists( $autoload ) ) {
+	require_once $autoload;
+}
+
+if ( ! $running_wp_tests ) {
+	require_once __DIR__ . '/helpers.php';
+	gregius_optimizer_test_setup_wpdb();
+}
+
+$run_wp_tests = getenv( 'WP_TESTS_RUN' );
+$has_config   = defined( 'WP_TESTS_CONFIG_FILE_PATH' )
+	&& file_exists( WP_TESTS_CONFIG_FILE_PATH );
+
+if ( ! $has_config && $run_wp_tests ) {
+	$wp_tests_dir = getenv( 'WP_TESTS_DIR' );
+	$config_paths = array_filter(
+		array(
+			$wp_tests_dir ? $wp_tests_dir . '/wp-tests-config.php' : '',
+			'/var/www/html/wp-tests-config.php',
+			__DIR__ . '/wp-tests-config.php',
+		)
+	);
+
+	foreach ( $config_paths as $path ) {
+		if ( file_exists( $path ) ) {
+			define( 'WP_TESTS_CONFIG_FILE_PATH', $path );
+			$has_config = true;
+			break;
+		}
+	}
+}
+
+if ( $has_config ) {
+	$plugin_dir         = dirname( __DIR__ );
+	$wp_tests_dir       = getenv( 'WP_TESTS_DIR' );
+	$wp_test_base_paths = array_filter(
+		array(
+			$wp_tests_dir,
+			$plugin_dir . '/tests/wp-phpunit',
+			dirname( __DIR__ ) . '/tests/wp-phpunit',
+		)
+	);
+
+	$wp_test_base = null;
+	foreach ( $wp_test_base_paths as $path ) {
+		if ( is_dir( $path ) ) {
+			$wp_test_base = $path;
+			break;
+		}
+	}
+
+	if ( ! $wp_test_base ) {
+		echo "Error: wp-phpunit not found. Run:\n";
+		echo "  svn co https://develop.svn.wordpress.org/trunk/tests/phpunit tests/wp-phpunit\n";
+		exit( 1 );
+	}
+
+	$functions_file = $wp_test_base . '/includes/functions.php';
+	if ( file_exists( $functions_file ) ) {
+		require_once $functions_file;
+	}
+
+	tests_add_filter(
+		'muplugins_loaded',
+		function () use ( $plugin_dir ) {
+			require_once $plugin_dir . '/gregius-optimizer.php';
+		}
+	);
+
+	tests_add_filter(
+		'setup_theme',
+		function () {
+			if ( ! get_option( GG_Optimizer_DB::DB_VERSION_OPTION ) ) {
+				GG_Optimizer_DB::maybe_create_tables();
+			}
+		}
+	);
+
+	$bootstrap_file = $wp_test_base . '/includes/bootstrap.php';
+	if ( file_exists( $bootstrap_file ) ) {
+		require_once $bootstrap_file;
+	} else {
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- CLI bootstrap error, no HTML context.
+		echo "Error: wp-phpunit bootstrap not found at {$bootstrap_file}\n";
+		exit( 1 );
+	}
+}

@@ -9,13 +9,18 @@ const assetsConfig = {
 	entry: {
 		...defaultConfig.entry,
 		editor: path.resolve( __dirname, 'editor.js' ),
+		'deactivation-modal': path.resolve( __dirname, 'deactivation-modal.js' ),
 	},
 	output: {
 		...defaultConfig.output,
 		filename: ( chunkData ) => {
-			return chunkData.chunk.name === 'editor'
-				? 'editor.js'
-				: '[name].min.[fullhash].js';
+			if ( chunkData.chunk.name === 'editor' ) {
+				return 'editor.js';
+			}
+			if ( chunkData.chunk.name === 'deactivation-modal' ) {
+				return 'deactivation-modal.js';
+			}
+			return '[name].min.[fullhash].js';
 		},
 		path: buildDir,
 	},

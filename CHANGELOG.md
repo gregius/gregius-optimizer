@@ -5,6 +5,28 @@ All notable changes to Gregius Optimizer will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-11-22
+
+### Added
+- Opt-in data retention: a deactivation modal asks whether deleting the plugin
+  should remove its data (kept by default). Deletion happens at uninstall, never
+  on deactivation.
+- Full GPL-2.0 license text, replacing the placeholder stub.
+- GitHub Actions CI: phpcs + php -l lint, unit/integration tests, WordPress
+  integration tests, and a single-site smoke test.
+
+### Changed
+- Uninstall now preserves the settings table, version option, and post meta by
+  default; data is removed only when the retention preference is enabled.
+
+### Improved
+- llms.txt Key Documents query bounded to a configurable maximum (default 200)
+  instead of fetching every matching post.
+
+### Removed
+- Unused internal DB methods (`drop_tables`, `get_group`, `delete`,
+  `delete_group`).
+
 ## [1.3.0] - 2026-11-08
 
 ### Updated

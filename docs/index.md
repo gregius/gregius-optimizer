@@ -3,7 +3,7 @@ okf_version: "0.1"
 ---
 # Gregius Optimizer — Documentation
 
-Plugin: Gregius Optimizer v1.2.1 — SEO, AEO, SMO, and LLMO editor extensions
+Plugin: Gregius Optimizer v1.4.0 — SEO, AEO, SMO, and LLMO editor extensions
 (schema, meta, indexing, and social cards).
 
 ## Schema (parent subsystem)
@@ -38,6 +38,9 @@ Plugin: Gregius Optimizer v1.2.1 — SEO, AEO, SMO, and LLMO editor extensions
 - [llms/srs.md](llms/srs.md) — Requirements for auto-generated llms.txt with per-post toggles
 - [llms/architecture.md](llms/architecture.md) — Architecture for llms.txt generation, caching, and REST endpoints
 - [llms/developer-documentation.md](llms/developer-documentation.md) — API reference for llms.txt controllers and hooks
+- [lifecycle/srs.md](lifecycle/srs.md) — Requirements for activation, deactivation, and uninstall data retention
+- [lifecycle/architecture.md](lifecycle/architecture.md) — Architecture for plugin lifecycle and uninstall data retention
+- [lifecycle/developer-documentation.md](lifecycle/developer-documentation.md) — API reference for lifecycle hooks, the retention REST endpoint, and the uninstall handler
 
 ## Convention
 
