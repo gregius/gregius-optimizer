@@ -34,8 +34,30 @@ register_activation_hook(
 	}
 );
 
-// Uninstall hook — clean up the settings table.
-register_uninstall_hook( __FILE__, array( 'GG_Optimizer_DB', 'drop_tables' ) );
+// Deactivation hook — flush rewrites (data is never removed on deactivation).
+register_deactivation_hook(
+	__FILE__,
+	static function ( $network_wide ) {
+		delete_transient( 'gg_optimizer_sitemap_flush' );
+
+		if ( is_multisite() && $network_wide ) {
+			$sites = get_sites(
+				array(
+					'fields' => 'ids',
+					'number' => 0,
+				)
+			);
+			foreach ( $sites as $site_id ) {
+				switch_to_blog( $site_id );
+				update_option( 'rewrite_rules', '' );
+				restore_current_blog();
+			}
+			return;
+		}
+
+		update_option( 'rewrite_rules', '' );
+	}
+);
 
 // Custom meta field helper.
 if ( ! class_exists( 'GG_Optimizer_Custom_Meta_Field' ) ) {
@@ -44,6 +66,9 @@ if ( ! class_exists( 'GG_Optimizer_Custom_Meta_Field' ) ) {
 
 // Feature toggle CRUD.
 require_once __DIR__ . '/includes/class-gg-optimizer-feature-toggle.php';
+
+// Data-retention preference (deactivation modal + uninstall handler).
+require_once __DIR__ . '/includes/class-gg-optimizer-data-retention.php';
 
 // Virtual root files (llms.txt, robots.txt).
 require_once __DIR__ . '/includes/virtual-files.php';
@@ -76,3 +101,5 @@ require_once __DIR__ . '/includes/llms.php';
 require_once __DIR__ . '/assets/assets.php';
 
 add_action( 'rest_api_init', array( 'GG_Optimizer_Feature_Toggle', 'register_routes' ) );
+
+add_action( 'rest_api_init', array( 'GG_Optimizer_Data_Retention', 'register_routes' ) );

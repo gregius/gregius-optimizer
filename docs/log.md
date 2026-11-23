@@ -1,5 +1,9 @@
 # Change Log
 
+## 2026-11-22
+
+- add | Data-retention-on-uninstall feature | touched: uninstall.php, includes/class-gg-optimizer-db.php, includes/class-gg-optimizer-data-retention.php, gregius-optimizer.php, assets/assets.php, assets/src/scripts/deactivation-modal.js, assets/deactivation-modal.js, assets/webpack.config.js, docs/lifecycle/*, docs/index.md
+
 ## 2026-06-30
 
 - migrate | OKF v0.1 migration — added YAML frontmatter to all 24 concept files, created root index.md + log.md, created 8 subsystem index.md files | touched: docs/index.md, docs/log.md, docs/*/index.md, docs/*/srs.md, docs/*/architecture.md, docs/*/developer-documentation.md

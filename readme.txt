@@ -65,6 +65,10 @@ Yes. When "Discourage search engines from indexing this site" is enabled (Settin
 
 Yes. Settings for sitemap, robots.txt, schema defaults, and LLMs context are stored in `{$prefix}gg_optimizer_settings`. The table is created on activation and removed on uninstall.
 
+= Does deactivating Gregius Optimizer delete my data? =
+
+No. Deactivating never removes settings or per-post metadata. On deactivation you are asked whether DELETING the plugin should remove its data (kept by default); that choice only takes effect if you later delete the plugin.
+
 = How does the plugin behave on a multisite network? =
 
 Each site manages its own settings independently. Feature toggles, robots.txt, llms.txt, and other configuration are stored per-site, so enabling a feature on one site does not affect the others.
