@@ -20,7 +20,7 @@ timestamp: 2026-11-22T00:00:00Z
 |---|---|
 | Project | Gregius Optimizer |
 | Software Component | lifecycle |
-| Version | 1.4.0 |
+| Version | 1.5.0 |
 | Date | 2026-11-22 |
 | Author | Gregius Engineering |
 | Status | Approved |

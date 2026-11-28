@@ -3,7 +3,7 @@ okf_version: "0.1"
 ---
 # Gregius Optimizer — Documentation
 
-Plugin: Gregius Optimizer v1.4.0 — SEO, AEO, SMO, and LLMO editor extensions
+Plugin: Gregius Optimizer v1.5.0 — SEO, AEO, SMO, and LLMO editor extensions
 (schema, meta, indexing, and social cards).
 
 ## Schema (parent subsystem)

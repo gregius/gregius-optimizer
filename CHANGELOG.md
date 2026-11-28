@@ -5,6 +5,16 @@ All notable changes to Gregius Optimizer will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-11-27
+
+### Added
+- WordPress Abilities API surface: 18 deterministic abilities (5 reads, 3
+  previews, 5 writes, 5 resets) exposing every configurable feature to the
+  agent harness. Reads, writes, and previews delegate to the existing
+  `gg-optimizer/v1` REST routes; the five `reset-*` abilities clear the stored
+  override so the plugin's own fallback resolves the default.
+- `GG_Optimizer_DB::delete()` (re-added) to clear a stored setting on reset.
+
 ## [1.4.0] - 2026-11-22
 
 ### Added
