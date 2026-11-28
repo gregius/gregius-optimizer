@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `gg-optimizer/v1` REST routes; the five `reset-*` abilities clear the stored
   override so the plugin's own fallback resolves the default.
 - `GG_Optimizer_DB::delete()` (re-added) to clear a stored setting on reset.
+- Per-post SEO meta abilities (`get-post-seo`, `update-post-seo`,
+  `reset-post-seo`): first-party, post-scoped read/write/reset over the
+  plugin's 15 `_gg_optimizer_*` post-meta keys (title/description/image
+  overrides for meta, Google, Open Graph, and Twitter; schema subtype; llms
+  include + description; hide-from-search).
 
 ## [1.4.0] - 2026-11-22
 
