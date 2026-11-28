@@ -12,6 +12,11 @@
  * abilities are net-new surface that clear the stored override and let the
  * feature's own fallback resolve the default — they never inline a default.
  *
+ * The per-post SEO abilities (`get-post-seo`, `update-post-seo`,
+ * `reset-post-seo`) have no backing route: they read and write the plugin's
+ * own `_gg_optimizer_*` post-meta keys directly via the core post-meta API,
+ * gated by `edit_post` on the target post.
+ *
  * `set-data-retention` is intentionally NOT registered (deferred): it is a
  * one-time uninstall preference, write-only, with no agent workflow. There is
  * also no `measure` ability — no server-side measurement source exists.
@@ -40,6 +45,45 @@ class GG_Optimizer_Abilities {
 	 * @var string
 	 */
 	const CATEGORY = 'seo';
+
+	/**
+	 * Per-post SEO meta field map: ability field name => stored post-meta key.
+	 *
+	 * The 15 `_gg_optimizer_*` post-meta keys (13 string + 2 boolean) that the
+	 * `get-post-seo` / `update-post-seo` / `reset-post-seo` abilities operate on
+	 * directly via the core post-meta API. They are registered across
+	 * includes/meta-tags.php (12), includes/llms.php (2), and
+	 * includes/sitemap.php (1).
+	 *
+	 * @var array<string,string>
+	 */
+	const POST_SEO_META_KEYS = array(
+		'meta_title'          => '_gg_optimizer_meta_title',
+		'meta_description'    => '_gg_optimizer_meta_description',
+		'meta_image'          => '_gg_optimizer_meta_image',
+		'google_title'        => '_gg_optimizer_google_title',
+		'google_description'  => '_gg_optimizer_google_description',
+		'og_title'            => '_gg_optimizer_og_title',
+		'og_description'      => '_gg_optimizer_og_description',
+		'og_image'            => '_gg_optimizer_og_image',
+		'twitter_title'       => '_gg_optimizer_twitter_title',
+		'twitter_description' => '_gg_optimizer_twitter_description',
+		'twitter_image'       => '_gg_optimizer_twitter_image',
+		'schema_subtype'      => '_gg_optimizer_schema_subtype',
+		'include_in_llms'     => '_gg_optimizer_include_in_llms',
+		'llms_description'    => '_gg_optimizer_llms_description',
+		'hide_from_search'    => '_gg_optimizer_hide_from_search',
+	);
+
+	/**
+	 * The post-seo fields registered as boolean meta (the rest are string).
+	 *
+	 * @var string[]
+	 */
+	const POST_SEO_BOOLEAN_FIELDS = array(
+		'include_in_llms',
+		'hide_from_search',
+	);
 
 	/**
 	 * Hook the registration callbacks.
@@ -94,6 +138,9 @@ class GG_Optimizer_Abilities {
 
 		// Reset abilities.
 		self::register_reset_abilities();
+
+		// Post-scoped SEO meta abilities (read / write / reset over core post-meta).
+		self::register_post_seo_abilities();
 	}
 
 	/**
@@ -485,6 +532,80 @@ class GG_Optimizer_Abilities {
 	}
 
 	/**
+	 * Register the post-scoped SEO meta abilities (read / write / reset).
+	 *
+	 * Unlike the 18 route-wrapping abilities, these have no backing
+	 * `gg-optimizer/v1` route: they read and write the plugin's own 15
+	 * `_gg_optimizer_*` post-meta keys directly via the core post-meta API,
+	 * gated by `edit_post` on the target post (see Cordenar decision #1710 F1).
+	 *
+	 * @return void
+	 */
+	private static function register_post_seo_abilities() {
+		$readonly   = self::meta_readonly();
+		$idempotent = self::meta_idempotent();
+
+		wp_register_ability(
+			self::NAMESPACE . '/get-post-seo',
+			array(
+				'label'               => __( 'Get post SEO overrides', 'gregius-optimizer' ),
+				'description'         => __( 'Returns the stored (un-resolved) SEO overrides for a post across all 15 per-post meta fields.', 'gregius-optimizer' ),
+				'category'            => self::CATEGORY,
+				'execute_callback'    => array( __CLASS__, 'execute_get_post_seo' ),
+				'permission_callback' => array( __CLASS__, 'can_edit_post' ),
+				'input_schema'        => array(
+					'type'                 => 'object',
+					'additionalProperties' => false,
+					'properties'           => array(
+						'post_id' => array(
+							'type'        => 'integer',
+							'description' => 'The post ID whose stored SEO overrides to read.',
+							'required'    => true,
+						),
+					),
+				),
+				'meta'                => $readonly,
+			)
+		);
+
+		wp_register_ability(
+			self::NAMESPACE . '/update-post-seo',
+			array(
+				'label'               => __( 'Update post SEO overrides', 'gregius-optimizer' ),
+				'description'         => __( 'Writes a partial set of per-post SEO overrides. A null value clears a field; an omitted field is left untouched.', 'gregius-optimizer' ),
+				'category'            => self::CATEGORY,
+				'execute_callback'    => array( __CLASS__, 'execute_update_post_seo' ),
+				'permission_callback' => array( __CLASS__, 'can_edit_post' ),
+				'input_schema'        => self::post_seo_update_schema(),
+				'meta'                => $idempotent,
+			)
+		);
+
+		wp_register_ability(
+			self::NAMESPACE . '/reset-post-seo',
+			array(
+				'label'               => __( 'Reset post SEO overrides', 'gregius-optimizer' ),
+				'description'         => __( 'Clears all 15 per-post SEO override fields so the resolver falls back to defaults.', 'gregius-optimizer' ),
+				'category'            => self::CATEGORY,
+				'execute_callback'    => array( __CLASS__, 'execute_reset_post_seo' ),
+				'permission_callback' => array( __CLASS__, 'can_edit_post' ),
+				'input_schema'        => array(
+					'type'                 => 'object',
+					'additionalProperties' => false,
+					'properties'           => array(
+						'post_id' => array(
+							'type'        => 'integer',
+							'description' => 'The post ID whose stored SEO overrides to clear.',
+							'required'    => true,
+						),
+					),
+				),
+				'meta'                => $idempotent,
+			)
+		);
+	}
+
+	/**
 	 * Permission callback: `manage_options`.
 	 *
 	 * @return bool
@@ -709,6 +830,225 @@ class GG_Optimizer_Abilities {
 		GG_Optimizer_DB::delete( 'schema_post_type_defaults' );
 		GG_Optimizer_DB::delete( 'schema_org_settings' );
 		return array( 'success' => true );
+	}
+
+	/**
+	 * Read ability: get the stored (un-resolved) per-post SEO overrides.
+	 *
+	 * Returns all 15 fields: strings carry their stored value ('' when unset);
+	 * the two boolean fields are returned as booleans (false when unset).
+	 *
+	 * @param mixed $input Ability input.
+	 * @return array|WP_Error
+	 */
+	public static function execute_get_post_seo( $input = null ) {
+		$post_id = self::extract_post_id( $input );
+		if ( is_wp_error( $post_id ) ) {
+			return $post_id;
+		}
+
+		$result = array();
+
+		foreach ( self::POST_SEO_META_KEYS as $field => $meta_key ) {
+			$value = get_post_meta( $post_id, $meta_key, true );
+
+			if ( in_array( $field, self::POST_SEO_BOOLEAN_FIELDS, true ) ) {
+				$result[ $field ] = (bool) $value;
+			} else {
+				$result[ $field ] = (string) $value;
+			}
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Write ability: update a partial set of per-post SEO overrides.
+	 *
+	 * @param mixed $input Ability input.
+	 * @return array|WP_Error
+	 */
+	public static function execute_update_post_seo( $input = null ) {
+		$post_id = self::extract_post_id( $input );
+		if ( is_wp_error( $post_id ) ) {
+			return $post_id;
+		}
+
+		if ( is_object( $input ) ) {
+			$input = get_object_vars( $input );
+		}
+
+		if ( ! is_array( $input ) ) {
+			$input = array();
+		}
+
+		foreach ( self::POST_SEO_META_KEYS as $field => $meta_key ) {
+			// Distinguish null (clear) from omitted (untouched) by key presence.
+			if ( ! array_key_exists( $field, $input ) ) {
+				continue;
+			}
+
+			$value = $input[ $field ];
+
+			if ( null === $value ) {
+				delete_post_meta( $post_id, $meta_key );
+				continue;
+			}
+
+			if ( in_array( $field, self::POST_SEO_BOOLEAN_FIELDS, true ) ) {
+				$value = (bool) $value;
+			} else {
+				$value = sanitize_text_field( $value );
+			}
+
+			update_post_meta( $post_id, $meta_key, $value );
+		}
+
+		return array( 'success' => true );
+	}
+
+	/**
+	 * Reset ability: clear all 15 per-post SEO override fields.
+	 *
+	 * @param mixed $input Ability input.
+	 * @return array|WP_Error
+	 */
+	public static function execute_reset_post_seo( $input = null ) {
+		$post_id = self::extract_post_id( $input );
+		if ( is_wp_error( $post_id ) ) {
+			return $post_id;
+		}
+
+		foreach ( self::POST_SEO_META_KEYS as $meta_key ) {
+			delete_post_meta( $post_id, $meta_key );
+		}
+
+		return array( 'success' => true );
+	}
+
+	/**
+	 * Resolve and validate the target post ID from ability input.
+	 *
+	 * Returns a WP_Error when `post_id` is missing, not a positive integer, or
+	 * does not reference an existing post.
+	 *
+	 * @param mixed $input Ability input.
+	 * @return int|WP_Error
+	 */
+	private static function extract_post_id( $input ) {
+		if ( is_object( $input ) ) {
+			$input = get_object_vars( $input );
+		}
+
+		if ( ! is_array( $input ) || ! isset( $input['post_id'] ) ) {
+			return new WP_Error(
+				'gg_optimizer_missing_post_id',
+				__( 'A post_id is required.', 'gregius-optimizer' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$post_id = absint( $input['post_id'] );
+
+		if ( $post_id <= 0 ) {
+			return new WP_Error(
+				'gg_optimizer_invalid_post_id',
+				__( 'A valid post_id is required.', 'gregius-optimizer' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		if ( ! get_post( $post_id ) ) {
+			return new WP_Error(
+				'gg_optimizer_post_not_found',
+				__( 'Post not found.', 'gregius-optimizer' ),
+				array( 'status' => 404 )
+			);
+		}
+
+		return $post_id;
+	}
+
+	/**
+	 * Build the input schema for the post-scoped SEO update ability.
+	 *
+	 * `post_id` is required; each of the 15 per-post fields is optional and
+	 * nullable (null clears the stored row; an omitted field is untouched).
+	 *
+	 * @return array
+	 */
+	private static function post_seo_update_schema() {
+		return array(
+			'type'                 => 'object',
+			'additionalProperties' => false,
+			'properties'           => array(
+				'post_id'             => array(
+					'type'        => 'integer',
+					'description' => __( 'The post ID whose SEO overrides to update.', 'gregius-optimizer' ),
+					'required'    => true,
+				),
+				'meta_title'          => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Social/search title override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'meta_description'    => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Social/search description override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'meta_image'          => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Social/search image override (attachment ID). Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'google_title'        => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Google search title override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'google_description'  => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Google search description override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'og_title'            => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Open Graph title override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'og_description'      => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Open Graph description override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'og_image'            => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Open Graph image override (attachment ID). Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'twitter_title'       => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Twitter title override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'twitter_description' => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Twitter description override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'twitter_image'       => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Twitter image override (attachment ID). Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'schema_subtype'      => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'Schema.org subtype override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'include_in_llms'     => array(
+					'type'        => array( 'boolean', 'null' ),
+					'description' => __( 'Whether this post is included in llms.txt. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'llms_description'    => array(
+					'type'        => array( 'string', 'null' ),
+					'description' => __( 'llms.txt description override. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+				'hide_from_search'    => array(
+					'type'        => array( 'boolean', 'null' ),
+					'description' => __( 'Whether this post is hidden from search engines. Pass null to clear the stored value.', 'gregius-optimizer' ),
+				),
+			),
+		);
 	}
 
 	/**

@@ -3,8 +3,9 @@
  * Abilities surface tests (source inspection).
  *
  * Guards the shape of the Abilities API surface without a live WordPress
- * environment: exactly the 18 planned abilities, no stale names, no measure,
- * delegation (not reimplementation), and reset semantics (clear, never inline).
+ * environment: exactly the 21 planned abilities (18 route-wrapping + 3
+ * post-scoped SEO meta), no stale names, no measure, delegation (not
+ * reimplementation), and reset semantics (clear, never inline).
  *
  * @package gregius-optimizer
  */
@@ -17,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 class Test_GG_Optimizer_Abilities_Surface extends TestCase {
 
 	/**
-	 * The 18 registered ability names (without the namespace prefix).
+	 * The 21 registered ability names (without the namespace prefix).
 	 *
 	 * @var string[]
 	 */
@@ -40,6 +41,32 @@ class Test_GG_Optimizer_Abilities_Surface extends TestCase {
 		'/reset-llms-override',
 		'/reset-sitemap-config',
 		'/reset-schema-config',
+		'/get-post-seo',
+		'/update-post-seo',
+		'/reset-post-seo',
+	);
+
+	/**
+	 * The 15 `_gg_optimizer_*` post-meta keys the post-seo abilities cover.
+	 *
+	 * @var string[]
+	 */
+	private $post_seo_meta_keys = array(
+		'_gg_optimizer_meta_title',
+		'_gg_optimizer_meta_description',
+		'_gg_optimizer_meta_image',
+		'_gg_optimizer_google_title',
+		'_gg_optimizer_google_description',
+		'_gg_optimizer_og_title',
+		'_gg_optimizer_og_description',
+		'_gg_optimizer_og_image',
+		'_gg_optimizer_twitter_title',
+		'_gg_optimizer_twitter_description',
+		'_gg_optimizer_twitter_image',
+		'_gg_optimizer_schema_subtype',
+		'_gg_optimizer_include_in_llms',
+		'_gg_optimizer_llms_description',
+		'_gg_optimizer_hide_from_search',
 	);
 
 	/**
@@ -57,9 +84,9 @@ class Test_GG_Optimizer_Abilities_Surface extends TestCase {
 	}
 
 	/**
-	 * All 18 abilities are registered.
+	 * All 21 abilities are registered.
 	 */
-	public function test_all_18_abilities_registered() {
+	public function test_all_21_abilities_registered() {
 		$src = $this->abilities_source();
 
 		foreach ( $this->expected_abilities as $ability ) {
@@ -113,5 +140,45 @@ class Test_GG_Optimizer_Abilities_Surface extends TestCase {
 		$this->assertStringContainsString( "'idempotent'", $src );
 		$this->assertStringContainsString( "'show_in_rest' => true", $src );
 		$this->assertStringContainsString( "'public' => true", $src );
+	}
+
+	/**
+	 * The post-seo abilities read/write core post-meta directly (no delegation).
+	 */
+	public function test_post_seo_uses_core_post_meta_api() {
+		$src = $this->abilities_source();
+
+		$this->assertStringContainsString( 'execute_get_post_seo', $src );
+		$this->assertStringContainsString( 'execute_update_post_seo', $src );
+		$this->assertStringContainsString( 'execute_reset_post_seo', $src );
+
+		$this->assertStringContainsString( 'get_post_meta(', $src );
+		$this->assertStringContainsString( 'update_post_meta(', $src );
+		$this->assertStringContainsString( 'delete_post_meta(', $src );
+
+		// null = clear vs omitted = untouched must be distinguished by key presence.
+		$this->assertStringContainsString( 'array_key_exists', $src );
+	}
+
+	/**
+	 * All 15 `_gg_optimizer_*` post-meta keys are referenced.
+	 */
+	public function test_post_seo_meta_keys_covered() {
+		$src = $this->abilities_source();
+
+		foreach ( $this->post_seo_meta_keys as $meta_key ) {
+			$this->assertStringContainsString( $meta_key, $src, "Meta key {$meta_key} is missing." );
+		}
+	}
+
+	/**
+	 * The post-seo abilities do not reimplement resolver/output logic.
+	 */
+	public function test_post_seo_does_not_reimplement_resolvers() {
+		$src = $this->abilities_source();
+
+		$this->assertStringNotContainsString( 'gg_optimizer_get_meta_title', $src );
+		$this->assertStringNotContainsString( 'gg_optimizer_get_metadata_context', $src );
+		$this->assertStringNotContainsString( 'gg_optimizer_rest_meta_preview', $src );
 	}
 }

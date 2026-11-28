@@ -99,6 +99,7 @@ Visit the contributor profiles on WordPress.org:
 
 = 1.5.0 =
 * Added: WordPress Abilities API surface (read, write, preview, and reset) for all configurable features
+* Added: per-post SEO meta abilities (get, update, and reset post SEO overrides)
 
 = 1.4.0 =
 * Added: opt-in data retention — choose to keep or remove data when deleting the plugin (default: keep)

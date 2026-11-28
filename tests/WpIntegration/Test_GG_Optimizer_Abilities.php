@@ -14,7 +14,7 @@
 class Test_GG_Optimizer_Abilities extends WP_UnitTestCase {
 
 	/**
-	 * The 18 registered ability names (namespace-prefixed).
+	 * The 21 registered ability names (namespace-prefixed).
 	 *
 	 * @var string[]
 	 */
@@ -37,6 +37,9 @@ class Test_GG_Optimizer_Abilities extends WP_UnitTestCase {
 		'gregius-optimizer/reset-llms-override',
 		'gregius-optimizer/reset-sitemap-config',
 		'gregius-optimizer/reset-schema-config',
+		'gregius-optimizer/get-post-seo',
+		'gregius-optimizer/update-post-seo',
+		'gregius-optimizer/reset-post-seo',
 	);
 
 	/**
@@ -53,6 +56,7 @@ class Test_GG_Optimizer_Abilities extends WP_UnitTestCase {
 		'gregius-optimizer/preview-llms',
 		'gregius-optimizer/preview-schema',
 		'gregius-optimizer/preview-meta',
+		'gregius-optimizer/get-post-seo',
 	);
 
 	/**
@@ -71,6 +75,8 @@ class Test_GG_Optimizer_Abilities extends WP_UnitTestCase {
 		'gregius-optimizer/reset-llms-override',
 		'gregius-optimizer/reset-sitemap-config',
 		'gregius-optimizer/reset-schema-config',
+		'gregius-optimizer/update-post-seo',
+		'gregius-optimizer/reset-post-seo',
 	);
 
 	/**
@@ -84,9 +90,9 @@ class Test_GG_Optimizer_Abilities extends WP_UnitTestCase {
 	}
 
 	/**
-	 * The `seo` category is registered and all 18 abilities are discoverable.
+	 * The `seo` category is registered and all 21 abilities are discoverable.
 	 */
-	public function test_all_18_abilities_registered_with_seo_category() {
+	public function test_all_21_abilities_registered_with_seo_category() {
 		$category = wp_get_ability_category( 'seo' );
 		$this->assertNotNull( $category, 'The `seo` ability category should be registered.' );
 
@@ -183,5 +189,221 @@ class Test_GG_Optimizer_Abilities extends WP_UnitTestCase {
 		foreach ( array( 'sitemap', 'robots', 'schema', 'social_cards', 'llms' ) as $feature ) {
 			$this->assertFalse( $result[ $feature ], "{$feature} should reset to off." );
 		}
+	}
+
+	/**
+	 * get-post-seo returns all 15 fields with defaults when nothing is stored.
+	 */
+	public function test_get_post_seo_returns_defaults() {
+		$post_id = self::factory()->post->create();
+
+		$ability = wp_get_ability( 'gregius-optimizer/get-post-seo' );
+		$result  = $ability->execute( array( 'post_id' => $post_id ) );
+
+		$this->assertIsArray( $result );
+
+		$string_fields = array(
+			'meta_title',
+			'meta_description',
+			'meta_image',
+			'google_title',
+			'google_description',
+			'og_title',
+			'og_description',
+			'og_image',
+			'twitter_title',
+			'twitter_description',
+			'twitter_image',
+			'schema_subtype',
+			'llms_description',
+		);
+
+		foreach ( $string_fields as $field ) {
+			$this->assertArrayHasKey( $field, $result );
+			$this->assertSame( '', $result[ $field ], "{$field} should default to ''." );
+		}
+
+		$this->assertFalse( $result['include_in_llms'] );
+		$this->assertFalse( $result['hide_from_search'] );
+	}
+
+	/**
+	 * update-post-seo writes a partial set; omitted fields are left untouched.
+	 */
+	public function test_update_post_seo_partial_write() {
+		$post_id = self::factory()->post->create();
+
+		$update = wp_get_ability( 'gregius-optimizer/update-post-seo' );
+		$update->execute(
+			array(
+				'post_id'    => $post_id,
+				'meta_title' => 'Custom title',
+			)
+		);
+
+		$get    = wp_get_ability( 'gregius-optimizer/get-post-seo' );
+		$result = $get->execute( array( 'post_id' => $post_id ) );
+
+		$this->assertSame( 'Custom title', $result['meta_title'] );
+		$this->assertSame( '', $result['meta_description'] );
+	}
+
+	/**
+	 * update-post-seo with a null field deletes the stored row (no inline default).
+	 */
+	public function test_update_post_seo_null_clears() {
+		$post_id = self::factory()->post->create();
+
+		update_post_meta( $post_id, '_gg_optimizer_meta_title', 'Stored' );
+
+		$update = wp_get_ability( 'gregius-optimizer/update-post-seo' );
+		$update->execute(
+			array(
+				'post_id'    => $post_id,
+				'meta_title' => null,
+			)
+		);
+
+		$this->assertSame( '', get_post_meta( $post_id, '_gg_optimizer_meta_title', true ) );
+	}
+
+	/**
+	 * update-post-seo with only post_id (no fields) is a no-op.
+	 */
+	public function test_update_post_seo_no_fields_is_noop() {
+		$post_id = self::factory()->post->create();
+
+		update_post_meta( $post_id, '_gg_optimizer_meta_title', 'Stored' );
+
+		$update = wp_get_ability( 'gregius-optimizer/update-post-seo' );
+		$result = $update->execute( array( 'post_id' => $post_id ) );
+
+		$this->assertSame( array( 'success' => true ), $result );
+		$this->assertSame( 'Stored', get_post_meta( $post_id, '_gg_optimizer_meta_title', true ) );
+	}
+
+	/**
+	 * reset-post-seo clears all 15 fields.
+	 */
+	public function test_reset_post_seo_clears_all() {
+		$post_id = self::factory()->post->create();
+
+		update_post_meta( $post_id, '_gg_optimizer_meta_title', 'Title' );
+		update_post_meta( $post_id, '_gg_optimizer_google_title', 'Google' );
+		update_post_meta( $post_id, '_gg_optimizer_include_in_llms', true );
+		update_post_meta( $post_id, '_gg_optimizer_hide_from_search', true );
+
+		$reset = wp_get_ability( 'gregius-optimizer/reset-post-seo' );
+		$reset->execute( array( 'post_id' => $post_id ) );
+
+		$get    = wp_get_ability( 'gregius-optimizer/get-post-seo' );
+		$result = $get->execute( array( 'post_id' => $post_id ) );
+
+		$this->assertSame( '', $result['meta_title'] );
+		$this->assertSame( '', $result['google_title'] );
+		$this->assertFalse( $result['include_in_llms'] );
+		$this->assertFalse( $result['hide_from_search'] );
+	}
+
+	/**
+	 * Twin invocation leaves stored state unchanged (idempotency).
+	 */
+	public function test_post_seo_idempotent() {
+		$post_id = self::factory()->post->create();
+
+		$update = wp_get_ability( 'gregius-optimizer/update-post-seo' );
+		$update->execute(
+			array(
+				'post_id'         => $post_id,
+				'meta_title'      => 'Title',
+				'include_in_llms' => true,
+			)
+		);
+		$update->execute(
+			array(
+				'post_id'         => $post_id,
+				'meta_title'      => 'Title',
+				'include_in_llms' => true,
+			)
+		);
+
+		$get    = wp_get_ability( 'gregius-optimizer/get-post-seo' );
+		$result = $get->execute( array( 'post_id' => $post_id ) );
+
+		$this->assertSame( 'Title', $result['meta_title'] );
+		$this->assertTrue( $result['include_in_llms'] );
+
+		$reset = wp_get_ability( 'gregius-optimizer/reset-post-seo' );
+		$reset->execute( array( 'post_id' => $post_id ) );
+		$reset->execute( array( 'post_id' => $post_id ) );
+
+		$result = $get->execute( array( 'post_id' => $post_id ) );
+		$this->assertSame( '', $result['meta_title'] );
+		$this->assertFalse( $result['include_in_llms'] );
+	}
+
+	/**
+	 * String fields are tag-stripped; boolean fields are stored as booleans.
+	 */
+	public function test_post_seo_sanitization() {
+		$post_id = self::factory()->post->create();
+
+		$update = wp_get_ability( 'gregius-optimizer/update-post-seo' );
+		$update->execute(
+			array(
+				'post_id'         => $post_id,
+				'meta_title'      => '<b>Hello</b>',
+				'include_in_llms' => true,
+			)
+		);
+
+		$get    = wp_get_ability( 'gregius-optimizer/get-post-seo' );
+		$result = $get->execute( array( 'post_id' => $post_id ) );
+
+		$this->assertSame( 'Hello', $result['meta_title'] );
+		$this->assertTrue( $result['include_in_llms'] );
+	}
+
+	/**
+	 * get/update/reset return a WP_Error for a missing or non-existent post_id.
+	 */
+	public function test_post_seo_error_contract() {
+		// Missing post_id.
+		$error = GG_Optimizer_Abilities::execute_get_post_seo( array() );
+		$this->assertInstanceOf( WP_Error::class, $error );
+		$this->assertSame( 'gg_optimizer_missing_post_id', $error->get_error_code() );
+
+		$this->assertInstanceOf( WP_Error::class, GG_Optimizer_Abilities::execute_update_post_seo( array() ) );
+		$this->assertInstanceOf( WP_Error::class, GG_Optimizer_Abilities::execute_reset_post_seo( array() ) );
+
+		// Non-existent post.
+		$error = GG_Optimizer_Abilities::execute_get_post_seo( array( 'post_id' => PHP_INT_MAX ) );
+		$this->assertInstanceOf( WP_Error::class, $error );
+		$this->assertSame( 'gg_optimizer_post_not_found', $error->get_error_code() );
+
+		$this->assertInstanceOf( WP_Error::class, GG_Optimizer_Abilities::execute_update_post_seo( array( 'post_id' => PHP_INT_MAX ) ) );
+		$this->assertInstanceOf( WP_Error::class, GG_Optimizer_Abilities::execute_reset_post_seo( array( 'post_id' => PHP_INT_MAX ) ) );
+	}
+
+	/**
+	 * The permission gate is post-scoped `edit_post` (anon denied, owner allowed,
+	 * non-owner with edit_posts denied).
+	 */
+	public function test_post_seo_permission_roundtrip() {
+		$author_a = self::factory()->user->create( array( 'role' => 'author' ) );
+		$author_b = self::factory()->user->create( array( 'role' => 'author' ) );
+		$post_a   = self::factory()->post->create( array( 'post_author' => $author_a ) );
+
+		// Anonymous.
+		wp_set_current_user( 0 );
+		$this->assertFalse( GG_Optimizer_Abilities::can_edit_post( array( 'post_id' => $post_a ) ) );
+
+		// Author A owns the post (edit_posts but not manage_options).
+		wp_set_current_user( $author_a );
+		$this->assertTrue( GG_Optimizer_Abilities::can_edit_post( array( 'post_id' => $post_a ) ) );
+
+		// Author B has edit_posts but not edit_post on A's post.
+		wp_set_current_user( $author_b );
+		$this->assertFalse( GG_Optimizer_Abilities::can_edit_post( array( 'post_id' => $post_a ) ) );
 	}
 }
