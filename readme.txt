@@ -3,7 +3,7 @@ Contributors: hectorjarquin, gregiusteam
 Tags: seo, aeo, smo, llmo, optimization
 Requires at least: 6.9
 Tested up to: 7.1
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 Requires PHP: 8.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -96,6 +96,9 @@ Visit the contributor profiles on WordPress.org:
 5. LLMs settings via the editor
 
 == Changelog ==
+
+= 1.5.0 =
+* Added: WordPress Abilities API surface (read, write, preview, and reset) for all configurable features
 
 = 1.4.0 =
 * Added: opt-in data retention — choose to keep or remove data when deleting the plugin (default: keep)

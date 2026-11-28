@@ -143,4 +143,26 @@ class GG_Optimizer_DB {
 			array( '%s', '%s' )
 		);
 	}
+
+	/**
+	 * Delete a single setting.
+	 *
+	 * Used by the reset-to-defaults abilities to clear a stored override so
+	 * the feature's own fallback resolves the default. Deleting a key that is
+	 * already absent is a no-op (returns 0, not false).
+	 *
+	 * @param string $key Setting key.
+	 * @return int|false Number of rows deleted, or false on failure.
+	 */
+	public static function delete( $key ) {
+		global $wpdb;
+
+		return $wpdb->delete( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery,WordPress.DB.DirectDatabaseQuery.NoCaching
+			$wpdb->prefix . self::TABLE_NAME,
+			array(
+				'setting_key' => $key,
+			),
+			array( '%s' )
+		);
+	}
 }

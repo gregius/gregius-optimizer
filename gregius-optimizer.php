@@ -3,7 +3,7 @@
  * Plugin Name:       Gregius Optimizer
  * Plugin URI:        https://gregius.com/gregius-optimizer
  * Description:       SEO, AEO, SMO, and LLMO editor extensions — schema, meta, indexing, and social cards.
- * Version:           1.4.0
+ * Version:           1.5.0
  * Requires at least: 6.9
  * Requires PHP:      8.2
  * Author:            Hector Jarquin, Gregius
@@ -70,6 +70,9 @@ require_once __DIR__ . '/includes/class-gg-optimizer-feature-toggle.php';
 // Data-retention preference (deactivation modal + uninstall handler).
 require_once __DIR__ . '/includes/class-gg-optimizer-data-retention.php';
 
+// Abilities API (WP 6.9+) — read / write / preview / reset surface.
+require_once __DIR__ . '/includes/class-gg-optimizer-abilities.php';
+
 // Virtual root files (llms.txt, robots.txt).
 require_once __DIR__ . '/includes/virtual-files.php';
 
@@ -103,3 +106,5 @@ require_once __DIR__ . '/assets/assets.php';
 add_action( 'rest_api_init', array( 'GG_Optimizer_Feature_Toggle', 'register_routes' ) );
 
 add_action( 'rest_api_init', array( 'GG_Optimizer_Data_Retention', 'register_routes' ) );
+
+GG_Optimizer_Abilities::init();
