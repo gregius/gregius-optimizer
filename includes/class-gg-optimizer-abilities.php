@@ -632,6 +632,10 @@ class GG_Optimizer_Abilities {
 	 * @return bool
 	 */
 	public static function can_edit_post( $input = null ) {
+		if ( is_object( $input ) ) {
+			$input = get_object_vars( $input );
+		}
+
 		$post_id = 0;
 		if ( is_array( $input ) && isset( $input['post_id'] ) ) {
 			$post_id = (int) $input['post_id'];

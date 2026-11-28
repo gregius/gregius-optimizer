@@ -406,4 +406,28 @@ class Test_GG_Optimizer_Abilities extends WP_UnitTestCase {
 		wp_set_current_user( $author_b );
 		$this->assertFalse( GG_Optimizer_Abilities::can_edit_post( array( 'post_id' => $post_a ) ) );
 	}
+
+	/**
+	 * can_edit_post normalizes object input (stdClass) the same as array input.
+	 *
+	 * Regression: can_edit_post previously read only is_array($input), so a
+	 * stdClass input (as some MCP transports pass) fell through to post_id = 0
+	 * and denied a legitimate editor — while the execute callbacks (which
+	 * normalize via get_object_vars) would have succeeded.
+	 */
+	public function test_can_edit_post_normalizes_object_input() {
+		$author = self::factory()->user->create( array( 'role' => 'author' ) );
+		$post   = self::factory()->post->create( array( 'post_author' => $author ) );
+
+		$object_input          = new stdClass();
+		$object_input->post_id = $post;
+
+		// Owner, stdClass input — must be allowed (parity with array input).
+		wp_set_current_user( $author );
+		$this->assertTrue( GG_Optimizer_Abilities::can_edit_post( $object_input ) );
+
+		// Anonymous, stdClass input — must still be denied (fails closed).
+		wp_set_current_user( 0 );
+		$this->assertFalse( GG_Optimizer_Abilities::can_edit_post( $object_input ) );
+	}
 }
